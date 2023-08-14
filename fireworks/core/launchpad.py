@@ -1727,7 +1727,7 @@ class LaunchPad(FWSerializable):
                 updated_ids = wf.refresh(fw_id)
                 self._update_wf(wf, updated_ids)
         except LockedWorkflowError:
-            self.m_logger.info(f"fw_id {fw_id} locked. Can't refresh!")
+            self.m_logger.info(f"{fw_id=} locked. Can't refresh!")
         except Exception:
             # some kind of internal error - an example is that fws serialization changed due to
             # code updates and thus the Firework object can no longer be loaded from db description
@@ -1742,7 +1742,7 @@ class LaunchPad(FWSerializable):
 
     def _update_wf(self, wf, updated_ids):
         """
-        Update the workflow with the update firework ids.
+        Update the workflow with the updated firework ids.
         Note: must be called within an enclosing WFLock.
 
         Args:
@@ -1936,7 +1936,7 @@ class LaunchPad(FWSerializable):
 
         except Exception:
             if print_errors:
-                self.m_logger.error(f"failed recovering launch_id {launch_id}.\n{traceback.format_exc()}")
+                self.m_logger.error(f"failed recovering {launch_id=}.\n{traceback.format_exc()}")
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(

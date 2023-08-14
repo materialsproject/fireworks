@@ -166,8 +166,8 @@ class PyTask(FiretaskBase):
     def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
-            modname, funcname = toks
-            mod = __import__(modname, globals(), locals(), [str(funcname)], 0)
+            mod_name, funcname = toks
+            mod = __import__(mod_name, globals(), locals(), [str(funcname)], 0)
             func = getattr(mod, funcname)
         else:
             # Handle built in functions.

@@ -44,26 +44,26 @@ def create_fw(args):
 def do_cleanup(args):
     lp = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
     to_delete = []
-    for i in lp.get_fw_ids({}):
-        fw = lp.get_fw_by_id(i)
+    for id in lp.get_fw_ids({}):
+        fw = lp.get_fw_by_id(id)
         if fw.state == "COMPLETED":
-            for l in fw.launches:
-                if os.path.isdir(l.launch_dir):
-                    to_delete.append((fw.fw_name, fw.fw_id, l.launch_dir, os.listdir(l.launch_dir)))
+            for launch in fw.launches:
+                if os.path.isdir(launch.launch_dir):
+                    to_delete.append((fw.fw_name, fw.fw_id, launch.launch_dir, os.listdir(launch.launch_dir)))
     if len(to_delete) == 0:
         print("Your directories are clean!")
         sys.exit(0)
     print("The following will be deleted:")
-    for name, fwid, d, files in to_delete:
-        print("{}-{} - {} - {}".format(name, fwid, d, ", ".join(files)))
+    for name, fw_id, directory, files in to_delete:
+        print(f"{name}-{fw_id} - {directory} - {', '.join(files)}")
     answer = input("Confirm? (Y/N)")
     if answer.startswith("Y"):
-        for name, fwid, d, files in to_delete:
+        for name, fw_id, directory, files in to_delete:
             try:
-                shutil.rmtree(d)
-                print(f"Deleted {d}")
+                shutil.rmtree(directory)
+                print(f"Deleted {directory}")
             except Exception as ex:
-                print(f"Unable to delete {d} because of {ex}")
+                print(f"Unable to delete {directory} because of {ex}")
     else:
         print("Canceled!")
 

@@ -195,7 +195,7 @@ class CompressDirTask(FiretaskBase):
             compress_dir(dest, compression=compression)
         except Exception:
             if not ignore_errors:
-                raise ValueError(f"There was an error performing compression {compression} in {dest}.")
+                raise ValueError(f"There was an error performing {compression=} in {dest}.")
 
 
 class DecompressDirTask(FiretaskBase):

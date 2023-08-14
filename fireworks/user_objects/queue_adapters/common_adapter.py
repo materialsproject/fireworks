@@ -227,7 +227,7 @@ class CommonAdapter(QueueAdapterBase):
             else:
                 # some qsub error, e.g. maybe wrong queue specified, don't have permission to submit, etc...
                 msgs = [
-                    f"Error in job submission with {self.q_name} file {script_file} and cmd {cmd}",
+                    f"Error in job submission with {self.q_name} file {script_file} and {cmd=}",
                     f"The error response reads: {p.stderr.read()}",
                 ]
                 log_fancy(queue_logger, msgs, "error")
