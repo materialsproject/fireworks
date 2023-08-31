@@ -194,14 +194,16 @@ def reset(args: Namespace) -> None:
     lp = get_lp(args)
     if not args.password:
         if (
-            input(f"Are you sure? This will RESET {lp.workflows.count_documents({})} workflows and all data. (Y/N)")[
-                0
-            ].upper()
-            == "Y"
+                input(
+                    f"Are you sure? This will RESET "
+                    f"{lp.workflows.count_documents({})} workflows and all "
+                    f"data. To confirm, please type the name of this database "
+                    f"({lp.name}) :") == lp.name
         ):
             args.password = datetime.datetime.now().strftime("%Y-%m-%d")
         else:
-            raise ValueError("Operation aborted by user.")
+            raise ValueError(
+                "Incorrect input to confirm database reset, operation aborted.")
     lp.reset(args.password)
 
 
