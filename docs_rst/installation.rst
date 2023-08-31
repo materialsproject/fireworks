@@ -2,7 +2,7 @@
 Installing FireWorks
 ====================
 
-.. note:: We suggest that you use Python 3.7 or higher, especially in production. There is a `bug <https://groups.google.com/forum/#!topic/modwsgi/DW-SlIb07rE>`_ in Python 2.7.2 that could affect FireWorks (although we haven't seen any problems yet).
+.. note:: We suggest you use Python 3.8 or higher, especially in production.
 
 Install MongoDB
 ===============
