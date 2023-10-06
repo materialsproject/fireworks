@@ -1,13 +1,15 @@
-from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
-from fireworks.utilities.fw_serializers import load_object
-
 """
 Master tests for FireWorks - generally used to ensure that installation was \
 completed properly.
 """
+
+import unittest
+
 from fireworks import Firework, FWAction
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
+from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
+from fireworks.utilities.fw_serializers import load_object
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -15,13 +17,9 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 9, 2013"
 
-import unittest
-
 
 class TestImports(unittest.TestCase):
-    """
-    Make sure that required external libraries can be imported
-    """
+    """Make sure that required external libraries can be imported."""
 
     def test_imports(self):
         pass
@@ -29,52 +27,53 @@ class TestImports(unittest.TestCase):
 
 
 class BasicTests(unittest.TestCase):
-    """
-    Make sure that required external libraries can be imported
-    """
+    """Make sure that required external libraries can be imported."""
 
     def test_fwconnector(self):
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'))
 
         wf1 = Workflow([fw1, fw2], {fw1.fw_id: fw2.fw_id})
-        self.assertEqual(wf1.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
+        assert wf1.links == {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []}
 
         wf2 = Workflow([fw1, fw2], {fw1: fw2})
-        self.assertEqual(wf2.links, {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []})
+        assert wf2.links == {fw1.fw_id: [fw2.fw_id], fw2.fw_id: []}
 
         wf3 = Workflow([fw1, fw2])
-        self.assertEqual(wf3.links, {fw1.fw_id: [], fw2.fw_id: []})
+        assert wf3.links == {fw1.fw_id: [], fw2.fw_id: []}
 
     def test_parentconnector(self):
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'), parents=fw1)
         fw3 = Firework(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
 
-        self.assertEqual(
-            Workflow([fw1, fw2, fw3]).links, {fw1.fw_id: [fw2.fw_id, fw3.fw_id], fw2.fw_id: [fw3.fw_id], fw3.fw_id: []}
-        )
+        assert Workflow([fw1, fw2, fw3]).links == {
+            fw1.fw_id: [fw2.fw_id, fw3.fw_id],
+            fw2.fw_id: [fw3.fw_id],
+            fw3.fw_id: [],
+        }
         self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this
 
 
 class SerializationTests(unittest.TestCase):
     @staticmethod
     def get_data(obj_dict):
-        modname = "fireworks.user_objects.queue_adapters.common_adapter"
+        mod_name = "fireworks.user_objects.queue_adapters.common_adapter"
         classname = "CommonAdapter"
-        mod = __import__(modname, globals(), locals(), [classname], 0)
+        mod = __import__(mod_name, globals(), locals(), [classname], 0)
         if hasattr(mod, classname):
             cls_ = getattr(mod, classname)
             return cls_.from_dict(obj_dict)
+        return None
 
     def test_serialization_details(self):
         # This detects a weird bug found in early version of serializers
 
         pbs = CommonAdapter("PBS")
-        self.assertTrue(isinstance(pbs, CommonAdapter))
-        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))
-        self.assertTrue(isinstance(load_object(pbs.to_dict()), CommonAdapter))
-        self.assertTrue(isinstance(self.get_data(pbs.to_dict()), CommonAdapter))  # repeated test on purpose!
+        assert isinstance(pbs, CommonAdapter)
+        assert isinstance(self.get_data(pbs.to_dict()), CommonAdapter)
+        assert isinstance(load_object(pbs.to_dict()), CommonAdapter)
+        assert isinstance(self.get_data(pbs.to_dict()), CommonAdapter)  # repeated test on purpose!
 
     def test_recursive_deserialize(self):
         my_dict = {

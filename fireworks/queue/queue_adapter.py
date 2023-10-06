@@ -1,6 +1,4 @@
-"""
-This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
-"""
+"""This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE."""
 
 import abc
 import collections
@@ -28,7 +26,7 @@ class Command:
     Helper class -  run subprocess commands in a different thread with TIMEOUT option.
     From https://gist.github.com/kirpit/1306188
     Based on jcollado's solution:
-    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
+    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933.
     """
 
     command = None
@@ -130,8 +128,8 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             subs_dict = {k: v for k, v in self.items() if v is not None}  # clean null values
 
             # warn user if they specify a key not present in template
-            for subs_key in subs_dict.keys():
-                if subs_key not in template_keys and not subs_key.startswith("_") and not subs_key == "logdir":
+            for subs_key in subs_dict:
+                if subs_key not in template_keys and not subs_key.startswith("_") and subs_key != "logdir":
                     warnings.warn(
                         f"Key {subs_key} has been specified in qadapter but it is not present in template, "
                         f"please check template ({self.template_file}) for supported keys."
@@ -148,7 +146,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             # might contain unused parameters as leftover $$
             unclean_template = a.safe_substitute(subs_dict)
 
-            clean_template = filter(lambda l: "$$" not in l, unclean_template.split("\n"))
+            clean_template = filter(lambda line: "$$" not in line, unclean_template.split("\n"))
 
             return "\n".join(clean_template)
 
@@ -187,8 +185,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     def get_qlogger(self, name):
         if "logdir" in self:
             return get_fw_logger(name, self["logdir"])
-        else:
-            return get_fw_logger(name, stream_level="CRITICAL")
+        return get_fw_logger(name, stream_level="CRITICAL")
 
 
 class QScriptTemplate(string.Template):

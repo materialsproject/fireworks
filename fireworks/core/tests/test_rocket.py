@@ -43,7 +43,7 @@ class RocketTest(unittest.TestCase):
         # Check data in the exception
         fw = self.lp.get_fw_by_id(1)
         launches = fw.launches
-        self.assertEqual(launches[0].action.stored_data["_exception"]["_details"], error_test_dict)
+        assert launches[0].action.stored_data["_exception"]["_details"] == error_test_dict
 
     def test_postproc_exception(self):
         fw = Firework(MalformedAdditionTask())
@@ -51,7 +51,7 @@ class RocketTest(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         fw = self.lp.get_fw_by_id(1)
 
-        self.assertEqual(fw.state, "FIZZLED")
+        assert fw.state == "FIZZLED"
 
 
 if __name__ == "__main__":

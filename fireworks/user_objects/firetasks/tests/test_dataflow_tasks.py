@@ -1,13 +1,9 @@
-""" Unit tests for the dataflow tasks """
-from unittest import SkipTest
-
-__author__ = "Ivan Kondov"
-__copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
-__email__ = "ivan.kondov@kit.edu"
+"""Unit tests for the dataflow tasks."""
 
 import os
 import unittest
 import uuid
+from unittest import SkipTest
 
 from fireworks.user_objects.firetasks.dataflow_tasks import (
     CommandLineTask,
@@ -17,17 +13,21 @@ from fireworks.user_objects.firetasks.dataflow_tasks import (
     JoinListTask,
 )
 
+__author__ = "Ivan Kondov"
+__copyright__ = "Copyright 2017, Karlsruhe Institute of Technology"
+__email__ = "ivan.kondov@kit.edu"
+
 
 def afunc(array, power):
-    """return the powers of a list of numbers"""
+    """Return the powers of a list of numbers."""
     return [pow(number, power) for number in array]
 
 
 class CommandLineTaskTest(unittest.TestCase):
-    """run tests for CimmandLineTask"""
+    """run tests for CommandLineTask."""
 
     def test_command_line_task_1(self):
-        """input from string to stdin, output from stdout to string"""
+        """Input from string to stdin, output from stdout to string."""
         params = {
             "command_spec": {
                 "command": ["cat"],
@@ -40,17 +40,17 @@ class CommandLineTaskTest(unittest.TestCase):
         spec = {"hello input": {"type": "data", "value": "Hello world!"}}
         action = CommandLineTask(**params).run_task(spec)
         output_string = action.update_spec["output string"]["value"]
-        self.assertEqual(output_string, "Hello world!")
+        assert output_string == "Hello world!"
 
         params["chunk_number"] = 0
         action = CommandLineTask(**params).run_task(spec)
         output_string = action.mod_spec[0]["_push"]["output string"]["value"]
-        self.assertEqual(output_string, "Hello world!")
+        assert output_string == "Hello world!"
 
     def test_command_line_task_2(self):
         """
         input from string to data, output from stdout to file;
-        input from file to stdin, output from stdout to string and from file
+        input from file to stdin, output from stdout to string and from file.
         """
         params = {
             "command_spec": {
@@ -64,9 +64,9 @@ class CommandLineTaskTest(unittest.TestCase):
         spec = {"input string": {"type": "data", "value": "Hello world!"}}
         action = CommandLineTask(**params).run_task(spec)
         filename = action.update_spec["output file"]["value"]
-        self.assertTrue(os.path.exists(filename))
+        assert os.path.exists(filename)
         with open(filename) as fptr:
-            self.assertEqual(fptr.read().strip(), "Hello world!")
+            assert fptr.read().strip() == "Hello world!"
 
         params = {
             "command_spec": {
@@ -84,16 +84,16 @@ class CommandLineTaskTest(unittest.TestCase):
         }
         action = CommandLineTask(**params).run_task(spec)
         output_string = action.update_spec["output string"]["value"]
-        self.assertEqual(output_string, "Hello world!")
+        assert output_string == "Hello world!"
         output_file = action.update_spec["output file"]["value"]
-        self.assertTrue(os.path.exists(output_file))
+        assert os.path.exists(output_file)
         with open(output_file) as fptr:
-            self.assertEqual(fptr.read().strip(), "Hello world!")
+            assert fptr.read().strip() == "Hello world!"
         os.remove(filename)
         os.remove(output_file)
 
     def test_command_line_task_3(self):
-        """input from string to data with command line options"""
+        """Input from string to data with command line options."""
         import platform
 
         if platform.system() != "Linux":
@@ -131,7 +131,7 @@ class CommandLineTaskTest(unittest.TestCase):
             "outputs": [],
         }
         action = CommandLineTask(**params).run_task(spec)
-        self.assertTrue(os.path.exists(spec["file name"]["value"]))
+        assert os.path.exists(spec["file name"]["value"])
 
         spec = {}
         params = {
@@ -149,12 +149,12 @@ class CommandLineTaskTest(unittest.TestCase):
         }
         action = CommandLineTask(**params).run_task(spec)
         time_stamp_2 = action.update_spec["date and time"]["value"]
-        self.assertEqual(time_stamp_1[0:10], time_stamp_2[0:10])
-        self.assertEqual(time_stamp_1[11:19], time_stamp_2[11:19])
+        assert time_stamp_1[0:10] == time_stamp_2[0:10]
+        assert time_stamp_1[11:19] == time_stamp_2[11:19]
         os.remove(filename)
 
     def test_command_line_task_4(self):
-        """multiple string inputs, multiple file outputs"""
+        """Multiple string inputs, multiple file outputs."""
         params = {
             "command_spec": {
                 "command": ["touch"],
@@ -173,10 +173,10 @@ class CommandLineTaskTest(unittest.TestCase):
         action = CommandLineTask(**params).run_task(spec)
         o_file_1 = action.update_spec["file_1"]["value"]
         o_file_2 = action.update_spec["file_2"]["value"]
-        self.assertTrue(os.path.exists(o_file_1))
-        self.assertTrue(os.path.exists(o_file_2))
-        self.assertTrue(os.path.exists(spec["f_name_1"]["value"]))
-        self.assertTrue(os.path.exists(spec["f_name_2"]["value"]))
+        assert os.path.exists(o_file_1)
+        assert os.path.exists(o_file_2)
+        assert os.path.exists(spec["f_name_1"]["value"])
+        assert os.path.exists(spec["f_name_2"]["value"])
         os.remove(o_file_1)
         os.remove(o_file_2)
         os.remove(spec["f_name_1"]["value"])
@@ -184,10 +184,10 @@ class CommandLineTaskTest(unittest.TestCase):
 
 
 class ForeachTaskTest(unittest.TestCase):
-    """run tests for ForeachTask"""
+    """run tests for ForeachTask."""
 
     def test_foreach_pytask(self):
-        """run PyTask for a list of numbers"""
+        """Run PyTask for a list of numbers."""
         numbers = [0, 1, 2, 3, 4]
         power = 2
         spec = {"numbers": numbers, "power": power}
@@ -204,11 +204,11 @@ class ForeachTaskTest(unittest.TestCase):
             action = detour.tasks[0].run_task(detour.spec)
             for mod in action.mod_spec:
                 results.append(mod["_push"]["results"])
-        for (number, result) in zip(numbers, results):
-            self.assertEqual(result, pow(number, power))
+        for number, result in zip(numbers, results):
+            assert result == pow(number, power)
 
     def test_foreach_commandlinetask(self):
-        """run CommandLineTask for a list of input data"""
+        """Run CommandLineTask for a list of input data."""
         inputs = ["black", "white", 2.5, 17]
         worklist = [{"source": {"type": "data", "value": s}} for s in inputs]
         spec = {"work list": worklist}
@@ -228,20 +228,20 @@ class ForeachTaskTest(unittest.TestCase):
         for detour in action.detours:
             action = detour.tasks[0].run_task(detour.spec)
             ofile = action.mod_spec[0]["_push"]["file set"]["value"]
-            self.assertTrue(os.path.exists(ofile))
+            assert os.path.exists(ofile)
             with open(ofile) as fptr:
                 outputs.append(fptr.read().strip())
             os.remove(ofile)
         ref_str = " ".join(str(inp) for inp in inputs)
         out_str = " ".join(str(out) for out in outputs)
-        self.assertEqual(out_str, ref_str)
+        assert out_str == ref_str
 
 
 class JoinDictTaskTest(unittest.TestCase):
-    """run tests for JoinDictTask"""
+    """run tests for JoinDictTask."""
 
     def test_join_dict_task(self):
-        """joins dictionaries into a new or existing dict in spec"""
+        """Joins dictionaries into a new or existing dict in spec."""
         temperature = {"value": 273.15, "units": "Kelvin"}
         pressure = {"value": 1.2, "units": "bar"}
         spec = {"temperature": temperature, "pressure": pressure}
@@ -249,25 +249,25 @@ class JoinDictTaskTest(unittest.TestCase):
 
         action = JoinDictTask(**params).run_task(spec)
         odict = action.update_spec["state parameters"]
-        self.assertTrue("temperature" in odict)
-        self.assertTrue("pressure" in odict)
-        self.assertEqual(odict["pressure"]["value"], pressure["value"])
+        assert "temperature" in odict
+        assert "pressure" in odict
+        assert odict["pressure"]["value"] == pressure["value"]
 
         spec["state parameters"] = {"potential": {}}
         params["rename"] = {"temperature": "temp", "pressure": "pres"}
         action = JoinDictTask(**params).run_task(spec)
         odict = action.update_spec["state parameters"]
-        self.assertTrue("temp" in odict)
-        self.assertTrue("pres" in odict)
-        self.assertTrue("potential" in odict)
-        self.assertEqual(odict["pres"]["value"], pressure["value"])
+        assert "temp" in odict
+        assert "pres" in odict
+        assert "potential" in odict
+        assert odict["pres"]["value"] == pressure["value"]
 
 
 class JoinListTaskTest(unittest.TestCase):
-    """run tests for JoinListTask"""
+    """run tests for JoinListTask."""
 
     def test_join_list_task(self):
-        """joins items into a new or existing list in spec"""
+        """Joins items into a new or existing list in spec."""
         temperature = {"value": 273.15, "units": "Kelvin"}
         pressure = {"value": 1.2, "units": "bar"}
         spec = {"temperature": temperature, "pressure": pressure}
@@ -275,22 +275,22 @@ class JoinListTaskTest(unittest.TestCase):
 
         action = JoinListTask(**params).run_task(spec)
         olist = action.update_spec["state parameters"]
-        self.assertEqual(olist[0]["units"], temperature["units"])
-        self.assertEqual(olist[1]["value"], pressure["value"])
+        assert olist[0]["units"] == temperature["units"]
+        assert olist[1]["value"] == pressure["value"]
 
         spec["state parameters"] = [{}]
         action = JoinListTask(**params).run_task(spec)
         olist = action.update_spec["state parameters"]
-        self.assertEqual(olist[0], {})
-        self.assertEqual(olist[1]["units"], temperature["units"])
-        self.assertEqual(olist[2]["value"], pressure["value"])
+        assert olist[0] == {}
+        assert olist[1]["units"] == temperature["units"]
+        assert olist[2]["value"] == pressure["value"]
 
 
 class ImportDataTaskTest(unittest.TestCase):
-    """run tests for ImportDataTask"""
+    """run tests for ImportDataTask."""
 
     def test_import_data_task(self):
-        """loads data from a file into spec"""
+        """Loads data from a file into spec."""
         import json
 
         import ruamel.yaml as yaml
@@ -306,9 +306,9 @@ class ImportDataTaskTest(unittest.TestCase):
                 formats[fmt].dump(temperature, fptr)
             action = ImportDataTask(**params).run_task(spec)
             root = action.update_spec["state parameters"]
-            self.assertTrue("temperature" in root)
-            self.assertTrue("value" in root["temperature"])
-            self.assertEqual(root["temperature"]["units"], temperature["units"])
+            assert "temperature" in root
+            assert "value" in root["temperature"]
+            assert root["temperature"]["units"] == temperature["units"]
             os.remove(filename)
 
 

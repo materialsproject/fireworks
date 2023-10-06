@@ -1,12 +1,11 @@
 """
-This module contains some of the most central FireWorks classes:
+This module contains some of the most central FireWorks classes.
 
-    - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
-    - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
-    - A Launch describes the run of a Firework on a computing resource.
-    - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
-    - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after
-        a job completes.
+- A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
+- A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
+- A Launch describes the run of a Firework on a computing resource.
+- A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
+- A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after a job completes.
 """
 import abc
 import os
@@ -14,24 +13,16 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import Any, Dict, Iterable, List, Sequence
+from typing import Any, Dict, Iterator, List, Optional, Sequence
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
 
 from fireworks.core.fworker import FWorker
-from fireworks.fw_config import (
-    EXCEPT_DETAILS_ON_RERUN,
-    NEGATIVE_FWID_CTR,
-    TRACKER_LINES,
-)
+from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
+from fireworks.fw_config import NEGATIVE_FWID_CTR as NEGATIVE_FWID_CTR  # noqa: PLC0414
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import (
-    FWSerializable,
-    recursive_deserialize,
-    recursive_serialize,
-    serialize_fw,
-)
+from fireworks.utilities.fw_serializers import FWSerializable, recursive_deserialize, recursive_serialize, serialize_fw
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
 
 __author__ = "Anubhav Jain"
@@ -40,9 +31,6 @@ __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
-
-# workaround for false positive flake8(F401) (https://git.io/JKZ2x)
-NEGATIVE_FWID_CTR
 
 
 class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
@@ -211,7 +199,7 @@ class FWAction(FWSerializable):
     @property
     def skip_remaining_tasks(self):
         """
-        If the FWAction gives any dynamic action, we skip the subsequent Firetasks
+        If the FWAction gives any dynamic action, we skip the subsequent Firetasks.
 
         Returns:
             bool
@@ -223,9 +211,7 @@ class FWAction(FWSerializable):
 
 
 class Firework(FWSerializable):
-    """
-    A Firework is a workflow step and might be contain several Firetasks.
-    """
+    """A Firework is a workflow step and might be contain several Firetasks."""
 
     STATE_RANKS = {
         "ARCHIVED": -2,
@@ -265,7 +251,6 @@ class Firework(FWSerializable):
             parents (Firework or [Firework]): list of parent FWs this FW depends on.
             updated_on (datetime): last time the STATE was updated.
         """
-
         self.tasks = tasks if isinstance(tasks, (list, tuple)) else [tasks]
 
         self.spec = spec.copy() if spec else {}
@@ -293,14 +278,14 @@ class Firework(FWSerializable):
     def state(self):
         """
         Returns:
-            str: The current state of the Firework
+            str: The current state of the Firework.
         """
         return self._state
 
     @state.setter
     def state(self, state):
         """
-        Setter for the FW state, which triggers updated_on change
+        Setter for the FW state, which triggers updated_on change.
 
         Args:
             state (str): the state to set for the FW
@@ -355,14 +340,12 @@ class Firework(FWSerializable):
         self.state = "WAITING"
 
     def to_db_dict(self):
-        """
-        Return firework dict with updated launches and state.
-        """
+        """Return firework dict with updated launches and state."""
         m_dict = self.to_dict()
         # the launches are stored separately
-        m_dict["launches"] = [l.launch_id for l in self.launches]
+        m_dict["launches"] = [launch.launch_id for launch in self.launches]
         # the archived launches are stored separately
-        m_dict["archived_launches"] = [l.launch_id for l in self.archived_launches]
+        m_dict["archived_launches"] = [launch.launch_id for launch in self.archived_launches]
         m_dict["state"] = self.state
         return m_dict
 
@@ -384,7 +367,7 @@ class Firework(FWSerializable):
     def __str__(self):
         return f"Firework object: (id: {int(self.fw_id)} , name: {self.fw_name})"
 
-    def __iter__(self) -> Iterable[FiretaskBase]:
+    def __iter__(self) -> Iterator[FiretaskBase]:
         return self.tasks.__iter__()
 
     def __len__(self) -> int:
@@ -395,9 +378,7 @@ class Firework(FWSerializable):
 
 
 class Tracker(FWSerializable):
-    """
-    A Tracker monitors a file and returns the last N lines for updating the Launch object.
-    """
+    """A Tracker monitors a file and returns the last N lines for updating the Launch object."""
 
     MAX_TRACKER_LINES = 1000
 
@@ -418,7 +399,7 @@ class Tracker(FWSerializable):
 
     def track_file(self, launch_dir=None):
         """
-        Reads the monitored file and returns back the last N lines
+        Reads the monitored file and returns back the last N lines.
 
         Args:
             launch_dir (str): directory where job was launched in case of relative filename
@@ -434,8 +415,8 @@ class Tracker(FWSerializable):
             m_file = zpath(m_file)
         if os.path.exists(m_file):
             with zopen(m_file, "rt", errors="surrogateescape") as f:
-                for l in reverse_readline(f):
-                    lines.append(l)
+                for line in reverse_readline(f):
+                    lines.append(line)
                     if len(lines) == self.nlines:
                         break
             self.content = "\n".join(reversed(lines))
@@ -458,9 +439,7 @@ class Tracker(FWSerializable):
 
 
 class Launch(FWSerializable):
-    """
-    A Launch encapsulates data about a specific run of a Firework on a computing resource.
-    """
+    """A Launch encapsulates data about a specific run of a Firework on a computing resource."""
 
     def __init__(
         self,
@@ -486,7 +465,7 @@ class Launch(FWSerializable):
             action (FWAction): the output of the Launch
             state_history ([dict]): a history of all states of the Launch and when they occurred
             launch_id (int): launch_id set by the LaunchPad
-            fw_id (int): id of the Firework this Launch is running
+            fw_id (int): id of the Firework this Launch is running.
         """
         if state not in Firework.STATE_RANKS:
             raise ValueError(f"Invalid launch state: {state}")
@@ -549,7 +528,7 @@ class Launch(FWSerializable):
     def time_start(self):
         """
         Returns:
-            datetime: the time the Launch started RUNNING
+            datetime: the time the Launch started RUNNING.
         """
         return self._get_time("RUNNING")
 
@@ -557,7 +536,7 @@ class Launch(FWSerializable):
     def time_end(self):
         """
         Returns:
-            datetime: the time the Launch was COMPLETED or FIZZLED
+            datetime: the time the Launch was COMPLETED or FIZZLED.
         """
         return self._get_time(["COMPLETED", "FIZZLED"])
 
@@ -565,7 +544,7 @@ class Launch(FWSerializable):
     def time_reserved(self):
         """
         Returns:
-            datetime: the time the Launch was RESERVED in the queue
+            datetime: the time the Launch was RESERVED in the queue.
         """
         return self._get_time("RESERVED")
 
@@ -573,7 +552,7 @@ class Launch(FWSerializable):
     def last_pinged(self):
         """
         Returns:
-            datetime: the time the Launch last pinged a heartbeat that it was still running
+            datetime: the time the Launch last pinged a heartbeat that it was still running.
         """
         return self._get_time("RUNNING", True)
 
@@ -587,6 +566,7 @@ class Launch(FWSerializable):
         end = self.time_end
         if start and end:
             return (end - start).total_seconds()
+        return None
 
     @property
     def reservedtime_secs(self):
@@ -598,6 +578,7 @@ class Launch(FWSerializable):
         if start:
             end = self.time_start if self.time_start else datetime.utcnow()
             return (end - start).total_seconds()
+        return None
 
     @recursive_serialize
     def to_dict(self):
@@ -682,17 +663,14 @@ class Launch(FWSerializable):
                 if use_update_time:
                     return data["updated_on"]
                 return data["created_on"]
+        return None
 
 
 class Workflow(FWSerializable):
-    """
-    A Workflow connects a group of FireWorks in an execution order.
-    """
+    """A Workflow connects a group of FireWorks in an execution order."""
 
     class Links(dict, FWSerializable):
-        """
-        An inner class for storing the DAG links between FireWorks
-        """
+        """An inner class for storing the DAG links between FireWorks."""
 
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
@@ -715,11 +693,11 @@ class Workflow(FWSerializable):
 
         @property
         def nodes(self):
-            """Return list of all nodes"""
-            allnodes = list(self.keys())
+            """Return list of all nodes."""
+            all_nodes = list(self)
             for v in self.values():
-                allnodes.extend(v)
-            return list(set(allnodes))
+                all_nodes.extend(v)
+            return list(set(all_nodes))
 
         @property
         def parent_links(self):
@@ -730,7 +708,7 @@ class Workflow(FWSerializable):
             update parent_links
             """
             child_parents = defaultdict(list)
-            for (parent, children) in self.items():
+            for parent, children in self.items():
                 for child in children:
                     child_parents[child].append(parent)
             return dict(child_parents)
@@ -751,12 +729,11 @@ class Workflow(FWSerializable):
             Returns:
                 dict
             """
-            m_dict = {
+            return {
                 "links": {str(k): v for (k, v) in self.items()},
                 "parent_links": {str(k): v for (k, v) in self.parent_links.items()},
                 "nodes": self.nodes,
             }
-            return m_dict
 
         @classmethod
         def from_dict(cls, m_dict):
@@ -770,7 +747,7 @@ class Workflow(FWSerializable):
             """
             To support Pickling of inner classes (for multi-job launcher's multiprocessing).
             Return a class which can return this class when called with the appropriate tuple of
-            arguments
+            arguments.
             """
             state = list(self.items())
             return (
@@ -785,12 +762,12 @@ class Workflow(FWSerializable):
     def __init__(
         self,
         fireworks: Sequence[Firework],
-        links_dict: Dict[int, List[int]] = None,
-        name: str = None,
-        metadata: Dict[str, Any] = None,
-        created_on: datetime = None,
-        updated_on: datetime = None,
-        fw_states: Dict[int, str] = None,
+        links_dict: Optional[Dict[int, List[int]]] = None,
+        name: Optional[str] = None,
+        metadata: Optional[Dict[str, Any]] = None,
+        created_on: Optional[datetime] = None,
+        updated_on: Optional[datetime] = None,
+        fw_states: Optional[Dict[int, str]] = None,
     ) -> None:
         """
         Args:
@@ -800,7 +777,7 @@ class Workflow(FWSerializable):
             metadata (dict): metadata for this Workflow.
             created_on (datetime): time of creation
             updated_on (datetime): time of update
-            fw_states (dict): leave this alone unless you are purposefully creating a Lazy-style WF
+            fw_states (dict): leave this alone unless you are purposefully creating a Lazy-style WF.
         """
         name = name or "unnamed WF"  # prevent None names
 
@@ -833,7 +810,7 @@ class Workflow(FWSerializable):
 
         # sanity check: make sure the set of nodes from the links_dict is equal to the set
         # of nodes from id_fw
-        if set(self.links.nodes) != set(map(int, self.id_fw.keys())):
+        if set(self.links.nodes) != set(map(int, self.id_fw)):
             raise ValueError("Specified links don't match given FW")
 
         if len(self.links.nodes) == 0:
@@ -849,15 +826,11 @@ class Workflow(FWSerializable):
 
     @property
     def fws(self) -> List[Firework]:
-        """
-        Return list of all fireworks
-        """
+        """Return list of all fireworks."""
         return list(self.id_fw.values())
 
-    def __iter__(self) -> Iterable[Firework]:
-        """
-        Iterate over all fireworks.
-        """
+    def __iter__(self) -> Iterator[Firework]:
+        """Iterate over all fireworks."""
         return self.id_fw.values().__iter__()
 
     def __len__(self) -> int:
@@ -870,7 +843,7 @@ class Workflow(FWSerializable):
     def state(self) -> str:
         """
         Returns:
-            state (str): state of workflow
+            state (str): state of workflow.
         """
         m_state = "READY"
         # states = [fw.state for fw in self.fws]
@@ -1010,7 +983,6 @@ class Workflow(FWSerializable):
         Returns:
             list[int]: list of Firework ids that were updated.
         """
-
         updated_ids = updated_ids if updated_ids else set()
         m_fw = self.id_fw[fw_id]
         m_fw._rerun()
@@ -1030,7 +1002,7 @@ class Workflow(FWSerializable):
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=False):
         """
         Method to add a workflow as a child to a Firework
-        Note: detours must have children that have STATE_RANK that is WAITING or below
+        Note: detours must have children that have STATE_RANK that is WAITING or below.
 
         Args:
             new_wf (Workflow): New Workflow to add.
@@ -1180,7 +1152,7 @@ class Workflow(FWSerializable):
             list[int]: Firework ids of root FWs.
         """
         all_ids = set(self.links.nodes)
-        child_ids = set(self.links.parent_links.keys())
+        child_ids = set(self.links.parent_links)
         root_ids = all_ids.difference(child_ids)
         return list(root_ids)
 
@@ -1207,19 +1179,19 @@ class Workflow(FWSerializable):
         """
         # update id_fw
         new_id_fw = {}
-        for (fwid, fws) in self.id_fw.items():
+        for fwid, fws in self.id_fw.items():
             new_id_fw[old_new.get(fwid, fwid)] = fws
         self.id_fw = new_id_fw
 
         # update the Links
         new_l = {}
-        for (parent, children) in self.links.items():
+        for parent, children in self.links.items():
             new_l[old_new.get(parent, parent)] = [old_new.get(child, child) for child in children]
         self.links = Workflow.Links(new_l)
 
         # update the states
         new_fw_states = {}
-        for (fwid, fw_state) in self.fw_states.items():
+        for fwid, fw_state in self.fw_states.items():
             new_fw_states[old_new.get(fwid, fwid)] = fw_state
         self.fw_states = new_fw_states
 
@@ -1247,7 +1219,9 @@ class Workflow(FWSerializable):
         m_dict = self.to_db_dict()
         nodes = sorted(m_dict["nodes"])
         m_dict["name--id"] = self.name + "--" + str(nodes[0])
-        m_dict["launch_dirs"] = {self._str_fw(x): [l.launch_dir for l in self.id_fw[x].launches] for x in nodes}
+        m_dict["launch_dirs"] = {
+            self._str_fw(x): [launch.launch_dir for launch in self.id_fw[x].launches] for x in nodes
+        }
         m_dict["states"] = {self._str_fw(x): self.id_fw[x].state for x in nodes}
         m_dict["nodes"] = [self._str_fw(x) for x in nodes]
         m_dict["links"] = {self._str_fw(k): [self._str_fw(v) for v in a] for k, a in m_dict["links"].items()}
@@ -1285,12 +1259,12 @@ class Workflow(FWSerializable):
         max_score = Firework.STATE_RANKS["ARCHIVED"]  # state rank must be greater than this
         m_launch = None
         completed_launches = []
-        for l in fw.launches:
-            if Firework.STATE_RANKS[l.state] > max_score:
-                max_score = Firework.STATE_RANKS[l.state]
-                m_launch = l
-                if l.state == "COMPLETED":
-                    completed_launches.append(l)
+        for launch in fw.launches:
+            if Firework.STATE_RANKS[launch.state] > max_score:
+                max_score = Firework.STATE_RANKS[launch.state]
+                m_launch = launch
+                if launch.state == "COMPLETED":
+                    completed_launches.append(launch)
         if completed_launches:
             return max(completed_launches, key=lambda v: v.time_end)
         return m_launch
@@ -1354,11 +1328,10 @@ class Workflow(FWSerializable):
                 created_on,
                 updated_on,
             )
-        else:
-            return Workflow.from_Firework(Firework.from_dict(m_dict))
+        return Workflow.from_Firework(Firework.from_dict(m_dict))
 
     @classmethod
-    def from_Firework(cls, fw: Firework, name: str = None, metadata=None) -> "Workflow":
+    def from_Firework(cls, fw: Firework, name: Optional[str] = None, metadata=None) -> "Workflow":
         """
         Return Workflow from the given Firework.
 
@@ -1374,7 +1347,7 @@ class Workflow(FWSerializable):
         return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on, updated_on=fw.updated_on)
 
     def __str__(self):
-        return f"Workflow object: (fw_ids: {self.id_fw.keys()} , name: {self.name})"
+        return f"Workflow object: (fw_ids: {[*self.id_fw]} , name: {self.name})"
 
     def remove_fws(self, fw_ids):
         """

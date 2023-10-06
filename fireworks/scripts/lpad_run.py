@@ -1,6 +1,4 @@
-"""
-A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)
-"""
+"""A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)."""
 
 import ast
 import copy
@@ -116,7 +114,6 @@ def get_lp(args: Namespace) -> LaunchPad:
         if args.launchpad_file:
             lp = LaunchPad.from_file(args.launchpad_file)
         else:
-
             args.loglvl = "CRITICAL" if args.silencer else args.loglvl
             # no lpad file means we try connect to localhost which is fast so use small timeout
             # (default 30s) for quick response to user if no DB is running
@@ -197,14 +194,16 @@ def reset(args: Namespace) -> None:
     lp = get_lp(args)
     if not args.password:
         if (
-            input(f"Are you sure? This will RESET {lp.workflows.count_documents({})} workflows and all data. (Y/N)")[
-                0
-            ].upper()
-            == "Y"
+                input(
+                    f"Are you sure? This will RESET "
+                    f"{lp.workflows.count_documents({})} workflows and all "
+                    f"data. To confirm, please type the name of this database "
+                    f"({lp.name}) :") == lp.name
         ):
             args.password = datetime.datetime.now().strftime("%Y-%m-%d")
         else:
-            raise ValueError("Operation aborted by user.")
+            raise ValueError(
+                "Incorrect input to confirm database reset, operation aborted.")
     lp.reset(args.password)
 
 
@@ -265,9 +264,8 @@ def print_fws(ids, lp, args: Namespace) -> None:
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
@@ -293,8 +291,7 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_id:
         query = {"fw_id": {"$in": args.fw_id}}
@@ -345,9 +342,8 @@ def get_fws_helper(
                 if "archived_launches" in d:
                     del d["archived_launches"]
                 del d["spec"]
-            if args.display_format == "less":
-                if "launches" in d:
-                    del d["launches"]
+            if args.display_format == "less" and "launches" in d:
+                del d["launches"]
             fws.append(d)
     return fws[0] if len(fws) == 1 else fws
 
@@ -384,8 +380,7 @@ def get_fws_in_wfs(args: Namespace) -> None:
         args.display_format = args.display_format if args.display_format else "ids"
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    else:
-        args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format if args.display_format else "more"
 
     if args.fw_fw_id:
         fw_query = {"fw_id": {"$in": args.fw_fw_id}}
@@ -471,7 +466,7 @@ def get_wfs(args: Namespace) -> None:
 
     if args.table:
         if wfs:
-            headers = list(wfs[0].keys())
+            headers = list(wfs[0])
             from prettytable import PrettyTable
 
             t = PrettyTable(headers)
@@ -495,12 +490,12 @@ def delete_wfs(args: Namespace) -> None:
 
 def get_children(links, start, max_depth):
     data = {}
-    for l, c in links.items():
-        if l == start:
-            if len(c) > 0:
-                data[l] = [get_children(links, i, max_depth) for i in c]
+    for link, child in links.items():
+        if link == start:
+            if len(child) > 0:
+                data[link] = [get_children(links, idx, max_depth) for idx in child]
             else:
-                data[l] = c
+                data[link] = child
     return data
 
 
@@ -637,9 +632,9 @@ def rerun_fws(args: Namespace) -> None:
             raise ValueError("Specify the same number of tasks and launches")
     else:
         launch_ids = [None] * len(fw_ids)
-    for f, l in zip(fw_ids, launch_ids):
-        lp.rerun_fw(int(f), recover_launch=l, recover_mode=args.recover_mode)
-        lp.m_logger.debug(f"Processed fw_id: {f}")
+    for fw_id, l_id in zip(fw_ids, launch_ids):
+        lp.rerun_fw(int(fw_id), recover_launch=l_id, recover_mode=args.recover_mode)
+        lp.m_logger.debug(f"Processed fw_id: {fw_id}")
     lp.m_logger.info(f"Finished setting {len(fw_ids)} FWs to rerun")
 
 
@@ -687,7 +682,7 @@ def set_priority(args: Namespace) -> None:
         all_fw_ids = set()
         for fw_id in fw_ids:
             wf = lp.get_wf_by_fw_id_lzyfw(fw_id)
-            all_fw_ids.update(wf.id_fw.keys())
+            all_fw_ids.update(wf.id_fw)
         fw_ids = list(all_fw_ids)
     for f in fw_ids:
         lp.set_priority(f, args.priority)
@@ -763,14 +758,14 @@ def recover_offline(args: Namespace) -> None:
     failed_fws = []
     recovered_fws = []
 
-    for l in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
-        if fworker_name and lp.launches.count({"launch_id": l["launch_id"], "fworker.name": fworker_name}) == 0:
+    for launch in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
+        if fworker_name and lp.launches.count({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0:
             continue
-        fw = lp.recover_offline(l["launch_id"], args.ignore_errors, args.print_errors)
+        fw = lp.recover_offline(launch["launch_id"], args.ignore_errors, args.print_errors)
         if fw:
-            failed_fws.append(l["fw_id"])
+            failed_fws.append(launch["fw_id"])
         else:
-            recovered_fws.append(l["fw_id"])
+            recovered_fws.append(launch["fw_id"])
 
     lp.m_logger.info(f"FINISHED recovering offline runs. {len(recovered_fws)} job(s) recovered: {recovered_fws}")
     if failed_fws:
@@ -872,8 +867,7 @@ def orphaned(args: Namespace) -> None:
 def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
     if format == "json":
         return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
-    else:
-        return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+    return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
 
 
 def arg_positive_int(value: str) -> int:
@@ -938,7 +932,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     enh_disp_kwargs["default"] = None
 
     query_args = ["-q", "--query"]
-    query_kwargs = {"help": "Query (enclose pymongo-style dict in " 'single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
+    query_kwargs = {"help": 'Query (enclose pymongo-style dict in single-quotes, e.g. \'{"state":"COMPLETED"}\')'}
 
     launches_mode_args = ["-lm", "--launches_mode"]
     launches_mode_kwargs = {
@@ -1195,7 +1189,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
         "-u",
         "--update",
         type=str,
-        help="Doc update (enclose pymongo-style dict in single-quotes, e.g. '{" '"_tasks.1.hello": "world"}\')',
+        help='Doc update (enclose pymongo-style dict in single-quotes, e.g. \'{"_tasks.1.hello": "world"}\')',
     )
     update_fws_parser.add_argument(
         "--mongo",
@@ -1222,7 +1216,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     get_wf_parser.add_argument(
         "-t",
         "--table",
-        help="Print results in table form instead of json. Needs prettytable. Works best " 'with "-d less"',
+        help='Print results in table form instead of json. Needs prettytable. Works best with "-d less"',
         action="store_true",
     )
     get_wf_parser.set_defaults(func=get_wfs)
@@ -1280,7 +1274,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     delete_wfs_parser = subparsers.add_parser(
         "delete_wflows",
-        help='Delete workflows (permanently). Use "archive_wflows" instead if ' 'you want to "soft-remove"',
+        help='Delete workflows (permanently). Use "archive_wflows" instead if you want to "soft-remove"',
     )
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument("-n", "--name", help="name")
@@ -1412,7 +1406,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
 
     # admin commands
     admin_parser = subparsers.add_parser(
-        "admin", help="Various db admin commands, " 'type "lpad admin -h" for more.', parents=[parent_parser]
+        "admin", help='Various db admin commands, type "lpad admin -h" for more.', parents=[parent_parser]
     )
     admin_subparser = admin_parser.add_subparsers(title="action", dest="action_command")
 
@@ -1483,7 +1477,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     unlock_parser.set_defaults(func=unlock)
 
     report_parser = subparsers.add_parser(
-        "report", help="Compile a report of runtime stats, " 'type "lpad report -h" for more options.'
+        "report", help='Compile a report of runtime stats, type "lpad report -h" for more options.'
     )
     report_parser.add_argument(
         "-c",

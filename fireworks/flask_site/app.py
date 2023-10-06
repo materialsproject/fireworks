@@ -2,18 +2,7 @@ import json
 import os
 from functools import wraps
 
-from flask import (
-    Flask,
-    Response,
-    abort,
-    flash,
-    make_response,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import Flask, Response, abort, flash, make_response, redirect, render_template, request, session, url_for
 from flask_paginate import Pagination
 from pymongo import DESCENDING
 
@@ -53,7 +42,7 @@ def check_auth(username, password):
 
 
 def authenticate():
-    """Sends a 401 response that enables basic auth"""
+    """Sends a 401 response that enables basic auth."""
     return Response(
         "Could not verify your access level for that URL. You have to login with proper credentials",
         401,
@@ -99,8 +88,7 @@ def datetime(value):
 def pluralize(number, singular="", plural="s"):
     if number == 1:
         return singular
-    else:
-        return plural
+    return plural
 
 
 @app.route("/")
@@ -161,6 +149,8 @@ def get_fw_details(fw_id):
     # to control their display
     fw = app.lp.get_fw_dict_by_id(fw_id)
     for launch in fw["launches"]:
+        launch.pop("_id", None)
+    for launch in fw["archived_launches"]:
         del launch["_id"]
     del fw["_id"]
     return jsonify(fw)
@@ -231,7 +221,7 @@ def fw_state(state, sorting_key="_id", sorting_order="DESCENDING"):
     elif sorting_order == "DESCENDING":
         sort_order = -1
     else:
-        raise RuntimeError()
+        raise RuntimeError
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
     db = app.lp.fireworks
@@ -263,7 +253,7 @@ def wf_state(state, sorting_key="_id", sorting_order="DESCENDING"):
     elif sorting_order == "DESCENDING":
         sort_order = -1
     else:
-        raise RuntimeError()
+        raise RuntimeError
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
     db = app.lp.workflows
@@ -297,21 +287,21 @@ def wf_metadata_find(key, value, state):
     wf_count = app.lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
-    elif wf_count == 1:
+        return None
+    if wf_count == 1:
         doc = db.find_one(q, {"nodes": 1, "_id": 0})
         fw_id = doc["nodes"][0]
         return redirect(url_for("wf_details", wf_id=fw_id))
-    else:
-        try:
-            page = int(request.args.get("page", 1))
-        except ValueError:
-            page = 1
-        rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
-        for r in rows:
-            r["fw_id"] = r["nodes"][0]
-        pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
-        all_states = STATES
-        return render_template("wf_metadata.html", **locals())
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        page = 1
+    rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
+    for r in rows:
+        r["fw_id"] = r["nodes"][0]
+    pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
+    all_states = STATES
+    return render_template("wf_metadata.html", **locals())
 
 
 @app.route("/report/", defaults={"interval": "months", "num_intervals": 6})

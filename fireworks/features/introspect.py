@@ -10,7 +10,7 @@ separator_str = ":%%:"
 
 def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
     """
-    Converts a dictionary into a list of keys, with string values "key1.key2:val"
+    Converts a dictionary into a list of keys, with string values "key1.key2:val".
 
     Args:
         curr_doc
@@ -31,10 +31,10 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
         return my_list
 
-    elif isinstance(curr_doc, list) or isinstance(curr_doc, tuple):
+    if isinstance(curr_doc, (list, tuple)):
         my_list = []
         for k in curr_doc:
-            if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
+            if isinstance(k, (dict, list, tuple)):
                 return [f"{separator_str}<TRUNCATED_OBJECT>"]
             my_list.append(separator_str + str(k))
         return my_list
@@ -61,17 +61,17 @@ def collect_stats(list_keys, filter_truncated=True):
     return d
 
 
-def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
+def compare_stats(stats_dict1, n_samples1, stats_dict2, n_samples2, threshold=5):
     diff_dict = defaultdict(float)
-    all_keys = list(statsdict1.keys())
-    all_keys.extend(statsdict2.keys())
+    all_keys = list(stats_dict1)
+    all_keys.extend(stats_dict2)
     all_keys = set(all_keys)
     for k in all_keys:
-        if k in statsdict1:
-            diff_dict[k] += (statsdict1[k] / numsamples1) * 100
+        if k in stats_dict1:
+            diff_dict[k] += (stats_dict1[k] / n_samples1) * 100
 
-        if k in statsdict2:
-            diff_dict[k] -= (statsdict2[k] / numsamples2) * 100
+        if k in stats_dict2:
+            diff_dict[k] -= (stats_dict2[k] / n_samples2) * 100
 
         if abs(diff_dict[k]) < threshold:
             del diff_dict[k]
@@ -83,7 +83,7 @@ class Introspector:
     def __init__(self, lpad):
         """
         Args:
-            lpad (LaunchPad)
+            lpad (LaunchPad).
         """
         self.lpad = lpad
         self.db = lpad.db
@@ -110,10 +110,7 @@ class Introspector:
             raise ValueError("Unrecognized collection!")
 
         sort_field = "time_end" if coll == "launches" else "updated_on"
-        if rsort:
-            sort_key = [(sort_field, DESCENDING)]
-        else:
-            sort_key = None
+        sort_key = [(sort_field, DESCENDING)] if rsort else None
 
         # get stats on fizzled docs
         fizzled_keys = []
@@ -175,7 +172,6 @@ class Introspector:
 
     @staticmethod
     def print_report(table, coll):
-
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"
         elif coll.lower() in ["tasks"]:

@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 from monty.dev import requires
 
@@ -47,7 +47,7 @@ def plot_wf(
     except ImportError:
         raise SystemExit("Install matplotlib. Exiting.")
 
-    keys = sorted(wf.links.keys(), reverse=True)
+    keys = sorted(wf.links, reverse=True)
     n_root_nodes = len(wf.root_fw_ids)
 
     # set (x,y) coordinates for each node in the workflow links
@@ -98,7 +98,7 @@ def plot_wf(
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bool = True) -> Digraph:
+def wf_to_graph(wf: Workflow, dag_kwargs: Optional[Dict[str, Any]] = None, wf_show_tasks: bool = True) -> Digraph:
     """Renders a graph representation of a workflow or firework. Workflows are rendered as the
     control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.
 
@@ -112,6 +112,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bo
     Returns:
         Digraph: The Workflow or Firework directed acyclic graph.
     """
+    dag_kwargs = dag_kwargs or {}
     if not isinstance(wf, (Workflow, Firework)):
         raise ValueError(f"expected instance of Workflow or Firework, got {wf}")
 

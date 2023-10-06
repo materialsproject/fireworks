@@ -28,6 +28,7 @@ def get_nested_dict(input_dict, key):
         elif i == n - 1:
             return current, toks[-1]
         current = current[tok]
+    return None
 
 
 def arrow_to_dot(input_dict):
@@ -43,8 +44,7 @@ def arrow_to_dot(input_dict):
     """
     if not isinstance(input_dict, dict):
         return input_dict
-    else:
-        return {k.replace("->", "."): arrow_to_dot(v) for k, v in input_dict.items()}
+    return {k.replace("->", "."): arrow_to_dot(v) for k, v in input_dict.items()}
 
 
 @singleton
@@ -62,7 +62,7 @@ class DictMods:
         _pop
         _pull
         _pull_all
-        _rename
+        _rename.
 
     However, note that "_set" does not support modification of nested dicts
     using the mongo {"a.b":1} notation. This is because mongo does not allow
@@ -84,7 +84,7 @@ class DictMods:
 
     @staticmethod
     def unset(input_dict, settings):
-        for k in settings.keys():
+        for k in settings:
             (d, key) = get_nested_dict(input_dict, k)
             del d[key]
 

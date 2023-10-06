@@ -1,6 +1,6 @@
 """
 This code is described in the Dynamic Workflow tutorial,
-https://materialsproject.github.io/fireworks/dynamic_wf_tutorial.html
+https://materialsproject.github.io/fireworks/dynamic_wf_tutorial.html.
 """
 
 from fireworks import Firework, FWorker, LaunchPad

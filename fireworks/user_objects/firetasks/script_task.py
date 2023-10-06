@@ -1,4 +1,4 @@
-""" This module includes tasks to integrate scripts and python functions """
+"""This module includes tasks to integrate scripts and python functions."""
 
 import builtins
 import shlex
@@ -19,7 +19,7 @@ __date__ = "Feb 18, 2013"
 
 
 class ScriptTask(FiretaskBase):
-    """Runs a user-defined script"""
+    """Runs a user-defined script."""
 
     required_params = ["script"]
     _fw_name = "ScriptTask"
@@ -86,7 +86,7 @@ class ScriptTask(FiretaskBase):
         if self.defuse_bad_rc and sum(returncodes) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
-        elif self.fizzle_bad_rc and sum(returncodes) != 0:
+        if self.fizzle_bad_rc and sum(returncodes) != 0:
             raise RuntimeError(f"ScriptTask fizzled! Return code: {returncodes}")
 
         return FWAction(stored_data=output)
@@ -166,8 +166,8 @@ class PyTask(FiretaskBase):
     def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
-            modname, funcname = toks
-            mod = __import__(modname, globals(), locals(), [str(funcname)], 0)
+            mod_name, funcname = toks
+            mod = __import__(mod_name, globals(), locals(), [str(funcname)], 0)
             func = getattr(mod, funcname)
         else:
             # Handle built in functions.
@@ -213,3 +213,4 @@ class PyTask(FiretaskBase):
             actions["stored_data"] = {self["stored_data_varname"]: output}
         if len(actions) > 0:
             return FWAction(**actions)
+        return None

@@ -10,7 +10,6 @@ __date__ = "Jan 21, 2014"
 
 
 class TestSerializer(FWSerializable):
-
     _fw_name = "TestSerializer Name"
 
     def __init__(self, a, m_date):
@@ -33,7 +32,6 @@ class TestSerializer(FWSerializable):
 
 
 class ExportTestSerializer(FWSerializable):
-
     _fw_name = "TestSerializer Export Name"
 
     def __init__(self, a):
