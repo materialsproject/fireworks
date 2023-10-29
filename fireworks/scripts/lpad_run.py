@@ -193,17 +193,15 @@ def init_yaml(args: Namespace) -> None:
 def reset(args: Namespace) -> None:
     lp = get_lp(args)
     if not args.password:
-        if (
-                input(
-                    f"Are you sure? This will RESET "
-                    f"{lp.workflows.count_documents({})} workflows and all "
-                    f"data. To confirm, please type the name of this database "
-                    f"({lp.name}) :") == lp.name
-        ):
+        n_docs = lp.workflows.count_documents({})
+        answer = input(
+            f"Are you sure? This will RESET {n_docs} workflows and all data. "
+            f"To confirm, please type the name of this database ({lp.name}) :"
+        )
+        if answer == lp.name:
             args.password = datetime.datetime.now().strftime("%Y-%m-%d")
         else:
-            raise ValueError(
-                "Incorrect input to confirm database reset, operation aborted.")
+            raise ValueError("Incorrect input to confirm database reset, operation aborted.")
     lp.reset(args.password)
 
 
