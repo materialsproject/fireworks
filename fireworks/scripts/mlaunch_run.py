@@ -1,8 +1,8 @@
 """A runnable script to launch Job Packing (Multiple) Rockets."""
 
 import os
-import sys
 from argparse import ArgumentParser
+from importlib import metadata
 from typing import Optional, Sequence
 
 from fireworks.core.fworker import FWorker
@@ -11,11 +11,6 @@ from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
 
 from ._helpers import _validate_config_file_paths
-
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"

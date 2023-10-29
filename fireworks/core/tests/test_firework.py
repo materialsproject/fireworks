@@ -9,6 +9,8 @@ __date__ = "2/26/14"
 
 import unittest
 
+import pytest
+
 from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
@@ -22,7 +24,7 @@ class FiretaskBaseTest(unittest.TestCase):
             def run_task(self, fw_spec):
                 return self["hello"]
 
-        with self.assertRaises(RuntimeError):
+        with pytest.raises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
         assert d.run_task({}) == "world"
@@ -33,7 +35,8 @@ class FiretaskBaseTest(unittest.TestCase):
             pass
 
         d = DummyTask2()
-        self.assertRaises(NotImplementedError, d.run_task, {})
+        with pytest.raises(NotImplementedError):
+            d.run_task({})
 
     def test_param_checks(self):
         class DummyTask(FiretaskBase):
@@ -41,8 +44,10 @@ class FiretaskBaseTest(unittest.TestCase):
             required_params = ["param1"]
             optional_params = ["param2"]
 
-        self.assertRaises(RuntimeError, DummyTask, param2=3)  # missing required param
-        self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)  # extraneous param
+        with pytest.raises(RuntimeError):
+            DummyTask(param2=3)  # missing required param
+        with pytest.raises(RuntimeError):
+            DummyTask(param1=3, param3=5)  # extraneous param
         DummyTask(param1=1)  # OK
         DummyTask(param1=1, param2=1)  # OK
 
@@ -100,8 +105,10 @@ class WorkflowTest(unittest.TestCase):
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
         assert isinstance(wf, Workflow)
-        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
-        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
+        with pytest.raises(ValueError):
+            Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
+        with pytest.raises(ValueError):
+            Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
     def test_copy(self):
         """Test that we can produce a copy of a Workflow but that the copy

@@ -3,17 +3,12 @@
 
 import json
 import os
-import sys
 import webbrowser
+from importlib import metadata
 
 import requests
 from invoke import task
 from monty.os import cd
-
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
 
 """
 Deployment file to facilitate releases.

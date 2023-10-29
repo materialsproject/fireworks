@@ -7,6 +7,8 @@ import time
 import unittest
 from multiprocessing import Pool
 
+import pytest
+
 from fireworks import FWAction, explicit_serialize
 from fireworks.core.firework import FiretaskBase, Firework, Workflow
 from fireworks.core.fworker import FWorker
@@ -472,8 +474,10 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
         self.lp.delete_wf(fw.fw_id)
-        self.assertRaises(ValueError, self.lp.get_fw_by_id, fw.fw_id)
-        self.assertRaises(ValueError, self.lp.get_launch_by_id, 1)
+        with pytest.raises(ValueError):
+            self.lp.get_fw_by_id(fw.fw_id)
+        with pytest.raises(ValueError):
+            self.lp.get_launch_by_id(1)
 
     def test_duplicate_delete_fw(self):
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
@@ -488,7 +492,8 @@ class MongoTests(unittest.TestCase):
         run_id = self.lp.get_launch_by_id(1).fw_id
         del_id = 1 if run_id == 2 else 2
         self.lp.delete_wf(del_id)
-        self.assertRaises(ValueError, self.lp.get_fw_by_id, del_id)
+        with pytest.raises(ValueError):
+            self.lp.get_fw_by_id(del_id)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 
     def test_dupefinder(self):
@@ -540,7 +545,8 @@ class MongoTests(unittest.TestCase):
         assert new_fw.spec["dummy2"] == [True]
 
         new_wf = Workflow([Firework([ModSpecTask()])])
-        self.assertRaises(ValueError, self.lp.append_wf, new_wf, [4], detour=True)
+        with pytest.raises(ValueError):
+            self.lp.append_wf(new_wf, [4], detour=True)
 
     def test_append_wf_detour(self):
         fw1 = Firework([ModSpecTask()], fw_id=1)

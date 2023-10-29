@@ -7,6 +7,8 @@ __date__ = "1/6/14"
 import os
 import unittest
 
+import pytest
+
 from fireworks.user_objects.firetasks.fileio_tasks import (
     ArchiveDirTask,
     CompressDirTask,
@@ -22,7 +24,8 @@ class FileWriteDeleteTest(unittest.TestCase):
     def test_init(self):
         FileWriteTask(files_to_write="hello")
         FileWriteTask({"files_to_write": "hello"})
-        self.assertRaises(RuntimeError, FileWriteTask)
+        with pytest.raises(RuntimeError):
+            FileWriteTask()
 
     def test_run(self):
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))

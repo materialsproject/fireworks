@@ -6,10 +6,10 @@ import datetime
 import json
 import os
 import re
-import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
-from typing import Any, Callable, Dict, List, Optional, Sequence, Union
+from importlib import metadata
+from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Union
 
 import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
@@ -35,13 +35,6 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 from ._helpers import _validate_config_file_paths
-
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-    from typing_extensions import Literal
-else:
-    from importlib import metadata
-    from typing import Literal
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -193,17 +186,15 @@ def init_yaml(args: Namespace) -> None:
 def reset(args: Namespace) -> None:
     lp = get_lp(args)
     if not args.password:
-        if (
-                input(
-                    f"Are you sure? This will RESET "
-                    f"{lp.workflows.count_documents({})} workflows and all "
-                    f"data. To confirm, please type the name of this database "
-                    f"({lp.name}) :") == lp.name
-        ):
+        n_docs = lp.workflows.count_documents({})
+        answer = input(
+            f"Are you sure? This will RESET {n_docs} workflows and all data. "
+            f"To confirm, please type the name of this database ({lp.name}) :"
+        )
+        if answer == lp.name:
             args.password = datetime.datetime.now().strftime("%Y-%m-%d")
         else:
-            raise ValueError(
-                "Incorrect input to confirm database reset, operation aborted.")
+            raise ValueError("Incorrect input to confirm database reset, operation aborted.")
     lp.reset(args.password)
 
 
@@ -1062,7 +1053,9 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     get_fw_parser.set_defaults(func=get_fws)
 
     get_fw_in_wf_parser = subparsers.add_parser(
-        "get_fws_in_wflows", help="get information about FireWorks in Workflows"
+        "get_fws_in_wflows",
+        help="get information about FireWorks in Workflows",
+        aliases=["get_fws_in_wfs"],
     )
 
     get_fw_in_wf_parser.add_argument(*wf_prefixed_fw_id_args, **fw_id_kwargs)
@@ -1204,7 +1197,11 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     )
     update_fws_parser.set_defaults(func=update_fws)
 
-    get_wf_parser = subparsers.add_parser("get_wflows", help="get information about Workflows")
+    get_wf_parser = subparsers.add_parser(
+        "get_wflows",
+        help="get information about Workflows",
+        aliases=["get_wfs"],
+    )
     get_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     get_wf_parser.add_argument("-n", "--name", help="get WFs with this name")
     get_wf_parser.add_argument(*state_args, **state_kwargs)
@@ -1236,7 +1233,11 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     )
     defuse_wf_parser.set_defaults(func=pause_wfs)
 
-    pause_wf_parser = subparsers.add_parser("pause_wflows", help="pause an entire Workflow")
+    pause_wf_parser = subparsers.add_parser(
+        "pause_wflows",
+        help="pause an entire Workflow",
+        aliases=["pause_wfs"],
+    )
     pause_wf_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     pause_wf_parser.add_argument("-n", "--name", help="name")
     pause_wf_parser.add_argument(*state_args, **state_kwargs)
@@ -1248,7 +1249,11 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     )
     pause_wf_parser.set_defaults(func=pause_wfs)
 
-    reignite_wfs_parser = subparsers.add_parser("reignite_wflows", help="reignite (un-cancel) an entire Workflow")
+    reignite_wfs_parser = subparsers.add_parser(
+        "reignite_wflows",
+        help="reignite (un-cancel) an entire Workflow",
+        aliases=["reignite_wfs"],
+    )
     reignite_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     reignite_wfs_parser.add_argument("-n", "--name", help="name")
     reignite_wfs_parser.add_argument(*state_args, **state_kwargs)
@@ -1260,7 +1265,11 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     )
     reignite_wfs_parser.set_defaults(func=reignite_wfs)
 
-    archive_parser = subparsers.add_parser("archive_wflows", help="archive an entire Workflow (irreversible)")
+    archive_parser = subparsers.add_parser(
+        "archive_wflows",
+        help="archive an entire Workflow (irreversible)",
+        aliases=["archive_wfs"],
+    )
     archive_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     archive_parser.add_argument("-n", "--name", help="name")
     archive_parser.add_argument(*state_args, **state_kwargs)
@@ -1275,6 +1284,7 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     delete_wfs_parser = subparsers.add_parser(
         "delete_wflows",
         help='Delete workflows (permanently). Use "archive_wflows" instead if you want to "soft-remove"',
+        aliases=["delete_wfs"],
     )
     delete_wfs_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     delete_wfs_parser.add_argument("-n", "--name", help="name")
