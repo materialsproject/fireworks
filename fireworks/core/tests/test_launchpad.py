@@ -32,7 +32,7 @@ from fireworks.core.tests.tasks import (
 from fireworks.queue.queue_launcher import setup_offline_job
 from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
 
-TESTDB_NAME = "fireworks_unittest"
+TEST_DB_NAME = "fireworks_unittest"
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 PYMONGO_MAJOR_VERSION = int(PYMONGO_VERSION[0])
 
@@ -75,7 +75,7 @@ class LaunchPadTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -83,7 +83,7 @@ class LaunchPadTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
         cls.lp.connection
 
     def setUp(self):
@@ -135,7 +135,7 @@ class LaunchPadTest(unittest.TestCase):
         self.lp.add_wf(fw)
         args = ("",)
         with pytest.raises(ValueError):
-            self.lp.add_wf(args)
+            self.lp.add_wf(*args)
 
     def test_add_wf(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
@@ -176,7 +176,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -184,7 +184,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         # define the individual FireWorks used in the Workflow
@@ -565,7 +565,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -573,7 +573,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         # Define a timed fireWork
@@ -707,7 +707,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -715,7 +715,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         # define the individual FireWorks used in the Workflow
@@ -1017,7 +1017,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -1025,7 +1025,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
@@ -1110,7 +1110,7 @@ class WFLockTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -1118,7 +1118,7 @@ class WFLockTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         # set the defaults in the init of wflock to break the lock quickly
@@ -1241,7 +1241,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -1249,7 +1249,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
@@ -1322,7 +1322,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         cls.lp = None
         cls.fworker = FWorker()
         try:
-            cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
+            cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -1330,7 +1330,7 @@ class GridfsStoredDataTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         if cls.lp:
-            cls.lp.connection.drop_database(TESTDB_NAME)
+            cls.lp.connection.drop_database(TEST_DB_NAME)
 
     def setUp(self):
         self.old_wd = os.getcwd()
