@@ -168,24 +168,24 @@ def start_rockets(
 
 def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     """
-    Parse node list and processor list from nodefile contents.
+    Parse node list and processor list from node file contents.
 
     Args:
         num_jobs (int): number of sub jobs
         total_node_list (list of str): the node list of the whole large job
-        ppn (int): number of procesors per node
+        ppn (int): number of processors per node
 
     Returns:
         (([int],[int])) the node list and processor list for each job
     """
     if total_node_list:
         orig_node_list = sorted(set(total_node_list))
-        nnodes = len(orig_node_list)
-        if nnodes % num_jobs != 0:
-            raise ValueError(f"can't allocate nodes, {nnodes} can't be divided by {num_jobs}")
-        sub_nnodes = nnodes // num_jobs
+        n_nodes = len(orig_node_list)
+        if n_nodes % num_jobs != 0:
+            raise ValueError(f"can't allocate nodes, {n_nodes} can't be divided by {num_jobs}")
+        sub_nnodes = n_nodes // num_jobs
         sub_nproc_list = [sub_nnodes * ppn] * num_jobs
-        node_lists = [orig_node_list[i : i + sub_nnodes] for i in range(0, nnodes, sub_nnodes)]
+        node_lists = [orig_node_list[i : i + sub_nnodes] for i in range(0, n_nodes, sub_nnodes)]
     else:
         sub_nproc_list = [ppn] * num_jobs
         node_lists = [None] * num_jobs
