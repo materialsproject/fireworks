@@ -135,7 +135,7 @@ class LaunchPadTest(unittest.TestCase):
         self.lp.add_wf(fw)
         args = ("",)
         with pytest.raises(ValueError):
-            self.lp.add_wf(*args)
+            self.lp.reset(*args)
 
     def test_add_wf(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")

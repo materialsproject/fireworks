@@ -300,6 +300,7 @@ epub_copyright = "2013, Anubhav Jain"
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {"http://docs.python.org/": None}
 
+
 # AJ: a hack found online to get __init__ to show up in docs
 def skip(app, what, name, obj, skip, options):
     if name == "__init__":

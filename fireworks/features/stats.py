@@ -61,7 +61,7 @@ class FWStats:
             query_end=query_end,
             query=query,
             time_field=time_field,
-            **args
+            **args,
         )
 
     def get_launch_summary(
@@ -72,7 +72,7 @@ class FWStats:
         query=None,
         runtime_stats=False,
         include_ids=False,
-        **args
+        **args,
     ):
         """
         Get launch summary for a specified time range.
@@ -104,7 +104,7 @@ class FWStats:
                 query=match_launch_id,
                 runtime_stats=runtime_stats,
                 include_ids=include_ids,
-                **args
+                **args,
             )
         return results
 
@@ -130,7 +130,7 @@ class FWStats:
             runtime_stats=False,
             allow_null_time=False,
             isoformat=False,
-            **args
+            **args,
         )
 
     def get_daily_completion_summary(self, query_start=None, query_end=None, query=None, time_field="time_end", **args):
@@ -155,7 +155,7 @@ class FWStats:
                 query_end=query_end,
                 query=match_launch_id,
                 return_query_only=True,
-                **args
+                **args,
             )
         summary_query[1]["$project"][time_field] = {"$substr": ["$" + time_field, 0, 10]}
         summary_query[2]["$group"]["_id"] = {time_field: "$" + time_field, "state": "$state"}
@@ -213,7 +213,7 @@ class FWStats:
         query=None,
         time_field="time_end",
         include_ids=True,
-        **args
+        **args,
     ):
         """
         Get days with higher failure ratio
@@ -262,7 +262,7 @@ class FWStats:
         return_query_only=False,
         allow_null_time=True,
         isoformat=True,
-        **args
+        **args,
     ):
         """
         Get a summary of Fireworks stats with a specified time range.
