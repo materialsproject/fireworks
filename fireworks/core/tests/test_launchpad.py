@@ -13,6 +13,7 @@ import time
 import unittest
 from multiprocessing import Process
 
+import pytest
 from monty.os import cd
 from pymongo import MongoClient
 from pymongo import __version__ as PYMONGO_VERSION
@@ -49,7 +50,7 @@ class AuthenticationTest(unittest.TestCase):
 
     def test_no_admin_privileges_for_plebs(self):
         """Normal users can not authenticate against the admin db."""
-        with self.assertRaises(OperationFailure):
+        with pytest.raises(OperationFailure):
             lp = LaunchPad(name="admin", username="myuser", password="mypassword", authsource="admin")
             lp.db.collection.count_documents({})
 
@@ -484,7 +485,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id)
         # Check if any fireworks and the workflow are available
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
         fw_ids = self.lp.get_fw_ids()
         assert not fw_ids
@@ -506,7 +507,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Delete workflow containing Zeus.
         self.lp.delete_wf(self.zeus_fw_id, delete_launch_dirs=True)
         # Check if any fireworks and the workflow are available
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             self.lp.get_wf_by_fw_id(self.zeus_fw_id)
         fw_ids = self.lp.get_fw_ids()
         assert not fw_ids

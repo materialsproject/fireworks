@@ -8,6 +8,8 @@ import os
 import unittest
 import uuid
 
+import pytest
+
 from fireworks import Firework, PyTask, Workflow
 
 
@@ -46,7 +48,7 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2, self.fw2: self.fw3, self.fw3: self.fw1})
         msg = "The workflow graph must be a DAG.: found cycles:"
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -56,7 +58,7 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2})
         msg = "The workflow graph must be connected"
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -66,7 +68,7 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: [self.fw2, self.fw3]})
         msg = "Every input in inputs list must have exactly one source."
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -83,7 +85,7 @@ class DAGFlowTest(unittest.TestCase):
             r"Every input in inputs list must have exactly one source.', 'step', "
             r"'pow(pow(2, 3), 4)', 'entity', 'exponent', 'sources', []"
         )
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -101,7 +103,7 @@ class DAGFlowTest(unittest.TestCase):
             r"'Every input in inputs list must have exactly one source.', 'step', "
             r"'pow(pow(2, 3), 4)', 'entity', 'first power', 'sources'"
         )
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -117,7 +119,7 @@ class DAGFlowTest(unittest.TestCase):
             r"'Every input in inputs list must have exactly one source.', 'step', "
             r"'the third one', 'entity', 'second power', 'sources', [0, 1]"
         )
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(wfl).check()
         assert msg in str(context.exception)
 
@@ -131,7 +133,7 @@ class DAGFlowTest(unittest.TestCase):
         ]
         fwk = Firework(tasks, spec={"exponent": 4, "first power 1": 8, "first power 2": 4})
         msg = "Several tasks may not use the same name in outputs list."
-        with self.assertRaises(AssertionError) as context:
+        with pytest.raises(AssertionError) as context:
             DAGFlow.from_fireworks(Workflow([fwk], {})).check()
         assert msg in str(context.exception)
 

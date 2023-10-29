@@ -9,6 +9,8 @@ __date__ = "2/26/14"
 
 import unittest
 
+import pytest
+
 from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
@@ -22,7 +24,7 @@ class FiretaskBaseTest(unittest.TestCase):
             def run_task(self, fw_spec):
                 return self["hello"]
 
-        with self.assertRaises(RuntimeError):
+        with pytest.raises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
         assert d.run_task({}) == "world"

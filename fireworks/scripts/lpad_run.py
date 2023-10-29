@@ -6,10 +6,10 @@ import datetime
 import json
 import os
 import re
-import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
-from typing import Any, Callable, Dict, List, Optional, Sequence, Union
+from importlib import metadata
+from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Union
 
 import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
@@ -35,13 +35,6 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 from ._helpers import _validate_config_file_paths
-
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-    from typing_extensions import Literal
-else:
-    from importlib import metadata
-    from typing import Literal
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"

@@ -3,6 +3,7 @@ __author__ = "Kiran Mathew, Johannes Hoermann"
 import os
 import unittest
 
+import pytest
 from ruamel.yaml import YAML
 
 from fireworks.user_objects.firetasks.filepad_tasks import (
@@ -133,7 +134,7 @@ class FilePadTasksTest(unittest.TestCase):
             dest_dir=dest_dir,
             new_file_names=["queried_test_file.txt"],
         )
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             t.run_task({})
         # test successful if exception raised
 
@@ -174,7 +175,7 @@ class FilePadTasksTest(unittest.TestCase):
         os.remove("degenerate_file.txt")
 
         t = GetFilesByQueryTask(query={"metadata->key": "value"}, fizzle_degenerate_file_name=True)
-        with self.assertRaises(ValueError):
+        with pytest.raises(ValueError):
             t.run_task({})
         # test successful if exception raised
 
