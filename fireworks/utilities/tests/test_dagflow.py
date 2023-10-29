@@ -48,9 +48,9 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2, self.fw2: self.fw3, self.fw3: self.fw1})
         msg = "The workflow graph must be a DAG.: found cycles:"
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_cut(self):
         """Disconnected graph."""
@@ -58,9 +58,9 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2})
         msg = "The workflow graph must be connected"
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_link(self):
         """Wrong links."""
@@ -68,9 +68,9 @@ class DAGFlowTest(unittest.TestCase):
 
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: [self.fw2, self.fw3]})
         msg = "Every input in inputs list must have exactly one source."
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_missing_input(self):
         """Missing input."""
@@ -85,9 +85,9 @@ class DAGFlowTest(unittest.TestCase):
             r"Every input in inputs list must have exactly one source.', 'step', "
             r"'pow(pow(2, 3), 4)', 'entity', 'exponent', 'sources', []"
         )
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_clashing_inputs(self):
         """Parent firework output overwrites an input in spec."""
@@ -103,9 +103,9 @@ class DAGFlowTest(unittest.TestCase):
             r"'Every input in inputs list must have exactly one source.', 'step', "
             r"'pow(pow(2, 3), 4)', 'entity', 'first power', 'sources'"
         )
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_race_condition(self):
         """Two parent firework outputs overwrite each other."""
@@ -119,9 +119,9 @@ class DAGFlowTest(unittest.TestCase):
             r"'Every input in inputs list must have exactly one source.', 'step', "
             r"'the third one', 'entity', 'second power', 'sources', [0, 1]"
         )
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(wfl).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_clashing_outputs(self):
         """Subsequent task overwrites output of a task."""
@@ -133,9 +133,9 @@ class DAGFlowTest(unittest.TestCase):
         ]
         fwk = Firework(tasks, spec={"exponent": 4, "first power 1": 8, "first power 2": 4})
         msg = "Several tasks may not use the same name in outputs list."
-        with pytest.raises(AssertionError) as context:
+        with pytest.raises(AssertionError) as exc:
             DAGFlow.from_fireworks(Workflow([fwk], {})).check()
-        assert msg in str(context.exception)
+        assert msg in str(exc.value)
 
     def test_dagflow_non_dataflow_tasks(self):
         """non-dataflow tasks using outputs and inputs keys do not fail."""
