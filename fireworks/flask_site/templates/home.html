@@ -17,18 +17,18 @@
 <div class="row pull-down">
     <div class="span6">
         <table class="table table-bordered">
-            <tr><th colspan="3"><a href="/wf">Newest Workflows</a></th></tr>
+            <tr><th colspan="3"><a href="{{ url_for('fw_webgui_main.home') }}wf">Newest Workflows</a></th></tr>
             {% for wf in wf_info %}
                 <tr>
                     <td>
                         <div class="row pull-down-sm">
                             <div class="span2">
-                                <a href="/wf/{{ wf.id }}"><strong>{{ wf.name }}</strong></a>
+                                <a href="{{ url_for('fw_webgui_main.home') }}wf/{{ wf.id }}"><strong>{{ wf.name }}</strong></a>
                             </div>
                             <div class="span3">
                                 <span class="label {{wf.state}}">{{wf.state}}</span>
                                 <span class="pull-right">
-                                    ID: <a href="/wf/{{ wf.id }}">{{ wf.id }}</a>
+                                    ID: <a href="{{ url_for('fw_webgui_main.home') }}wf/{{ wf.id }}">{{ wf.id }}</a>
                                 </span>
                             </div>
 
@@ -37,7 +37,7 @@
                         <div class="pull-up">
                             {% for fw  in wf.fireworks %}
                             <div>
-                                <small><a class="fw-link {{fw.state}}" href="/fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
+                                <small><a class="fw-link {{fw.state}}" href="{{ url_for('fw_webgui_main.home') }}fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
                             </div>
                             {% endfor %}
                         </div>
@@ -51,10 +51,10 @@
         {% if PLOTTING %}
         <div class="report_images">
             <div class="imgContainer">
-                <a href="/report/hours/12"><img src="/reports/fireworks/hours/12/fig.png" width="225px"></a>
+                <a href="{{ url_for('fw_webgui_main.home') }}report/hours/12"><img src="{{ url_for('fw_webgui_main.home') }}reports/fireworks/hours/12/fig.png" width="225px"></a>
             </div>
             <div class="imgContainer">
-                <a href="/report/days/7"><img src="/reports/fireworks/days/7/fig.png" width="225px"></a>
+                <a href="{{ url_for('fw_webgui_main.home') }}report/days/7"><img src="{{ url_for('fw_webgui_main.home') }}reports/fireworks/days/7/fig.png" width="225px"></a>
             </div>
         </div>
         {% else %}
@@ -66,8 +66,8 @@
             <tr><th colspan="3">Database snapshot</th></tr>
             <tr>
                 <th></th>
-                <th><a href="/fw">Fireworks</a></th>
-                <th><a href="/wf">Workflows</a></th>
+                <th><a href="{{ url_for('fw_webgui_main.home') }}fw">Fireworks</a></th>
+                <th><a href="{{ url_for('fw_webgui_main.home') }}wf">Workflows</a></th>
             </tr>
             {% for state, fw_num, wf_num in state_nums %}
                 <tr>
@@ -76,29 +76,29 @@
                             {{ state }}
                         </span>
                     </td>
-                    <td><center><a href="/fw/{{ state }}">{{ '{:,}'.format(fw_num) }}</a></center></td>
-                    <td><center><a href="/wf/{{ state }}">{{ '{:,}'.format(wf_num) }}</a></center></td>
+                    <td><center><a href="{{ url_for('fw_webgui_main.home') }}fw/{{ state }}">{{ '{:,}'.format(fw_num) }}</a></center></td>
+                    <td><center><a href="{{ url_for('fw_webgui_main.home') }}wf/{{ state }}">{{ '{:,}'.format(wf_num) }}</a></center></td>
                 </tr>
             {% endfor %}
             <tr>
                 <th><div align="right">TOTAL</div></th>
-                <td><center><a href="/fw">{{ '{:,}'.format(tot_fws) }}</a></center></td>
-                <td><center><a href="/wf">{{ '{:,}'.format(tot_wfs) }}</a></center></td>
+                <td><center><a href="{{ url_for('fw_webgui_main.home') }}fw">{{ '{:,}'.format(tot_fws) }}</a></center></td>
+                <td><center><a href="{{ url_for('fw_webgui_main.home') }}wf">{{ '{:,}'.format(tot_wfs) }}</a></center></td>
             </tr>
         </table>
 
         <hr />
         <h3>Summary Reports</h3>
-        <p>See a <a href="/dashboard">visual dashboard</a>.</p>
+        <p>See a <a href="{{ url_for('fw_webgui_main.home') }}dashboard">visual dashboard</a>.</p>
         <p>Get a report of all jobs for the past:</p>
         <ul>
-            <li><a href="/report/minutes/30">30 minutes</a></li>
-            <li><a href="/report/hours/24">24 hours</a></li>
-            <li><a href="/report/days/7">7 days</a></li>
-            <li><a href="/report/days/30">30 days</a></li>
-            <li><a href="/report/months/6">6 months</a></li>
-            <li><a href="/report/months/24">24 months</a></li>
-            <li><a href="/report/years/10">10 years</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/minutes/30">30 minutes</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/hours/24">24 hours</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/days/7">7 days</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/days/30">30 days</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/months/6">6 months</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/months/24">24 months</a></li>
+            <li><a href="{{ url_for('fw_webgui_main.home') }}report/years/10">10 years</a></li>
         </ul>
         <p>For more reporting options, use the "lpad report --help" command line tool.</p>
 
