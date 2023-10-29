@@ -5,6 +5,8 @@ completed properly.
 
 import unittest
 
+import pytest
+
 from fireworks import Firework, FWAction
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
@@ -52,7 +54,8 @@ class BasicTests(unittest.TestCase):
             fw2.fw_id: [fw3.fw_id],
             fw3.fw_id: [],
         }
-        self.assertRaises(ValueError, Workflow, [fw1, fw3])  # can't make this
+        with pytest.raises(ValueError):
+            Workflow([fw1, fw3])  # can't make this
 
 
 class SerializationTests(unittest.TestCase):

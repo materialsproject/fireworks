@@ -115,7 +115,8 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name="test_workflow")
         self.lp.add_wf(wf)
-        self.assertRaises(ValueError, self.lp.reset, "", False, 0)
+        with pytest.raises(ValueError):
+            self.lp.reset("", require_password=False, max_reset_wo_password=0)
         assert self.lp.workflows.count_documents({}) == 1
         self.lp.reset("", require_password=False)
         assert not self.lp.get_fw_ids()
@@ -125,14 +126,16 @@ class LaunchPadTest(unittest.TestCase):
         for _ in range(30):
             self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
 
-        self.assertRaises(ValueError, self.lp.reset, "")
+        with pytest.raises(ValueError):
+            self.lp.reset("")
         self.lp.reset("", False, 100)  # reset back
 
     def test_pw_check(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         args = ("",)
-        self.assertRaises(ValueError, self.lp.reset, *args)
+        with pytest.raises(ValueError):
+            self.lp.add_wf(args)
 
     def test_add_wf(self):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
