@@ -25,7 +25,6 @@ Some advantages:
         their fw_name (if no parameters are needed to describe the object)
 
 """
-
 import abc
 import datetime
 import importlib
@@ -34,7 +33,8 @@ import json  # note that ujson is faster, but at this time does not support "def
 import pkgutil
 import traceback
 
-import ruamel.yaml as yaml
+from ruamel.yaml import YAML
+from ruamel.yaml.compat import StringIO
 from monty.json import MontyDecoder, MSONable
 
 from fireworks.fw_config import (
@@ -235,8 +235,12 @@ class FWSerializable(metaclass=abc.ABCMeta):
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         if f_format == "yaml":
-            # start with the JSON format, and convert to YAML
-            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
+            yaml = YAML(typ="safe", pure=True)
+            yaml.default_flow_style = YAML_STYLE
+            yaml.allow_unicode = True
+            strm = StringIO()
+            yaml.dump(self.to_dict(), strm)
+            return strm.getvalue()
         raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
@@ -254,7 +258,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
         if f_format == "json":
             dct = json.loads(f_str)
         elif f_format == "yaml":
-            dct = yaml.safe_load(f_str)
+            dct = YAML(typ="safe", pure=True).load(f_str)
         else:
             raise ValueError(f"Unsupported format {f_format}")
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
@@ -271,8 +275,16 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "w", **ENCODING_PARAMS) as f:
-            f.write(self.to_format(f_format=f_format, **kwargs))
+        with open(filename, "w", **ENCODING_PARAMS) as f_out:
+            if f_format == "json":
+                json.dump(self.to_dict(), f_out, default=DATETIME_HANDLER, **kwargs)
+            elif f_format == "yaml":
+                yaml = YAML(typ="safe", pure=True)
+                yaml.default_flow_style = YAML_STYLE
+                yaml.allow_unicode = True
+                yaml.dump(self.to_dict(), f_out)
+            else:
+                raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
     def from_file(cls, filename, f_format=None):
@@ -387,7 +399,7 @@ def load_object_from_file(filename, f_format=None):
         if f_format == "json":
             dct = json.loads(f.read())
         elif f_format == "yaml":
-            dct = yaml.safe_load(f)
+            dct = YAML(typ="safe", pure=True).load(f.read())
         else:
             raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 

@@ -6,6 +6,8 @@ __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
 import sys
 
+from ruamel.yaml import YAML
+
 from fireworks import Firework
 from fireworks.core.firework import FiretaskBase, FWAction
 from fireworks.utilities.fw_serializers import load_object
@@ -300,7 +302,7 @@ class ForeachTask(FiretaskBase):
         chunklen = lensplit // nchunks
         if lensplit % nchunks > 0:
             chunklen = chunklen + 1
-        chunks = [split_field[i : i + chunklen] for i in range(0, lensplit, chunklen)]
+        chunks = [split_field[i:i+chunklen] for i in range(0, lensplit, chunklen)]
 
         fireworks = []
         for index, chunk in enumerate(chunks):
@@ -381,8 +383,6 @@ class ImportDataTask(FiretaskBase):
         import operator
         from functools import reduce
 
-        import ruamel.yaml as yaml
-
         filename = self["filename"]
         mapstring = self["mapstring"]
         assert isinstance(filename, basestring)
@@ -392,7 +392,7 @@ class ImportDataTask(FiretaskBase):
         fmt = filename.split(".")[-1]
         assert fmt in ["json", "yaml"]
         with open(filename) as inp:
-            data = json.load(inp) if fmt == "json" else yaml.safe_load(inp)
+            data = json.load(inp) if fmt == "json" else YAML(typ="safe", pure=True).load(inp)
 
         leaf = reduce(operator.getitem, maplist[:-1], fw_spec)
         if isinstance(data, dict):
