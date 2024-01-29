@@ -6,12 +6,14 @@ import datetime
 import json
 import os
 import re
+import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from importlib import metadata
 from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Union
 
-import ruamel.yaml as yaml
+from ruamel.yaml import YAML
+
 from pymongo import ASCENDING, DESCENDING
 
 from fireworks import FW_INSTALL_DIR
@@ -260,8 +262,7 @@ def print_fws(ids, lp, args: Namespace) -> None:
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
-
-    print(args.output(fws))
+    get_output(args, fws)
 
 
 def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, None] = None) -> Union[List[int], int]:
@@ -343,7 +344,7 @@ def get_fws(args: Namespace) -> None:
     lp = get_lp(args)
     ids = get_fw_ids_helper(lp, args)
     fws = get_fws_helper(lp, ids, args)
-    print(args.output(fws))
+    get_output(args, fws)
 
 
 def get_fws_in_wfs(args: Namespace) -> None:
@@ -467,7 +468,7 @@ def get_wfs(args: Namespace) -> None:
     else:
         if len(wfs) == 1:
             wfs = wfs[0]
-        print(args.output(wfs))
+        get_output(args, wfs)
 
 
 def delete_wfs(args: Namespace) -> None:
@@ -852,13 +853,18 @@ def orphaned(args: Namespace) -> None:
         lp.m_logger.info(f"Found {len(orphaned_fw_ids)} orphaned fw_ids: {orphaned_fw_ids}")
         lp.delete_fws(orphaned_fw_ids, delete_launch_dirs=args.delete_launch_dirs)
     else:
-        print(args.output(fws))
+        get_output(args, fws)
 
 
-def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
-    if format == "json":
-        return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
-    return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+def get_output(args: Namespace, objs: List[Any]) -> None:
+    """prints output on stdout"""
+    if args.output == "json":
+        json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
+    else:
+        yaml = YAML(typ='safe', pure=True)
+        yaml.default_flow_style = False
+        yaml.dump(recursive_dict(objs, preserve_unicode=False), sys.stdout)
+    print()
 
 
 def arg_positive_int(value: str) -> int:
@@ -1538,8 +1544,6 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     if hasattr(args, "fworker_file"):
         cfg_files_to_check.append(("fworker", "-w", False, FWORKER_LOC))
     _validate_config_file_paths(args, cfg_files_to_check)
-
-    args.output = get_output_func(args.output)
 
     if args.command is None:
         # if no command supplied, print help
