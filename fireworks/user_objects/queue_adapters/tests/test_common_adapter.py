@@ -7,6 +7,7 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "12/31/13"
 
+import sys
 import unittest
 
 from ruamel.yaml import YAML
@@ -45,7 +46,8 @@ class CommonAdapterTest(unittest.TestCase):
         print(p.get_script_str("."))
         yaml = YAML(typ="safe", pure=True)
         yaml.default_flow_style = False
-        print(yaml.dump(p.to_dict()))
+        yaml.dump(p.to_dict(), sys.stdout)
+        print()
 
     def test_parse_njobs(self):
         pbs = """
