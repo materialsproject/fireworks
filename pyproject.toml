@@ -43,9 +43,10 @@ ignore = [
   "D105",    # Missing docstring in magic method
   "D205",    # 1 blank line required between summary line and description
   "D212",    # Multi-line docstring summary should start at the first line
+  "FA100",   # future-rewritable-type-annotation
   "PD901",   # pandas-df-variable-name
   "PERF203", # try-except-in-loop
-  # "PERF401", # manual-list-comprehension (TODO fix these or wait for autofix)
+  "PERF401", # manual-list-comprehension (TODO fix these or wait for autofix)
   "PLR",     # pylint refactor
   "PLW2901", # Outer for loop variable overwritten by inner assignment target
   "PT013",   # pytest-incorrect-pytest-import

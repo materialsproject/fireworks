@@ -150,7 +150,8 @@ class Rocket:
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            print(f"No FireWorks are ready to run and match query! {self.fworker.query}")
+            msg = f"No FireWorks are ready to run and match query! {self.fworker.query}"
+            l_logger.log(logging.INFO, msg)
             return False
 
         final_state = None
