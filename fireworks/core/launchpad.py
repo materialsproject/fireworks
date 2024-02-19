@@ -15,8 +15,10 @@ import gridfs
 from bson import ObjectId
 from monty.os.path import zpath
 from monty.serialization import loadfn
-from pymongo import ASCENDING, DESCENDING, MongoClient
+from pymongo import ASCENDING, DESCENDING
 from pymongo.errors import DocumentTooLarge
+from mongomock import MongoClient
+import mongomock.gridfs
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
@@ -42,6 +44,8 @@ __date__ = "Jan 30, 2013"
 
 
 # TODO: lots of duplication reduction and cleanup possible
+
+mongomock.gridfs.enable_gridfs_integration()
 
 
 def sort_aggregation(sort):

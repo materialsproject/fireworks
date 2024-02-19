@@ -10,7 +10,9 @@ import gridfs
 import pymongo
 from monty.json import MSONable
 from monty.serialization import loadfn
-from pymongo import MongoClient
+
+import mongomock.gridfs
+from mongomock import MongoClient
 
 from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -18,6 +20,8 @@ from fireworks.utilities.fw_utilities import get_fw_logger
 __author__ = "Kiran Mathew"
 __email__ = "kmathew@lbl.gov"
 __credits__ = "Anubhav Jain"
+
+mongomock.gridfs.enable_gridfs_integration()
 
 
 class FilePad(MSONable):
