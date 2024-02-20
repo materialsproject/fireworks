@@ -15,9 +15,10 @@ import gridfs
 from bson import ObjectId
 from monty.os.path import zpath
 from monty.serialization import loadfn
+import pymongo
 from pymongo import ASCENDING, DESCENDING
 from pymongo.errors import DocumentTooLarge
-from mongomock import MongoClient
+import mongomock
 import mongomock.gridfs
 from tqdm import tqdm
 
@@ -27,6 +28,7 @@ from fireworks.fw_config import (
     LAUNCHPAD_LOC,
     MAINTAIN_INTERVAL,
     MONGO_SOCKET_TIMEOUT_MS,
+    MONGOMOCK_SERVERSTORE_FILE,
     RESERVATION_EXPIRATION_SECS,
     RUN_EXPIRATION_SECS,
     SORT_FWS,
@@ -44,8 +46,6 @@ __date__ = "Jan 30, 2013"
 
 
 # TODO: lots of duplication reduction and cleanup possible
-
-mongomock.gridfs.enable_gridfs_integration()
 
 
 def sort_aggregation(sort):
@@ -199,14 +199,22 @@ class LaunchPad(FWSerializable):
         self.user_indices = user_indices if user_indices else []
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
+        if MONGOMOCK_SERVERSTORE_FILE:
+            os.environ['MONGOMOCK_SERVERSTORE_FILE'] = MONGOMOCK_SERVERSTORE_FILE
+            mongoclient_cls = getattr(mongomock, 'MongoClient')
+            if GRIDFS_FALLBACK_COLLECTION:
+                mongomock.gridfs.enable_gridfs_integration()
+        else:
+            mongoclient_cls = getattr(pymongo, 'MongoClient')
+
         # get connection
         if uri_mode:
-            self.connection = MongoClient(host, **self.mongoclient_kwargs)
+            self.connection = mongoclient_cls(host, **self.mongoclient_kwargs)
             if self.name is None:
                 raise ValueError("Must specify a database name when using a MongoDB URI string.")
             self.db = self.connection[self.name]
         else:
-            self.connection = MongoClient(
+            self.connection = mongoclient_cls(
                 self.host,
                 self.port,
                 socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
