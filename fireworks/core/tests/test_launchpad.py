@@ -15,7 +15,6 @@ from multiprocessing import Process
 
 import pytest
 from monty.os import cd
-from mongomock import MongoClient
 from pymongo import __version__ as PYMONGO_VERSION
 from pymongo.errors import OperationFailure
 
@@ -43,7 +42,7 @@ class AuthenticationTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         try:
-            client = MongoClient()
+            client = fireworks.fw_config.MongoClient()
             client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")

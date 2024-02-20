@@ -5,6 +5,9 @@ from typing import Any, Dict, Optional
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
+import pymongo
+import mongomock
+import mongomock.gridfs
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -105,6 +108,9 @@ GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
 # path to a database file to use with mongomock, do not use mongomock if None
 MONGOMOCK_SERVERSTORE_FILE = None
 
+# default mongoclient class
+MongoClient = pymongo.MongoClient
+
 
 def override_user_settings() -> None:
     module_dir = os.path.dirname(os.path.abspath(__file__))
@@ -155,6 +161,15 @@ def override_user_settings() -> None:
 
             if len(m_paths) > 0:
                 globals()[k] = m_paths[0]
+
+    if 'MONGOMOCK_SERVERSTORE_FILE' in os.environ:
+        globals()['MONGOMOCK_SERVERSTORE_FILE'] = os.environ['MONGOMOCK_SERVERSTORE_FILE']
+    if globals()['MONGOMOCK_SERVERSTORE_FILE']:
+        if not os.environ.get('MONGOMOCK_SERVERSTORE_FILE'):
+            os.environ['MONGOMOCK_SERVERSTORE_FILE'] = globals()['MONGOMOCK_SERVERSTORE_FILE']
+        globals()['MongoClient'] = getattr(mongomock, 'MongoClient')
+        if globals()['GRIDFS_FALLBACK_COLLECTION']:
+            mongomock.gridfs.enable_gridfs_integration()
 
 
 override_user_settings()

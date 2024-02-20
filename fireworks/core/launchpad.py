@@ -15,20 +15,17 @@ import gridfs
 from bson import ObjectId
 from monty.os.path import zpath
 from monty.serialization import loadfn
-import pymongo
 from pymongo import ASCENDING, DESCENDING
 from pymongo.errors import DocumentTooLarge
-import mongomock
-import mongomock.gridfs
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
+from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
     MAINTAIN_INTERVAL,
     MONGO_SOCKET_TIMEOUT_MS,
-    MONGOMOCK_SERVERSTORE_FILE,
     RESERVATION_EXPIRATION_SECS,
     RUN_EXPIRATION_SECS,
     SORT_FWS,
@@ -199,22 +196,14 @@ class LaunchPad(FWSerializable):
         self.user_indices = user_indices if user_indices else []
         self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
-        if MONGOMOCK_SERVERSTORE_FILE:
-            os.environ['MONGOMOCK_SERVERSTORE_FILE'] = MONGOMOCK_SERVERSTORE_FILE
-            mongoclient_cls = getattr(mongomock, 'MongoClient')
-            if GRIDFS_FALLBACK_COLLECTION:
-                mongomock.gridfs.enable_gridfs_integration()
-        else:
-            mongoclient_cls = getattr(pymongo, 'MongoClient')
-
         # get connection
         if uri_mode:
-            self.connection = mongoclient_cls(host, **self.mongoclient_kwargs)
+            self.connection = MongoClient(host, **self.mongoclient_kwargs)
             if self.name is None:
                 raise ValueError("Must specify a database name when using a MongoDB URI string.")
             self.db = self.connection[self.name]
         else:
-            self.connection = mongoclient_cls(
+            self.connection = MongoClient(
                 self.host,
                 self.port,
                 socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
@@ -423,7 +412,7 @@ class LaunchPad(FWSerializable):
 
         """
         # Make all fireworks workflows
-        wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
+        wfs = [Workflow.from_Firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum(len(wf) for wf in wfs)
