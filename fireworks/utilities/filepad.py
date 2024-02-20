@@ -7,11 +7,12 @@ import os
 import zlib
 
 import gridfs
-import pymongo
+from pymongo import DESCENDING
 from monty.json import MSONable
 from monty.serialization import loadfn
-from pymongo import MongoClient
+from bson.objectid import ObjectId
 
+from fireworks.fw_config import MongoClient
 from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -176,7 +177,7 @@ class FilePad(MSONable):
         doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._get_file_contents(doc)
 
-    def get_file_by_query(self, query, sort_key=None, sort_direction=pymongo.DESCENDING):
+    def get_file_by_query(self, query, sort_key=None, sort_direction=DESCENDING):
         """
 
         Args:
@@ -289,8 +290,6 @@ class FilePad(MSONable):
         Returns:
             (str, dict): the file content as a string, document dictionary
         """
-        from bson.objectid import ObjectId
-
         if doc:
             gfs_id = doc["gfs_id"]
             file_contents = self.gridfs.get(ObjectId(gfs_id)).read()
