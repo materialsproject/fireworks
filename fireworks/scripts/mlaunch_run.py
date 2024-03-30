@@ -92,7 +92,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
         if args.nodefile in os.environ:
             args.nodefile = os.environ[args.nodefile]
         with open(args.nodefile) as f:
-            total_node_list = [line.strip() for line in f.readlines()]
+            total_node_list = [line.strip() for line in f]
 
     launch_multiprocess(
         launchpad,

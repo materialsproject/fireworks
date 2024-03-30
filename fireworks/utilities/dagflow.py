@@ -69,7 +69,7 @@ class DAGFlow(Graph):
             step = {}
             step["name"] = fwk["name"]
             step["id"] = fwk["fw_id"]
-            step["state"] = fwk["state"] if "state" in fwk else None
+            step["state"] = fwk.get("state", None)
             steps.append(step)
 
         links = []
@@ -108,7 +108,7 @@ class DAGFlow(Graph):
 
             step_data = []
             for task in step["_tasks"]:
-                true_task = task["task"] if "task" in task else task
+                true_task = task.get("task", task)
                 step_data.extend(task_input(true_task, fwk["spec"]))
                 if "outputs" in true_task:
                     assert isinstance(true_task["outputs"], list), "outputs must be a list in fw_id " + str(step["id"])
@@ -211,7 +211,7 @@ class DAGFlow(Graph):
             step[item] = []
             for task in step["_tasks"]:
                 # test the case of meta-tasks
-                true_task = task["task"] if "task" in task else task
+                true_task = task.get("task", task)
                 if item in true_task:
                     if isinstance(true_task[item], list):
                         step[item].extend(true_task[item])

@@ -150,7 +150,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: Optional[Dict[str, Any]] = None, wf_sh
                 if idx == 0:
                     subgraph.edge(str(fw.fw_id), node_id)
                 else:
-                    subgraph.edge(f"{fw.fw_id}-{idx-1}", node_id)
+                    subgraph.edge(f"{fw.fw_id}-{idx - 1}", node_id)
 
             dag.subgraph(subgraph)
 

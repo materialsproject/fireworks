@@ -94,7 +94,7 @@ class Introspector:
             coll = "fireworks"
             state_key = "spec"
 
-        elif coll.lower() in ["tasks"]:
+        elif coll.lower() == "tasks":
             coll = "fireworks"
             state_key = "spec._tasks"
 
@@ -102,7 +102,7 @@ class Introspector:
             coll = "workflows"
             state_key = "metadata"
 
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             coll = "launches"
             state_key = "action.stored_data._exception._stacktrace"
 
@@ -174,11 +174,11 @@ class Introspector:
     def print_report(table, coll):
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"
-        elif coll.lower() in ["tasks"]:
+        elif coll.lower() == "tasks":
             header_txt = "fireworks.spec._tasks"
         elif coll.lower() in ["wflows", "workflows"]:
             header_txt = "workflows.metadata"
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             header_txt = "launches.actions.stored_data._exception._stacktrace"
 
         header_txt = f"Introspection report for {header_txt}"
@@ -192,4 +192,4 @@ class Introspector:
             for row in table:
                 print(f"----{row[3]} Failures have the following stack trace--------------")
                 print(row[1])
-                print("")
+                print()

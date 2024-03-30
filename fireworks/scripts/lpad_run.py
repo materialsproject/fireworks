@@ -793,10 +793,10 @@ def introspect(args: Namespace) -> None:
     isp = Introspector(lp)
     for coll in ["launches", "tasks", "fireworks", "workflows"]:
         print(f"generating report for {coll}...please wait...")
-        print("")
+        print()
         table = isp.introspect_fizzled(coll=coll, threshold=args.threshold, limit=args.max)
         isp.print_report(table, coll)
-        print("")
+        print()
 
 
 def get_launchdir(args: Namespace) -> None:
@@ -817,8 +817,7 @@ def track_fws(args: Namespace) -> None:
         for d in data:
             for t in d["trackers"]:
                 if (not include or t.filename in include) and (not exclude or t.filename not in exclude):
-                    output.append(f"## Launch id: {d['launch_id']}")
-                    output.append(str(t))
+                    output.extend((f"## Launch id: {d['launch_id']}", str(t)))
         if output:
             name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})["name"]
             output.insert(0, f"# FW id: {f}, FW name: {name}")
@@ -856,7 +855,7 @@ def orphaned(args: Namespace) -> None:
 
 
 def get_output(args: Namespace, objs: List[Any]) -> None:
-    """prints output on stdout"""
+    """Prints output on stdout"""
     if args.output == "json":
         json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
     else:

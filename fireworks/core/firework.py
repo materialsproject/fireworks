@@ -34,7 +34,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 5, 2013"
 
 
-class FiretaskBase(defaultdict, FWSerializable, metaclass=abc.ABCMeta):
+class FiretaskBase(defaultdict, FWSerializable, abc.ABC):
     """
     FiretaskBase is used like an abstract class that defines a computing task
     (Firetask). All Firetasks should inherit from FiretaskBase.

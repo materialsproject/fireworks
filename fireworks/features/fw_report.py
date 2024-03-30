@@ -54,7 +54,7 @@ class FWReport:
         # initialize collection
         if coll.lower() in ["fws", "fireworks"]:
             coll = "fireworks"
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             coll = "launches"
         elif coll.lower() in ["wflows", "workflows"]:
             coll = "workflows"
@@ -75,29 +75,27 @@ class FWReport:
             date_q = {"$gte": start_time.isoformat()} if string_type_dates else {"$gte": start_time}
             match_q.update({time_field: date_q})
 
-        pipeline.append({"$match": match_q})
-        pipeline.append(
-            {"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}}
+        pipeline.extend(
+            (
+                {"$match": match_q},
+                {"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}},
+                {
+                    "$group": {
+                        "_id": {"state:": "$state", "date_key": "$date_key"},
+                        "count": {"$sum": 1},
+                        "state": {"$first": "$state"},
+                    }
+                },
+                {
+                    "$group": {
+                        "_id": {"_id_date_key": "$_id.date_key"},
+                        "date_key": {"$first": "$_id.date_key"},
+                        "states": {"$push": {"count": "$count", "state": "$state"}},
+                    }
+                },
+                {"$sort": {"date_key": -1}},
+            )
         )
-        pipeline.append(
-            {
-                "$group": {
-                    "_id": {"state:": "$state", "date_key": "$date_key"},
-                    "count": {"$sum": 1},
-                    "state": {"$first": "$state"},
-                }
-            }
-        )
-        pipeline.append(
-            {
-                "$group": {
-                    "_id": {"_id_date_key": "$_id.date_key"},
-                    "date_key": {"$first": "$_id.date_key"},
-                    "states": {"$push": {"count": "$count", "state": "$state"}},
-                }
-            }
-        )
-        pipeline.append({"$sort": {"date_key": -1}})
 
         # add in missing states and more fields
         decorated_list = []
