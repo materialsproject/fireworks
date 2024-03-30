@@ -1,9 +1,11 @@
 """A runnable script to launch Job Packing (Multiple) Rockets."""
 
+from __future__ import annotations
+
 import os
 from argparse import ArgumentParser
 from importlib import metadata
-from typing import Optional, Sequence
+from typing import Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -19,7 +21,7 @@ __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
 
 
-def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def mlaunch(argv: Sequence[str] | None = None) -> int:
     m_description = "This program launches multiple Rockets simultaneously"
 
     parser = ArgumentParser("mlaunch", description=m_description)

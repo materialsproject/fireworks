@@ -1,4 +1,6 @@
-from typing import Any, Dict, Optional
+from __future__ import annotations
+
+from typing import Any
 
 from monty.dev import requires
 
@@ -98,7 +100,7 @@ def plot_wf(
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow, dag_kwargs: Optional[Dict[str, Any]] = None, wf_show_tasks: bool = True) -> Digraph:
+def wf_to_graph(wf: Workflow, dag_kwargs: dict[str, Any] | None = None, wf_show_tasks: bool = True) -> Digraph:
     """Renders a graph representation of a workflow or firework. Workflows are rendered as the
     control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.
 

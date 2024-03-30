@@ -1,5 +1,6 @@
+from __future__ import annotations
+
 from datetime import datetime
-from typing import List
 
 from dateutil.relativedelta import relativedelta
 
@@ -181,7 +182,7 @@ class FWReport:
         return fig
 
     @staticmethod
-    def get_stats_str(decorated_stat_list: List[dict]) -> str:
+    def get_stats_str(decorated_stat_list: list[dict]) -> str:
         """
         Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 

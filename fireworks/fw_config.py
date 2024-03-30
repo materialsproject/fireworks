@@ -1,7 +1,9 @@
 """A set of global constants for FireWorks (Python code as a config file)."""
 
+from __future__ import annotations
+
 import os
-from typing import Any, Dict, Optional
+from typing import Any
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
@@ -157,7 +159,7 @@ def override_user_settings() -> None:
 override_user_settings()
 
 
-def config_to_dict() -> Dict[str, Any]:
+def config_to_dict() -> dict[str, Any]:
     d = {}
     for k, v in globals().items():
         if k.upper() == k and k != "NEGATIVE_FWID_CTR":
@@ -165,7 +167,7 @@ def config_to_dict() -> Dict[str, Any]:
     return d
 
 
-def write_config(path: Optional[str] = None) -> None:
+def write_config(path: str | None = None) -> None:
     if path is None:
         path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)

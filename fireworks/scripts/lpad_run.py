@@ -1,5 +1,7 @@
 """A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)."""
 
+from __future__ import annotations
+
 import ast
 import copy
 import datetime
@@ -10,7 +12,7 @@ import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from importlib import metadata
-from typing import Any, Dict, List, Optional, Sequence, Union
+from typing import Any, Sequence
 
 from pymongo import ASCENDING, DESCENDING
 from ruamel.yaml import YAML
@@ -47,7 +49,7 @@ __date__ = "Feb 7, 2013"
 DEFAULT_LPAD_YAML = "my_launchpad.yaml"
 
 
-def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int]:
+def pw_check(ids: list[int], args: Namespace, skip_pw: bool = False) -> list[int]:
     if len(ids) > PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
         if not args.password:
@@ -63,7 +65,7 @@ def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int
     return ids
 
 
-def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> List[int]:
+def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> list[int]:
     """
     Helper method to parse args that can take either id, name, state or query.
 
@@ -161,7 +163,7 @@ def init_yaml(args: Namespace) -> None:
             ),
         )
 
-    doc: Dict[str, Union[str, int, bool, None]] = {}
+    doc: dict[str, str | int | bool | None] = {}
     if args.uri_mode:
         print(
             "Note 1: You are in URI format mode. This means that all database parameters (username, password, host, "
@@ -264,7 +266,7 @@ def print_fws(ids, lp, args: Namespace) -> None:
     get_output(args, fws)
 
 
-def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, None] = None) -> Union[List[int], int]:
+def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: bool | None = None) -> list[int] | int:
     """Build fws query from command line options and submit.
 
     Parameters:
@@ -316,8 +318,8 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
 
 
 def get_fws_helper(
-    lp: LaunchPad, ids: List[int], args: Namespace
-) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
+    lp: LaunchPad, ids: list[int], args: Namespace
+) -> list[int] | int | list[dict[str, str | int | bool]] | str | bool:
     """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == "ids":
@@ -854,7 +856,7 @@ def orphaned(args: Namespace) -> None:
         get_output(args, fws)
 
 
-def get_output(args: Namespace, objs: List[Any]) -> None:
+def get_output(args: Namespace, objs: list[Any]) -> None:
     """Prints output on stdout"""
     if args.output == "json":
         json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
@@ -876,7 +878,7 @@ def arg_positive_int(value: str) -> int:
     return ivalue
 
 
-def lpad(argv: Optional[Sequence[str]] = None) -> int:
+def lpad(argv: Sequence[str] | None = None) -> int:
     m_description = (
         "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
