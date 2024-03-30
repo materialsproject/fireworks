@@ -5,6 +5,8 @@ import unittest
 import uuid
 from unittest import SkipTest
 
+from ruamel.yaml import YAML
+
 from fireworks.user_objects.firetasks.dataflow_tasks import (
     CommandLineTask,
     ForeachTask,
@@ -293,11 +295,9 @@ class ImportDataTaskTest(unittest.TestCase):
         """Loads data from a file into spec."""
         import json
 
-        import ruamel.yaml as yaml
-
         temperature = {"value": 273.15, "units": "Kelvin"}
         spec = {"state parameters": {}}
-        formats = {"json": json, "yaml": yaml}
+        formats = {"json": json, "yaml": YAML(typ="safe", pure=True)}
         params = {"mapstring": "state parameters/temperature"}
         for fmt in formats:
             filename = str(uuid.uuid4()) + "." + fmt

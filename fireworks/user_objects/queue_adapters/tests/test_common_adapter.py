@@ -7,7 +7,10 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "12/31/13"
 
+import sys
 import unittest
+
+from ruamel.yaml import YAML
 
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter, os
 from fireworks.utilities.fw_serializers import load_object, load_object_from_file
@@ -41,9 +44,10 @@ class CommonAdapterTest(unittest.TestCase):
         p = load_object_from_file(os.path.join(os.path.dirname(__file__), "pbs.yaml"))
         p = CommonAdapter(q_type="PBS", q_name="hello", ppnode="8:ib", nnodes=1, hello="world", queue="random")
         print(p.get_script_str("."))
-        import ruamel.yaml as yaml
-
-        print(yaml.safe_dump(p.to_dict(), default_flow_style=False))
+        yaml = YAML(typ="safe", pure=True)
+        yaml.default_flow_style = False
+        yaml.dump(p.to_dict(), sys.stdout)
+        print()
 
     def test_parse_njobs(self):
         pbs = """
