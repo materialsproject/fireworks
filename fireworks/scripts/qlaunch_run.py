@@ -1,4 +1,5 @@
 """A runnable script for launching rockets (a command-line interface to queue_launcher.py)."""
+
 import os
 import time
 from argparse import ArgumentParser

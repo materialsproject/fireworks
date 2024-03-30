@@ -1,6 +1,5 @@
 """TODO: Modify unittest doc."""
 
-
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
 __maintainer__ = "Shyue Ping Ong"

@@ -10,11 +10,10 @@ import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from importlib import metadata
-from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Union
-
-from ruamel.yaml import YAML
+from typing import Any, Dict, List, Optional, Sequence, Union
 
 from pymongo import ASCENDING, DESCENDING
+from ruamel.yaml import YAML
 
 from fireworks import FW_INSTALL_DIR
 from fireworks.core.firework import Firework, Workflow
@@ -861,7 +860,7 @@ def get_output(args: Namespace, objs: List[Any]) -> None:
     if args.output == "json":
         json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
     else:
-        yaml = YAML(typ='safe', pure=True)
+        yaml = YAML(typ="safe", pure=True)
         yaml.default_flow_style = False
         yaml.dump(recursive_dict(objs, preserve_unicode=False), sys.stdout)
     print()

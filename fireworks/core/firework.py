@@ -7,6 +7,7 @@ This module contains some of the most central FireWorks classes.
 - A FiretaskBase defines the contract for tasks that run within a Firework (Firetasks).
 - A FWAction encapsulates the output of a Firetask and tells FireWorks what to do next after a job completes.
 """
+
 import abc
 import os
 import pprint

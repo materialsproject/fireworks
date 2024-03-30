@@ -60,7 +60,7 @@ def plot_wf(
     # the rest
     for k in keys:
         for i, j in enumerate(wf.links[k]):
-            if not points_map.get(j, None):
+            if not points_map.get(j):
                 points_map[j] = ((i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
