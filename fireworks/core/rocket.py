@@ -3,6 +3,8 @@ A Rocket fetches a Firework from the database, runs the sequence of Firetasks in
 completes the Launch.
 """
 
+from __future__ import annotations
+
 import distutils.dir_util
 import errno
 import glob
@@ -15,13 +17,12 @@ import shutil
 import traceback
 from datetime import datetime
 from threading import Event, Thread, current_thread
-from typing import Dict, Union
+from typing import TYPE_CHECKING
 
 from monty.io import zopen
 from monty.os.path import zpath
 
 from fireworks.core.firework import Firework, FWAction
-from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
 from fireworks.fw_config import (
     PING_TIME_SECS,
@@ -34,6 +35,9 @@ from fireworks.fw_config import (
 )
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_utilities import get_fw_logger
+
+if TYPE_CHECKING:
+    from fireworks.core.fworker import FWorker
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -56,7 +60,7 @@ def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None]:
+def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Event | None:
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
@@ -228,7 +232,7 @@ class Rocket:
             # start background tasks
             if "_background_tasks" in my_spec:
                 for bt in my_spec["_background_tasks"]:
-                    btask_stops.append(start_background_task(bt, m_fw.spec))
+                    btask_stops.append(start_background_task(bt, m_fw.spec))  # noqa: PERF401
 
             # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
@@ -422,7 +426,7 @@ class Rocket:
             return True
 
     @staticmethod
-    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Dict[str, any]) -> None:
+    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: dict[str, any]) -> None:
         """
         Helper function to update checkpoint.
 
@@ -443,7 +447,7 @@ class Rocket:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
     def decorate_fwaction(
-        self, fwaction: FWAction, my_spec: Dict[str, any], m_fw: Firework, launch_dir: str
+        self, fwaction: FWAction, my_spec: dict[str, any], m_fw: Firework, launch_dir: str
     ) -> FWAction:
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))

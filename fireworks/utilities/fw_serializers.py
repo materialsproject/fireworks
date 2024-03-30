@@ -25,6 +25,7 @@ Some advantages:
         their fw_name (if no parameters are needed to describe the object)
 
 """
+
 import abc
 import datetime
 import importlib
@@ -33,9 +34,9 @@ import json  # note that ujson is faster, but at this time does not support "def
 import pkgutil
 import traceback
 
+from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
-from monty.json import MontyDecoder, MSONable
 
 from fireworks.fw_config import (
     DECODE_MONTY,
@@ -179,7 +180,7 @@ def serialize_fw(func):
     return _decorator
 
 
-class FWSerializable(metaclass=abc.ABCMeta):
+class FWSerializable(abc.ABC):
     """
     To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.

@@ -250,7 +250,7 @@ class FilePadTasksTest(unittest.TestCase):
         write_file_contents, _ = self.fp.get_file(self.paths[0])
         with open(self.paths[0]) as f:
             assert write_file_contents == f.read().encode()
-        del_file_contents, wdoc = self.fp.get_file(self.paths[1])
+        del_file_contents, _wdoc = self.fp.get_file(self.paths[1])
         with open(self.paths[1]) as f:
             assert del_file_contents == f.read().encode()
 

@@ -302,7 +302,7 @@ class ForeachTask(FiretaskBase):
         chunklen = lensplit // nchunks
         if lensplit % nchunks > 0:
             chunklen = chunklen + 1
-        chunks = [split_field[i:i+chunklen] for i in range(0, lensplit, chunklen)]
+        chunks = [split_field[i : i + chunklen] for i in range(0, lensplit, chunklen)]
 
         fireworks = []
         for index, chunk in enumerate(chunks):
