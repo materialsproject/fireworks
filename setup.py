@@ -12,7 +12,7 @@ if __name__ == "__main__":
         name="FireWorks",
         version="2.0.3",
         description="FireWorks workflow software",
-        long_description=open("README.md", encoding='utf-8').read(),  # noqa: SIM115
+        long_description=open("README.md", encoding="utf-8").read(),  # noqa: SIM115
         url="https://github.com/materialsproject/fireworks",
         author="Anubhav Jain",
         author_email="anubhavster@gmail.com",
