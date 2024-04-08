@@ -582,7 +582,7 @@ class LaunchPad(FWSerializable):
         for fw_id in fw_ids:
             fw_dict = self.fireworks.find_one({"fw_id": fw_id})
             if fw_dict:
-                potential_launch_ids += fw_dict["launches"] + fw_dict["archived_launches"]
+                potential_launch_ids += fw_dict.get("launches", []) + fw_dict.get("archived_launches", [])
 
         for i in potential_launch_ids:  # only remove launches if no other fws refer to them
             if not self.fireworks.find_one(
