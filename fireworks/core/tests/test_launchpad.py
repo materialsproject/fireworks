@@ -41,27 +41,27 @@ class AuthenticationTest(unittest.TestCase):
     """Tests whether users are authenticating against the correct mongo dbs."""
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         try:
             client = MongoClient()
             client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
-    def test_no_admin_privileges_for_plebs(self):
+    def test_no_admin_privileges_for_plebs(self) -> None:
         """Normal users can not authenticate against the admin db."""
         with pytest.raises(OperationFailure):
             lp = LaunchPad(name="admin", username="myuser", password="mypassword", authsource="admin")
             lp.db.collection.count_documents({})
 
-    def test_authenticating_to_users_db(self):
+    def test_authenticating_to_users_db(self) -> None:
         """A user should be able to authenticate against a database that they
         are a user of.
         """
         lp = LaunchPad(name="not_the_admin_db", username="myuser", password="mypassword", authsource="not_the_admin_db")
         lp.db.collection.count_documents({})
 
-    def test_authsource_infered_from_db_name(self):
+    def test_authsource_infered_from_db_name(self) -> None:
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
@@ -71,7 +71,7 @@ class AuthenticationTest(unittest.TestCase):
 
 class LaunchPadTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -81,17 +81,17 @@ class LaunchPadTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
         cls.lp.connection
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
         self.LP_LOC = os.path.join(MODULE_DIR, "launchpad.yaml")
         self.lp.to_file(self.LP_LOC)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False, max_reset_wo_password=1000)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -103,13 +103,13 @@ class LaunchPadTest(unittest.TestCase):
         if os.path.exists(self.LP_LOC):
             os.remove(self.LP_LOC)
 
-    def test_dict_from_file(self):
+    def test_dict_from_file(self) -> None:
         lp = LaunchPad.from_file(self.LP_LOC)
         lp_dict = lp.to_dict()
         new_lp = LaunchPad.from_dict(lp_dict)
         assert isinstance(new_lp, LaunchPad)
 
-    def test_reset(self):
+    def test_reset(self) -> None:
         # Store some test fireworks
         # Attempt couple of ways to reset the lp and check
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
@@ -130,14 +130,14 @@ class LaunchPadTest(unittest.TestCase):
             self.lp.reset("")
         self.lp.reset("", False, 100)  # reset back
 
-    def test_pw_check(self):
+    def test_pw_check(self) -> None:
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         args = ("",)
         with pytest.raises(ValueError):
             self.lp.reset(*args)
 
-    def test_add_wf(self):
+    def test_add_wf(self) -> None:
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         wf_id = self.lp.get_wf_ids()
@@ -154,7 +154,7 @@ class LaunchPadTest(unittest.TestCase):
         assert len(fw_ids) == 3
         self.lp.reset("", require_password=False)
 
-    def test_add_wfs(self):
+    def test_add_wfs(self) -> None:
         ftask = ScriptTask.from_str('echo "lorem ipsum"')
         wfs = []
         for _ in range(50):
@@ -172,7 +172,7 @@ class LaunchPadTest(unittest.TestCase):
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -182,11 +182,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         # define the individual FireWorks used in the Workflow
         # Parent Firework
         fw_p = Firework(
@@ -291,7 +291,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -301,12 +301,12 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
             shutil.rmtree(ldir)
 
     @staticmethod
-    def _teardown(dests):
+    def _teardown(dests) -> None:
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
 
-    def test_pause_fw(self):
+    def test_pause_fw(self) -> None:
         self.lp.pause_fw(self.zeus_fw_id)
 
         paused_ids = self.lp.get_fw_ids({"state": "PAUSED"})
@@ -339,7 +339,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         except Exception:
             raise
 
-    def test_defuse_fw(self):
+    def test_defuse_fw(self) -> None:
         # defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
 
@@ -363,7 +363,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         except Exception:
             raise
 
-    def test_defuse_fw_after_completion(self):
+    def test_defuse_fw_after_completion(self) -> None:
         # Launch rockets in rapidfire
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         # defuse Zeus
@@ -374,7 +374,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
         assert not self.zeus_child_fw_ids.issubset(completed_ids)
 
-    def test_reignite_fw(self):
+    def test_reignite_fw(self) -> None:
         # Defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
@@ -392,7 +392,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         assert self.zeus_fw_id in completed_ids
         assert self.zeus_child_fw_ids.issubset(completed_ids)
 
-    def test_pause_wf(self):
+    def test_pause_wf(self) -> None:
         # pause Workflow containing Zeus
         self.lp.pause_wf(self.zeus_fw_id)
         paused_ids = self.lp.get_fw_ids({"state": "PAUSED"})
@@ -405,7 +405,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
         assert fws_no_run == self.all_ids
 
-    def test_defuse_wf(self):
+    def test_defuse_wf(self) -> None:
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
@@ -418,7 +418,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
         assert fws_no_run == self.all_ids
 
-    def test_defuse_wf_after_partial_run(self):
+    def test_defuse_wf_after_partial_run(self) -> None:
         # Run a firework before defusing Zeus
         launch_rocket(self.lp, self.fworker)
         print("----------\nafter launch rocket\n--------")
@@ -440,7 +440,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fws_no_run = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
         assert len(fws_no_run) == 0
 
-    def test_reignite_wf(self):
+    def test_reignite_wf(self) -> None:
         # Defuse workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
@@ -457,7 +457,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fws_completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
         assert fws_completed == self.all_ids
 
-    def test_archive_wf(self):
+    def test_archive_wf(self) -> None:
         # Run a firework before archiving Zeus
         launch_rocket(self.lp, self.fworker)
 
@@ -475,7 +475,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         assert fw.state == "ARCHIVED"
 
-    def test_delete_wf(self):
+    def test_delete_wf(self) -> None:
         # Run a firework before deleting Zeus
         rapidfire(self.lp, self.fworker, nlaunches=1)
 
@@ -497,7 +497,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Check that the launch dir has not been deleted
         assert os.path.isdir(first_ldir)
 
-    def test_delete_wf_and_files(self):
+    def test_delete_wf_and_files(self) -> None:
         # Run a firework before deleting Zeus
         rapidfire(self.lp, self.fworker, nlaunches=1)
 
@@ -519,7 +519,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         # Check that the launch dir has not been deleted
         assert not os.path.isdir(first_ldir)
 
-    def test_rerun_fws2(self):
+    def test_rerun_fws2(self) -> None:
         # Launch all fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
@@ -561,7 +561,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 @unittest.skipIf(PYMONGO_MAJOR_VERSION > 3, "detect lostruns test not supported for pymongo major version > 3")
 class LaunchPadLostRunsDetectTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -571,11 +571,11 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         # Define a timed fireWork
         fw_timer = Firework(PyTask(func="time.sleep", args=[5]), name="timer")
         self.lp.add_wf(fw_timer)
@@ -585,7 +585,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -595,15 +595,15 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
             shutil.rmtree(ldir)
         # self.lp.connection.close()
 
-    def test_detect_lostruns(self):
+    def test_detect_lostruns(self) -> None:
         # Launch the timed firework in a separate process
         class RocketProcess(Process):
-            def __init__(self, lpad, fworker):
+            def __init__(self, lpad, fworker) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
 
-            def run(self):
+            def run(self) -> None:
                 launch_rocket(self.lpad, self.fworker)
 
         rp = RocketProcess(self.lp, self.fworker)
@@ -634,15 +634,15 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
         assert self.lp.get_fw_by_id(1).state == "READY"
 
-    def test_detect_lostruns_defuse(self):
+    def test_detect_lostruns_defuse(self) -> None:
         # Launch the timed firework in a separate process
         class RocketProcess(Process):
-            def __init__(self, lpad, fworker):
+            def __init__(self, lpad, fworker) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
 
-            def run(self):
+            def run(self) -> None:
                 launch_rocket(self.lpad, self.fworker)
 
         rp = RocketProcess(self.lp, self.fworker)
@@ -666,15 +666,15 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         assert (lost_launch_ids, lost_fw_ids) == ([1], [])
         assert self.lp.get_fw_by_id(1).state == "DEFUSED"
 
-    def test_state_after_run_start(self):
+    def test_state_after_run_start(self) -> None:
         # Launch the timed firework in a separate process
         class RocketProcess(Process):
-            def __init__(self, lpad, fworker):
+            def __init__(self, lpad, fworker) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
 
-            def run(self):
+            def run(self) -> None:
                 launch_rocket(self.lpad, self.fworker)
 
         rp = RocketProcess(self.lp, self.fworker)
@@ -703,7 +703,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
     """
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -713,11 +713,11 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         # define the individual FireWorks used in the Workflow
         # Parent Firework
         fw_p = Firework(
@@ -821,7 +821,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -831,12 +831,12 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             shutil.rmtree(ldir)
 
     @staticmethod
-    def _teardown(dests):
+    def _teardown(dests) -> None:
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
 
-    def test_defuse_fw(self):
+    def test_defuse_fw(self) -> None:
         # defuse Zeus
         self.lp.defuse_fw(self.zeus_fw_id)
         # Ensure the states are sync after defusing fw
@@ -860,7 +860,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         except Exception:
             raise
 
-    def test_defuse_fw_after_completion(self):
+    def test_defuse_fw_after_completion(self) -> None:
         # Launch rockets in rapidfire
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         # defuse Zeus
@@ -873,7 +873,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_reignite_fw(self):
+    def test_reignite_fw(self) -> None:
         # Defuse Zeus and launch remaining fireworks
         self.lp.defuse_fw(self.zeus_fw_id)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
@@ -888,7 +888,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_defuse_wf(self):
+    def test_defuse_wf(self) -> None:
         # defuse Workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
@@ -902,7 +902,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_reignite_wf(self):
+    def test_reignite_wf(self) -> None:
         # Defuse workflow containing Zeus
         self.lp.defuse_wf(self.zeus_fw_id)
 
@@ -919,7 +919,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_archive_wf(self):
+    def test_archive_wf(self) -> None:
         # Run a firework before archiving Zeus
         launch_rocket(self.lp, self.fworker)
         # archive Workflow containing Zeus.
@@ -932,7 +932,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_rerun_fws(self):
+    def test_rerun_fws(self) -> None:
         # Launch all fireworks
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
@@ -949,15 +949,15 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-    def test_rerun_timed_fws(self):
+    def test_rerun_timed_fws(self) -> None:
         # Launch all fireworks in a separate process
         class RapidfireProcess(Process):
-            def __init__(self, lpad, fworker):
+            def __init__(self, lpad, fworker) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
 
-            def run(self):
+            def run(self) -> None:
                 rapidfire(self.lpad, self.fworker)
 
         rp = RapidfireProcess(self.lp, self.fworker)
@@ -1013,7 +1013,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
 class LaunchPadRerunExceptionTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -1023,11 +1023,11 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
 
         self.error_test_dict = {"error": "description", "error_code": 1}
@@ -1044,7 +1044,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -1053,14 +1053,14 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
 
-    def test_except_details_on_rerun(self):
+    def test_except_details_on_rerun(self) -> None:
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1)
         fw = self.lp.get_fw_by_id(1)
         assert fw.spec["_exception_details"] == self.error_test_dict
 
-    def test_task_level_rerun(self):
+    def test_task_level_rerun(self) -> None:
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last")
@@ -1077,7 +1077,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(1)
         assert "_recovery" not in fw.spec
 
-    def test_task_level_rerun_cp(self):
+    def test_task_level_rerun_cp(self) -> None:
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last", recover_mode="cp")
@@ -1090,7 +1090,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         assert ExceptionTestTask.exec_counter == 2
         assert filecmp.cmp(os.path.join(dirs[0], "date_file"), os.path.join(dirs[1], "date_file"))
 
-    def test_task_level_rerun_prev_dir(self):
+    def test_task_level_rerun_prev_dir(self) -> None:
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         assert os.getcwd() == MODULE_DIR
         self.lp.rerun_fw(1, recover_launch="last", recover_mode="prev_dir")
@@ -1106,7 +1106,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
 
 class WFLockTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -1116,11 +1116,11 @@ class WFLockTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         # set the defaults in the init of wflock to break the lock quickly
         fireworks.core.launchpad.WFLock(3, False).__init__.__func__.__defaults__ = (3, False)
 
@@ -1133,7 +1133,7 @@ class WFLockTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -1142,15 +1142,15 @@ class WFLockTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
 
-    def test_fix_db_inconsistencies_completed(self):
+    def test_fix_db_inconsistencies_completed(self) -> None:
         class RocketProcess(Process):
-            def __init__(self, lpad, fworker, fw_id):
+            def __init__(self, lpad, fworker, fw_id) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
                 self.fw_id = fw_id
 
-            def run(self):
+            def run(self) -> None:
                 launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
 
         # Launch the slow firework in a separate process
@@ -1189,15 +1189,15 @@ class WFLockTest(unittest.TestCase):
 
         assert fast_fw.state == "COMPLETED"
 
-    def test_fix_db_inconsistencies_fizzled(self):
+    def test_fix_db_inconsistencies_fizzled(self) -> None:
         class RocketProcess(Process):
-            def __init__(self, lpad, fworker, fw_id):
+            def __init__(self, lpad, fworker, fw_id) -> None:
                 super(self.__class__, self).__init__()
                 self.lpad = lpad
                 self.fworker = fworker
                 self.fw_id = fw_id
 
-            def run(self):
+            def run(self) -> None:
                 launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
 
         self.lp.update_spec([2], {"fizzle": True})
@@ -1237,7 +1237,7 @@ class WFLockTest(unittest.TestCase):
 
 class LaunchPadOfflineTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -1247,11 +1247,11 @@ class LaunchPadOfflineTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         fireworks.core.firework.EXCEPT_DETAILS_ON_RERUN = True
 
         self.error_test_dict = {"error": "description", "error_code": 1}
@@ -1263,7 +1263,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -1272,7 +1272,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir, ignore_errors=True)
 
-    def test__recover_completed(self):
+    def test__recover_completed(self) -> None:
         fw, launch_id = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
@@ -1287,7 +1287,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         assert fw.state == "COMPLETED"
 
-    def test_recover_errors(self):
+    def test_recover_errors(self) -> None:
         fw, launch_id = self.lp.reserve_fw(self.fworker, self.launch_dir)
         fw = self.lp.get_fw_by_id(1)
         with cd(self.launch_dir):
@@ -1318,7 +1318,7 @@ class GridfsStoredDataTest(unittest.TestCase):
     """
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -1328,14 +1328,14 @@ class GridfsStoredDataTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
@@ -1344,7 +1344,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
 
-    def test_many_detours(self):
+    def test_many_detours(self) -> None:
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
         fw = Firework([task])
         self.lp.add_wf(fw)
@@ -1367,7 +1367,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         wf = self.lp.get_wf_by_fw_id_lzyfw(1)
         assert len(wf.id_fw[1].launches[0].action.detours) == 2000
 
-    def test_many_detours_offline(self):
+    def test_many_detours_offline(self) -> None:
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)
         fw = Firework([task])
         self.lp.add_wf(fw)

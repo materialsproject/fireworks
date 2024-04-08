@@ -10,7 +10,7 @@ __date__ = "Sept 8, 2015"
 class PrintJobTask(FiretaskBase):
     _fw_name = "Print Job Task"
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         job_info_array = fw_spec["_job_info"]
         prev_job_info = job_info_array[-1]
 

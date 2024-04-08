@@ -683,7 +683,7 @@ def set_priority(args: Namespace) -> None:
     lp.m_logger.info(f"Finished setting priorities of {len(fw_ids)} FWs")
 
 
-def _open_webbrowser(url):
+def _open_webbrowser(url) -> None:
     """Open a web browser after a delay to give the web server more startup time."""
     import webbrowser
 

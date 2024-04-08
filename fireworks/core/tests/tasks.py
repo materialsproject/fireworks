@@ -1,4 +1,5 @@
 import time
+from typing import NoReturn
 from unittest import SkipTest
 
 from fireworks import FiretaskBase, Firework, FWAction
@@ -6,7 +7,7 @@ from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 class SerializableException(Exception):
-    def __init__(self, exc_details):
+    def __init__(self, exc_details) -> None:
         self.exc_details = exc_details
 
     def to_dict(self):
@@ -17,7 +18,7 @@ class SerializableException(Exception):
 class ExceptionTestTask(FiretaskBase):
     exec_counter = 0
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         ExceptionTestTask.exec_counter += 1
         if not fw_spec.get("skip_exception", False):
             raise SerializableException(self["exc_details"])
@@ -27,7 +28,7 @@ class ExceptionTestTask(FiretaskBase):
 class ExecutionCounterTask(FiretaskBase):
     exec_counter = 0
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         ExecutionCounterTask.exec_counter += 1
 
 
@@ -39,7 +40,7 @@ class MalformedAdditionTask(FiretaskBase):
 
 @explicit_serialize
 class TodictErrorTask(FiretaskBase):
-    def to_dict(self):
+    def to_dict(self) -> NoReturn:
         raise RuntimeError("to_dict error")
 
     def run_task(self, fw_spec):
@@ -87,7 +88,7 @@ class WaitWFLockTask(FiretaskBase):
 
 @explicit_serialize
 class DoNothingTask(FiretaskBase):
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         pass
 
 

@@ -1,5 +1,7 @@
 """This module contains the base class for implementing Duplicate Finders."""
 
+from typing import NoReturn
+
 from fireworks.utilities.fw_serializers import FWSerializable, serialize_fw
 
 __author__ = "Anubhav Jain"
@@ -12,10 +14,10 @@ __date__ = "Mar 01, 2013"
 class DupeFinderBase(FWSerializable):
     """This serves an Abstract class for implementing Duplicate Finders."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
-    def verify(self, spec1, spec2):
+    def verify(self, spec1, spec2) -> NoReturn:
         """
         Method that checks whether two specs are identical enough to be
         considered duplicates. Return true if duplicated. Note that
@@ -31,7 +33,7 @@ class DupeFinderBase(FWSerializable):
         """
         raise NotImplementedError
 
-    def query(self, spec):
+    def query(self, spec) -> NoReturn:
         """
         Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.
 

@@ -21,7 +21,7 @@ def power_wf():
     return Workflow([fw1, fw2, fw3], {fw1: [fw2], fw2: [fw3], fw3: []})
 
 
-def test_wf_to_graph(power_wf):
+def test_wf_to_graph(power_wf) -> None:
     dag = wf_to_graph(power_wf)
 
     assert isinstance(dag, Digraph)
@@ -31,7 +31,7 @@ def test_wf_to_graph(power_wf):
     assert isinstance(dag, Digraph)
 
 
-def test_plot_wf(power_wf):
+def test_plot_wf(power_wf) -> None:
     plot_wf(power_wf)
 
     plot_wf(power_wf, depth_factor=0.5, breadth_factor=1)

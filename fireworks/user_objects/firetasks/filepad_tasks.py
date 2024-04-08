@@ -27,7 +27,7 @@ class AddFilesTask(FiretaskBase):
     required_params = ["paths"]
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         from glob import glob
 
         directory = os.path.abspath(self.get("directory", "."))
@@ -68,7 +68,7 @@ class GetFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
@@ -142,7 +142,7 @@ class GetFilesByQueryTask(FiretaskBase):
         "sort_key",
     ]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         import json
 
         import pymongo
@@ -206,7 +206,7 @@ class DeleteFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         for file in self["identifiers"]:
             fpad.delete_file(file)

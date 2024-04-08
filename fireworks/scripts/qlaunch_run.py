@@ -34,7 +34,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
 
-def do_launch(args):
+def do_launch(args) -> None:
     cfg_files_to_check = [
         ("launchpad", "-l", False, LAUNCHPAD_LOC),
         ("fworker", "-w", False, FWORKER_LOC),

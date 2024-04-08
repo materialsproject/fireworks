@@ -25,7 +25,7 @@ def plot_wf(
     markersize=10,
     markerfacecolor="blue",
     fontsize=12,
-):
+) -> None:
     """
     Generate a visual representation of the workflow. Useful for checking whether the firework
     connections are in order before launching the workflow.

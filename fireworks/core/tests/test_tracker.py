@@ -23,7 +23,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class TrackerTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -33,11 +33,11 @@ class TrackerTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
         self.dest1 = os.path.join(MODULE_DIR, "numbers1.txt")
         self.dest2 = os.path.join(MODULE_DIR, "numbers2.txt")
@@ -45,7 +45,7 @@ class TrackerTest(unittest.TestCase):
         self.tracker1 = Tracker(self.dest1, nlines=2)
         self.tracker2 = Tracker(self.dest2, nlines=2)
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         if os.path.exists(os.path.join("FW.json")):
             os.remove("FW.json")
@@ -54,12 +54,12 @@ class TrackerTest(unittest.TestCase):
             shutil.rmtree(i)
 
     @staticmethod
-    def _teardown(dests):
+    def _teardown(dests) -> None:
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
 
-    def test_tracker(self):
+    def test_tracker(self) -> None:
         """Launch a workflow and track the files."""
         self._teardown([self.dest1])
         try:
@@ -78,7 +78,7 @@ class TrackerTest(unittest.TestCase):
         finally:
             self._teardown([self.dest1])
 
-    def test_tracker_failed_fw(self):
+    def test_tracker_failed_fw(self) -> None:
         """Add a bad firetask to workflow and test the tracking."""
         self._teardown([self.dest1])
         try:
@@ -107,12 +107,12 @@ class TrackerTest(unittest.TestCase):
         finally:
             self._teardown([self.dest1])
 
-    def test_tracker_mlaunch(self):
+    def test_tracker_mlaunch(self) -> None:
         """Test the tracker for mlaunch."""
         self._teardown([self.dest1, self.dest2])
         try:
 
-            def add_wf(j, dest, tracker, name):
+            def add_wf(j, dest, tracker, name) -> None:
                 fts = []
                 for i in range(j, j + 25):
                     ft = ScriptTask.from_str('echo "' + str(i) + '" >> ' + dest, {"store_stdout": True})

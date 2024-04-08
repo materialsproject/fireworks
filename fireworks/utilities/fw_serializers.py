@@ -33,6 +33,7 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
+from typing import NoReturn
 
 from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
@@ -206,7 +207,7 @@ class FWSerializable(abc.ABC):
             return get_default_serialization(self.__class__)
 
     @abc.abstractmethod
-    def to_dict(self):
+    def to_dict(self) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
     def to_db_dict(self):
@@ -220,10 +221,10 @@ class FWSerializable(abc.ABC):
 
     @classmethod
     @abc.abstractmethod
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format="json", **kwargs):
@@ -266,7 +267,7 @@ class FWSerializable(abc.ABC):
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
 
-    def to_file(self, filename, f_format=None, **kwargs):
+    def to_file(self, filename, f_format=None, **kwargs) -> None:
         """
         Write a serialization of this object to a file.
 

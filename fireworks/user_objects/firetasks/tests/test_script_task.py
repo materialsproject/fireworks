@@ -17,7 +17,7 @@ def afunc(y, z, a):
 
 
 class ScriptTaskTest(unittest.TestCase):
-    def test_scripttask(self):
+    def test_scripttask(self) -> None:
         if os.path.exists("hello.txt"):
             os.remove("hello.txt")
         s = ScriptTask({"script": 'echo "hello world"', "stdout_file": "hello.txt"})
@@ -30,7 +30,7 @@ class ScriptTaskTest(unittest.TestCase):
 
 
 class PyTaskTest(unittest.TestCase):
-    def test_task(self):
+    def test_task(self) -> None:
         p = PyTask(func="json.dumps", kwargs={"obj": {"hello": "world"}}, stored_data_varname="json")
         a = p.run_task({})
         assert a.stored_data["json"] == '{"hello": "world"}'
@@ -40,7 +40,7 @@ class PyTaskTest(unittest.TestCase):
         p = PyTask(func="print", args=[3])
         p.run_task({})
 
-    def test_task_auto_kwargs(self):
+    def test_task_auto_kwargs(self) -> None:
         p = PyTask(func="json.dumps", obj={"hello": "world"}, stored_data_varname="json", auto_kwargs=True)
         a = p.run_task({})
         assert a.stored_data["json"] == '{"hello": "world"}'
@@ -50,7 +50,7 @@ class PyTaskTest(unittest.TestCase):
         p = PyTask(func="print", args=[3])
         p.run_task({})
 
-    def test_task_data_flow(self):
+    def test_task_data_flow(self) -> None:
         """Test dataflow parameters: inputs, outputs and chunk_number."""
         params = {"func": "pow", "inputs": ["arg", "power", "modulo"], "stored_data_varname": "data"}
         spec = {"arg": 2, "power": 3, "modulo": None}

@@ -73,7 +73,7 @@ def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Event | None:
     return ping_stop
 
 
-def stop_backgrounds(ping_stop, btask_stops):
+def stop_backgrounds(ping_stop, btask_stops) -> None:
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
@@ -84,7 +84,7 @@ def stop_backgrounds(ping_stop, btask_stops):
         b.set()
 
 
-def background_task(btask, spec, stop_event, master_thread):
+def background_task(btask, spec, stop_event, master_thread) -> None:
     num_launched = 0
     while not stop_event.is_set() and master_thread.is_alive():
         for task in btask.tasks:

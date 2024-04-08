@@ -10,7 +10,7 @@ __date__ = "Feb 10, 2014"
 class BackgroundTask(FWSerializable):
     _fw_name = "BackgroundTask"
 
-    def __init__(self, tasks, num_launches=0, sleep_time=60, run_on_finish=False):
+    def __init__(self, tasks, num_launches=0, sleep_time=60, run_on_finish=False) -> None:
         """
         Args:
             tasks [Firetask]: a list of Firetasks to perform

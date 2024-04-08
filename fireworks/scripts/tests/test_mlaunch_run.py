@@ -6,7 +6,7 @@ __author__ = "Janosh Riebesell <janosh.riebesell@gmail.com>"
 
 
 @pytest.mark.parametrize("arg", ["-v", "--version"])
-def test_mlaunch_report_version(capsys, arg):
+def test_mlaunch_report_version(capsys, arg) -> None:
     """Test mlaunch CLI version flag."""
     with pytest.raises(SystemExit, match="0"):
         mlaunch([arg])
@@ -17,7 +17,7 @@ def test_mlaunch_report_version(capsys, arg):
     assert stderr == ""
 
 
-def test_mlaunch_config_file_flags():
+def test_mlaunch_config_file_flags() -> None:
     """Test mlaunch CLI throws errors on missing config file flags."""
     num_jobs = "1"
 

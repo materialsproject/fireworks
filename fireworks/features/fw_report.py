@@ -25,7 +25,7 @@ state_to_color = {
 
 
 class FWReport:
-    def __init__(self, lpad):
+    def __init__(self, lpad) -> None:
         """
         Args:
         lpad (LaunchPad).

@@ -177,7 +177,7 @@ def write_config(path: str | None = None) -> None:
 class FWData:
     """This class stores data that a Firetask might want to access, e.g. to see the runtime params."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.MULTIPROCESSING = None  # default single process framework
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job

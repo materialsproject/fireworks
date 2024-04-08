@@ -15,7 +15,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class UpdateCollectionTests(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
@@ -24,11 +24,11 @@ class UpdateCollectionTests(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def test_update_path(self):
+    def test_update_path(self) -> None:
         self.lp.db.test_coll.insert_one({"foo": "bar", "foo_list": [{"foo1": "bar1"}, {"foo2": "foo/old/path/bar"}]})
         update_path_in_collection(
             self.lp.db,

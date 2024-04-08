@@ -23,7 +23,7 @@ __date__ = "Jan 9, 2013"
 class TestImports(unittest.TestCase):
     """Make sure that required external libraries can be imported."""
 
-    def test_imports(self):
+    def test_imports(self) -> None:
         pass
         # test that MongoClient is available (newer pymongo)
 
@@ -31,7 +31,7 @@ class TestImports(unittest.TestCase):
 class BasicTests(unittest.TestCase):
     """Make sure that required external libraries can be imported."""
 
-    def test_fwconnector(self):
+    def test_fwconnector(self) -> None:
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'))
 
@@ -44,7 +44,7 @@ class BasicTests(unittest.TestCase):
         wf3 = Workflow([fw1, fw2])
         assert wf3.links == {fw1.fw_id: [], fw2.fw_id: []}
 
-    def test_parentconnector(self):
+    def test_parentconnector(self) -> None:
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'), parents=fw1)
         fw3 = Firework(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
@@ -69,7 +69,7 @@ class SerializationTests(unittest.TestCase):
             return cls_.from_dict(obj_dict)
         return None
 
-    def test_serialization_details(self):
+    def test_serialization_details(self) -> None:
         # This detects a weird bug found in early version of serializers
 
         pbs = CommonAdapter("PBS")
@@ -78,7 +78,7 @@ class SerializationTests(unittest.TestCase):
         assert isinstance(load_object(pbs.to_dict()), CommonAdapter)
         assert isinstance(self.get_data(pbs.to_dict()), CommonAdapter)  # repeated test on purpose!
 
-    def test_recursive_deserialize(self):
+    def test_recursive_deserialize(self) -> None:
         my_dict = {
             "update_spec": {},
             "mod_spec": [],
