@@ -1,0 +1,39 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Miniconda
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          python-version: 3.8
+          activate-environment: test-environment
+
+      - name: Install dependencies
+        shell: bash -l {0}
+        run: |
+          conda info -a
+          pip install --ignore-installed -r requirements.txt -r requirements-ci.txt
+
+      - name: Run fireworks tests
+        shell: bash -l {0}
+        run: |
+          pip install .[workflow-checks,graph-plotting,flask-plotting]
+          pytest fireworks
