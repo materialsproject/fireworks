@@ -1,10 +1,11 @@
 """This module includes tasks to integrate scripts and python functions."""
 
+from __future__ import annotations
+
 import builtins
 import shlex
 import subprocess
 import sys
-from typing import Dict, List, Optional, Union
 
 from fireworks.core.firework import FiretaskBase, FWAction
 
@@ -163,7 +164,7 @@ class PyTask(FiretaskBase):
     # note that we are not using "optional_params" because we do not want to do
     # strict parameter checking in FiretaskBase due to "auto_kwargs" option
 
-    def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
+    def run_task(self, fw_spec: dict[str, list[int] | int]) -> FWAction | None:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
             mod_name, funcname = toks
@@ -177,8 +178,7 @@ class PyTask(FiretaskBase):
 
         inputs = self.get("inputs", [])
         assert isinstance(inputs, list)
-        for item in inputs:
-            args.append(fw_spec[item])
+        args += [fw_spec[item] for item in inputs]
 
         if self.get("auto_kwargs"):
             kwargs = {

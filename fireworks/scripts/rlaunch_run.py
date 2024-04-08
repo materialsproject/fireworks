@@ -1,11 +1,13 @@
 """A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)."""
 
+from __future__ import annotations
+
 import os
 import signal
 import sys
 from argparse import ArgumentParser
 from importlib import metadata
-from typing import Optional, Sequence
+from typing import Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -29,7 +31,7 @@ def handle_interrupt(signum, frame):
     sys.exit(1)
 
 
-def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def rlaunch(argv: Sequence[str] | None = None) -> int:
     m_description = (
         "This program launches one or more Rockets. A Rocket retrieves a job from the "
         'central database and runs it. The "single-shot" option launches a single Rocket, '
@@ -165,7 +167,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
             if args.nodefile in os.environ:
                 args.nodefile = os.environ[args.nodefile]
             with open(args.nodefile) as f:
-                total_node_list = [line.strip() for line in f.readlines()]
+                total_node_list = [line.strip() for line in f]
         launch_multiprocess(
             launchpad,
             fworker,

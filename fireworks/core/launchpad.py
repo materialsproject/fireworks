@@ -642,8 +642,7 @@ class LaunchPad(FWSerializable):
         if mode != "less":
             wf_fields.append("updated_on")
             fw_fields.extend(["name", "launches"])
-            launch_fields.append("launch_id")
-            launch_fields.append("launch_dir")
+            launch_fields.extend(("launch_id", "launch_dir"))
 
         if mode == "reservations":
             launch_fields.append("state_history.reservation_id")
@@ -1885,7 +1884,7 @@ class LaunchPad(FWSerializable):
                 if not already_running:
                     m_launch.state = "RUNNING"  # this should also add a history item
 
-                checkpoint = offline_data["checkpoint"] if "checkpoint" in offline_data else None
+                checkpoint = offline_data.get("checkpoint", None)
 
                 # look for ping file - update the Firework if this is the case
                 ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
@@ -2019,7 +2018,7 @@ class LazyFirework:
         # This is the only attribute known w/o a DB query
         self.fw_id = fw_id
         self._fwc, self._lc, self._ffs = fw_coll, launch_coll, fallback_fs
-        self._launches = {k: False for k in self.db_launch_fields}
+        self._launches = dict.fromkeys(self.db_launch_fields, False)
         self._fw, self._lids, self._state = None, None, None
 
     # FireWork methods

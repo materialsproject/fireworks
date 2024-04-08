@@ -657,12 +657,12 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
                 raise ValueError("FW never starts running")
         rp.terminate()  # Kill the rocket
 
-        lost_launch_ids, lost_fw_ids, i = self.lp.detect_lostruns(0.01)
+        lost_launch_ids, lost_fw_ids, _i = self.lp.detect_lostruns(0.01)
         assert (lost_launch_ids, lost_fw_ids) == ([1], [1])
 
         self.lp.defuse_fw(1)
 
-        lost_launch_ids, lost_fw_ids, i = self.lp.detect_lostruns(0.01, rerun=True)
+        lost_launch_ids, lost_fw_ids, _i = self.lp.detect_lostruns(0.01, rerun=True)
         assert (lost_launch_ids, lost_fw_ids) == ([1], [])
         assert self.lp.get_fw_by_id(1).state == "DEFUSED"
 
@@ -973,7 +973,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             assert fw_state == fw_cache_state
 
         # Detect lost runs
-        lost_lids, lost_fwids, inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
+        _lost_lids, lost_fwids, _inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw

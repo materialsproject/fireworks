@@ -1,6 +1,5 @@
 """Tracker unitest."""
 
-
 __author__ = "Bharat medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
 __maintainer__ = "Bharat medasani"

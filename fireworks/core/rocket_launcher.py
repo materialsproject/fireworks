@@ -1,15 +1,19 @@
 """This module contains methods for launching Rockets, both singly and in rapid-fire mode."""
 
+from __future__ import annotations
+
 import os
 import time
 from datetime import datetime
-from typing import Optional
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
-from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket import Rocket
 from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, log_multi, redirect_local
+
+if TYPE_CHECKING:
+    from fireworks.core.launchpad import LaunchPad
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -56,12 +60,12 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_e
 def rapidfire(
     launchpad: LaunchPad,
     fworker: FWorker = None,
-    m_dir: Optional[str] = None,
+    m_dir: str | None = None,
     nlaunches: int = 0,
     max_loops: int = -1,
-    sleep_time: Optional[int] = None,
+    sleep_time: int | None = None,
     strm_lvl: str = "INFO",
-    timeout: Optional[int] = None,
+    timeout: int | None = None,
     local_redirect: bool = False,
     pdb_on_exception: bool = False,
 ):

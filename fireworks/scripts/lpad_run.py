@@ -1,18 +1,21 @@
 """A runnable script for managing a FireWorks database (a command-line interface to launchpad.py)."""
 
+from __future__ import annotations
+
 import ast
 import copy
 import datetime
 import json
 import os
 import re
+import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from importlib import metadata
-from typing import Any, Callable, Dict, List, Literal, Optional, Sequence, Union
+from typing import Any, Sequence
 
-import ruamel.yaml as yaml
 from pymongo import ASCENDING, DESCENDING
+from ruamel.yaml import YAML
 
 from fireworks import FW_INSTALL_DIR
 from fireworks.core.firework import Firework, Workflow
@@ -46,7 +49,7 @@ __date__ = "Feb 7, 2013"
 DEFAULT_LPAD_YAML = "my_launchpad.yaml"
 
 
-def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int]:
+def pw_check(ids: list[int], args: Namespace, skip_pw: bool = False) -> list[int]:
     if len(ids) > PW_CHECK_NUM and not skip_pw:
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
         if not args.password:
@@ -62,7 +65,7 @@ def pw_check(ids: List[int], args: Namespace, skip_pw: bool = False) -> List[int
     return ids
 
 
-def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> List[int]:
+def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> list[int]:
     """
     Helper method to parse args that can take either id, name, state or query.
 
@@ -160,7 +163,7 @@ def init_yaml(args: Namespace) -> None:
             ),
         )
 
-    doc: Dict[str, Union[str, int, bool, None]] = {}
+    doc: dict[str, str | int | bool | None] = {}
     if args.uri_mode:
         print(
             "Note 1: You are in URI format mode. This means that all database parameters (username, password, host, "
@@ -260,11 +263,10 @@ def print_fws(ids, lp, args: Namespace) -> None:
             fws.append(d)
     if len(fws) == 1:
         fws = fws[0]
+    get_output(args, fws)
 
-    print(args.output(fws))
 
-
-def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, None] = None) -> Union[List[int], int]:
+def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: bool | None = None) -> list[int] | int:
     """Build fws query from command line options and submit.
 
     Parameters:
@@ -316,8 +318,8 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: Union[bool, No
 
 
 def get_fws_helper(
-    lp: LaunchPad, ids: List[int], args: Namespace
-) -> Union[List[int], int, List[Dict[str, Union[str, int, bool]]], Union[str, int, bool]]:
+    lp: LaunchPad, ids: list[int], args: Namespace
+) -> list[int] | int | list[dict[str, str | int | bool]] | str | bool:
     """Get fws from ids in a representation according to args.display_format."""
     fws = []
     if args.display_format == "ids":
@@ -343,7 +345,7 @@ def get_fws(args: Namespace) -> None:
     lp = get_lp(args)
     ids = get_fw_ids_helper(lp, args)
     fws = get_fws_helper(lp, ids, args)
-    print(args.output(fws))
+    get_output(args, fws)
 
 
 def get_fws_in_wfs(args: Namespace) -> None:
@@ -467,7 +469,7 @@ def get_wfs(args: Namespace) -> None:
     else:
         if len(wfs) == 1:
             wfs = wfs[0]
-        print(args.output(wfs))
+        get_output(args, wfs)
 
 
 def delete_wfs(args: Namespace) -> None:
@@ -793,10 +795,10 @@ def introspect(args: Namespace) -> None:
     isp = Introspector(lp)
     for coll in ["launches", "tasks", "fireworks", "workflows"]:
         print(f"generating report for {coll}...please wait...")
-        print("")
+        print()
         table = isp.introspect_fizzled(coll=coll, threshold=args.threshold, limit=args.max)
         isp.print_report(table, coll)
-        print("")
+        print()
 
 
 def get_launchdir(args: Namespace) -> None:
@@ -817,8 +819,7 @@ def track_fws(args: Namespace) -> None:
         for d in data:
             for t in d["trackers"]:
                 if (not include or t.filename in include) and (not exclude or t.filename not in exclude):
-                    output.append(f"## Launch id: {d['launch_id']}")
-                    output.append(str(t))
+                    output.extend((f"## Launch id: {d['launch_id']}", str(t)))
         if output:
             name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})["name"]
             output.insert(0, f"# FW id: {f}, FW name: {name}")
@@ -852,13 +853,18 @@ def orphaned(args: Namespace) -> None:
         lp.m_logger.info(f"Found {len(orphaned_fw_ids)} orphaned fw_ids: {orphaned_fw_ids}")
         lp.delete_fws(orphaned_fw_ids, delete_launch_dirs=args.delete_launch_dirs)
     else:
-        print(args.output(fws))
+        get_output(args, fws)
 
 
-def get_output_func(format: Literal["json", "yaml"]) -> Callable[[str], Any]:
-    if format == "json":
-        return lambda x: json.dumps(x, default=DATETIME_HANDLER, indent=4)
-    return lambda x: yaml.safe_dump(recursive_dict(x, preserve_unicode=False), default_flow_style=False)
+def get_output(args: Namespace, objs: list[Any]) -> None:
+    """Prints output on stdout"""
+    if args.output == "json":
+        json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
+    else:
+        yaml = YAML(typ="safe", pure=True)
+        yaml.default_flow_style = False
+        yaml.dump(recursive_dict(objs, preserve_unicode=False), sys.stdout)
+    print()
 
 
 def arg_positive_int(value: str) -> int:
@@ -872,7 +878,7 @@ def arg_positive_int(value: str) -> int:
     return ivalue
 
 
-def lpad(argv: Optional[Sequence[str]] = None) -> int:
+def lpad(argv: Sequence[str] | None = None) -> int:
     m_description = (
         "A command line interface to FireWorks. For more help on a specific command, type 'lpad <command> -h'."
     )
@@ -1538,8 +1544,6 @@ def lpad(argv: Optional[Sequence[str]] = None) -> int:
     if hasattr(args, "fworker_file"):
         cfg_files_to_check.append(("fworker", "-w", False, FWORKER_LOC))
     _validate_config_file_paths(args, cfg_files_to_check)
-
-    args.output = get_output_func(args.output)
 
     if args.command is None:
         # if no command supplied, print help
