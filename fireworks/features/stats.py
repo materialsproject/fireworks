@@ -22,7 +22,7 @@ RUNTIME_STATS = {
 
 
 class FWStats:
-    def __init__(self, lpad):
+    def __init__(self, lpad) -> None:
         """
         Object to get Fireworks running stats from a LaunchPad.
 

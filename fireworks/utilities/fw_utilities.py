@@ -72,7 +72,7 @@ def get_fw_logger(
     return logger
 
 
-def log_multi(m_logger, msg, log_lvl="info"):
+def log_multi(m_logger, msg, log_lvl="info") -> None:
     """
     Args:
         m_logger (logger): The logger object
@@ -86,7 +86,7 @@ def log_multi(m_logger, msg, log_lvl="info"):
         _log_fnc(msg)
 
 
-def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False):
+def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
     """
     A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,

@@ -19,7 +19,7 @@ __date__ = "Dec 12, 2012"
 
 
 class FWorker(FWSerializable):
-    def __init__(self, name="Automatically generated Worker", category="", query=None, env=None):
+    def __init__(self, name="Automatically generated Worker", category="", query=None, env=None) -> None:
         """
         Args:
             name (str): the name of the resource, should be unique

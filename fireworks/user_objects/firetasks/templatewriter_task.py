@@ -31,7 +31,7 @@ class TemplateWriterTask(FiretaskBase):
 
     _fw_name = "TemplateWriterTask"
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         if self.get("use_global_spec"):
             self._load_params(fw_spec)
         else:
@@ -45,7 +45,7 @@ class TemplateWriterTask(FiretaskBase):
             with open(self.output_file, write_mode) as of:
                 of.write(output)
 
-    def _load_params(self, d):
+    def _load_params(self, d) -> None:
         self.context = d["context"]
         self.output_file = d["output_file"]
         self.append_file = d.get("append")  # append to output file?

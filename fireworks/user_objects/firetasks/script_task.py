@@ -92,7 +92,7 @@ class ScriptTask(FiretaskBase):
 
         return FWAction(stored_data=output)
 
-    def _load_params(self, d):
+    def _load_params(self, d) -> None:
         if d.get("stdin_file") and d.get("stdin_key"):
             raise ValueError("ScriptTask cannot process both a key and file as the standard in!")
 

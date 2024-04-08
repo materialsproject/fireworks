@@ -26,7 +26,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
 
 
-def handle_interrupt(signum, frame):
+def handle_interrupt(signum, frame) -> None:
     sys.stderr.write(f"Interrupted by signal {signum:d}\n")
     sys.exit(1)
 

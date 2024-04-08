@@ -31,7 +31,7 @@ class FileWriteTask(FiretaskBase):
     required_params = ["files_to_write"]
     optional_params = ["dest"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         pth = self.get("dest", os.getcwd())
         for d in self["files_to_write"]:
             with open(os.path.join(pth, d["filename"]), "w") as f:
@@ -54,7 +54,7 @@ class FileDeleteTask(FiretaskBase):
     required_params = ["files_to_delete"]
     optional_params = ["dest", "ignore_errors"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         pth = self.get("dest", os.getcwd())
         ignore_errors = self.get("ignore_errors", True)
         for f in self["files_to_delete"]:
@@ -98,7 +98,7 @@ class FileTransferTask(FiretaskBase):
         "copyfile": shutil.copyfile,
     }
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         shell_interpret = self.get("shell_interpret", True)
         ignore_errors = self.get("ignore_errors", False)
         max_retry = self.get("max_retry", 0)
@@ -162,7 +162,7 @@ class FileTransferTask(FiretaskBase):
             ssh.close()
 
     @staticmethod
-    def _rexists(sftp, path):
+    def _rexists(sftp, path) -> bool:
         """os.path.exists for paramiko's SCP object."""
         try:
             sftp.stat(path)
@@ -187,7 +187,7 @@ class CompressDirTask(FiretaskBase):
     _fw_name = "CompressDirTask"
     optional_params = ["compression", "dest", "ignore_errors"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         ignore_errors = self.get("ignore_errors", False)
         dest = self.get("dest", os.getcwd())
         compression = self.get("compression", "gz")
@@ -211,7 +211,7 @@ class DecompressDirTask(FiretaskBase):
     _fw_name = "DecompressDirTask"
     optional_params = ["dest", "ignore_errors"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         ignore_errors = self.get("ignore_errors", False)
         dest = self.get("dest", os.getcwd())
         try:
@@ -235,5 +235,5 @@ class ArchiveDirTask(FiretaskBase):
     required_params = ["base_name"]
     optional_params = ["format"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         shutil.make_archive(self["base_name"], format=self.get("format", "gztar"), root_dir=".")

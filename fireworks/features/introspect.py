@@ -80,7 +80,7 @@ def compare_stats(stats_dict1, n_samples1, stats_dict2, n_samples2, threshold=5)
 
 
 class Introspector:
-    def __init__(self, lpad):
+    def __init__(self, lpad) -> None:
         """
         Args:
             lpad (LaunchPad).
@@ -171,7 +171,7 @@ class Introspector:
         return table
 
     @staticmethod
-    def print_report(table, coll):
+    def print_report(table, coll) -> None:
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"
         elif coll.lower() == "tasks":

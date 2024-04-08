@@ -13,7 +13,7 @@ from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterT
 
 
 class TemplateWriterTaskTest(unittest.TestCase):
-    def test_task(self):
+    def test_task(self) -> None:
         with open("test_template.txt", "w") as fp:
             fp.write("option1 = {{opt1}}\noption2 = {{opt2}}")
         t = TemplateWriterTask(

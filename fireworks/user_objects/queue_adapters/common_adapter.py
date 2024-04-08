@@ -39,7 +39,7 @@ class CommonAdapter(QueueAdapterBase):
         "MOAB": {"submit_cmd": "msub", "status_cmd": "showq"},
     }
 
-    def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs):
+    def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs) -> None:
         """
         Initializes a new QueueAdapter object.
 

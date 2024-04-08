@@ -16,7 +16,7 @@ __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
 
 
-def ping_multilaunch(port, stop_event):
+def ping_multilaunch(port, stop_event) -> None:
     """
     A single manager to ping all launches during multiprocess launches.
 
@@ -43,7 +43,7 @@ def ping_multilaunch(port, stop_event):
 
 def rapidfire_process(
     fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect
-):
+) -> None:
     """
     Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
@@ -205,7 +205,7 @@ def launch_multiprocess(
     timeout=None,
     exclude_current_node=False,
     local_redirect=False,
-):
+) -> None:
     """
     Launch the jobs in the job packing mode.
 

@@ -309,5 +309,5 @@ def skip(app, what, name, obj, skip, options):
 
 
 # AJ: a hack found online to get __init__ to show up in docs
-def setup(app):
+def setup(app) -> None:
     app.connect("autodoc-skip-member", skip)

@@ -24,7 +24,7 @@ class TaskB(FiretaskBase):
 
 @explicit_serialize
 class TaskC(FiretaskBase):
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         print("This is task C.")
         print(f"Task A gave me: {fw_spec['param_A']}")
         print(f"Task B gave me: {fw_spec['param_B']}")

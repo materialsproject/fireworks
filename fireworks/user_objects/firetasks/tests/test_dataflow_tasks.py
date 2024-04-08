@@ -28,7 +28,7 @@ def afunc(array, power):
 class CommandLineTaskTest(unittest.TestCase):
     """run tests for CommandLineTask."""
 
-    def test_command_line_task_1(self):
+    def test_command_line_task_1(self) -> None:
         """Input from string to stdin, output from stdout to string."""
         params = {
             "command_spec": {
@@ -49,7 +49,7 @@ class CommandLineTaskTest(unittest.TestCase):
         output_string = action.mod_spec[0]["_push"]["output string"]["value"]
         assert output_string == "Hello world!"
 
-    def test_command_line_task_2(self):
+    def test_command_line_task_2(self) -> None:
         """
         input from string to data, output from stdout to file;
         input from file to stdin, output from stdout to string and from file.
@@ -94,7 +94,7 @@ class CommandLineTaskTest(unittest.TestCase):
         os.remove(filename)
         os.remove(output_file)
 
-    def test_command_line_task_3(self):
+    def test_command_line_task_3(self) -> None:
         """Input from string to data with command line options."""
         import platform
 
@@ -155,7 +155,7 @@ class CommandLineTaskTest(unittest.TestCase):
         assert time_stamp_1[11:19] == time_stamp_2[11:19]
         os.remove(filename)
 
-    def test_command_line_task_4(self):
+    def test_command_line_task_4(self) -> None:
         """Multiple string inputs, multiple file outputs."""
         params = {
             "command_spec": {
@@ -188,7 +188,7 @@ class CommandLineTaskTest(unittest.TestCase):
 class ForeachTaskTest(unittest.TestCase):
     """run tests for ForeachTask."""
 
-    def test_foreach_pytask(self):
+    def test_foreach_pytask(self) -> None:
         """Run PyTask for a list of numbers."""
         numbers = [0, 1, 2, 3, 4]
         power = 2
@@ -209,7 +209,7 @@ class ForeachTaskTest(unittest.TestCase):
         for number, result in zip(numbers, results):
             assert result == pow(number, power)
 
-    def test_foreach_commandlinetask(self):
+    def test_foreach_commandlinetask(self) -> None:
         """Run CommandLineTask for a list of input data."""
         inputs = ["black", "white", 2.5, 17]
         worklist = [{"source": {"type": "data", "value": s}} for s in inputs]
@@ -242,7 +242,7 @@ class ForeachTaskTest(unittest.TestCase):
 class JoinDictTaskTest(unittest.TestCase):
     """run tests for JoinDictTask."""
 
-    def test_join_dict_task(self):
+    def test_join_dict_task(self) -> None:
         """Joins dictionaries into a new or existing dict in spec."""
         temperature = {"value": 273.15, "units": "Kelvin"}
         pressure = {"value": 1.2, "units": "bar"}
@@ -268,7 +268,7 @@ class JoinDictTaskTest(unittest.TestCase):
 class JoinListTaskTest(unittest.TestCase):
     """run tests for JoinListTask."""
 
-    def test_join_list_task(self):
+    def test_join_list_task(self) -> None:
         """Joins items into a new or existing list in spec."""
         temperature = {"value": 273.15, "units": "Kelvin"}
         pressure = {"value": 1.2, "units": "bar"}
@@ -291,7 +291,7 @@ class JoinListTaskTest(unittest.TestCase):
 class ImportDataTaskTest(unittest.TestCase):
     """run tests for ImportDataTask."""
 
-    def test_import_data_task(self):
+    def test_import_data_task(self) -> None:
         """Loads data from a file into spec."""
         import json
 

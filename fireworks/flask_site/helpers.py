@@ -16,8 +16,7 @@ def fw_filt_given_wf_filt(filt, lp):
 
 def wf_filt_given_fw_filt(filt, lp):
     wf_ids = set()
-    for doc in lp.fireworks.find(filt, {"_id": 0, "fw_id": 1}):
-        wf_ids.add(doc["fw_id"])
+    wf_ids.update(doc["fw_id"] for doc in lp.fireworks.find(filt, {"_id": 0, "fw_id": 1}))
     return {"nodes": {"$in": list(wf_ids)}}
 
 

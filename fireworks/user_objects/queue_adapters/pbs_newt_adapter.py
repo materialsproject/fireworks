@@ -40,7 +40,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
         return len(r.json())
 
     @staticmethod
-    def _init_auth_session(max_pw_requests=3):
+    def _init_auth_session(max_pw_requests=3) -> None:
         """
         Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions.

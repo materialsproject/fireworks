@@ -11,7 +11,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 class RocketTest(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -21,20 +21,20 @@ class RocketTest(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         pass
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         # Delete launch locations
         if os.path.exists(os.path.join("FW.json")):
             os.remove("FW.json")
 
-    def test_serializable_exception(self):
+    def test_serializable_exception(self) -> None:
         error_test_dict = {"error": "description", "error_code": 1}
         fw = Firework(ExceptionTestTask(exc_details=error_test_dict))
         self.lp.add_wf(fw)
@@ -45,7 +45,7 @@ class RocketTest(unittest.TestCase):
         launches = fw.launches
         assert launches[0].action.stored_data["_exception"]["_details"] == error_test_dict
 
-    def test_postproc_exception(self):
+    def test_postproc_exception(self) -> None:
         fw = Firework(MalformedAdditionTask())
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)

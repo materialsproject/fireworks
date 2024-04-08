@@ -6,6 +6,7 @@ import shutil
 import time
 import unittest
 from multiprocessing import Pool
+from typing import NoReturn
 
 import pytest
 
@@ -36,14 +37,14 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 NCORES_PARALLEL_TEST = 4
 
 
-def random_launch(lp_creds):
+def random_launch(lp_creds) -> None:
     lp = LaunchPad.from_dict(lp_creds)
     while lp.run_exists(None):
         launch_rocket(lp)
         time.sleep(random.random() / 3 + 0.1)
 
 
-def throw_error(msg):
+def throw_error(msg) -> NoReturn:
     raise ValueError(msg)
 
 
@@ -74,7 +75,7 @@ class ModSpecTask(FiretaskBase):
 
 class MongoTests(unittest.TestCase):
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.lp = None
         cls.fworker = FWorker()
         try:
@@ -84,21 +85,21 @@ class MongoTests(unittest.TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
     @staticmethod
-    def _teardown(dests):
+    def _teardown(dests) -> None:
         for f in dests:
             if os.path.exists(f):
                 os.remove(f)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.lp.reset(password=None, require_password=False)
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         if os.path.exists(os.path.join("FW.json")):
             os.remove("FW.json")
@@ -110,14 +111,14 @@ class MongoTests(unittest.TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    def test_basic_fw(self):
+    def test_basic_fw(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1)
         self.lp.add_wf(fw)
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 
-    def test_basic_fw_offline(self):
+    def test_basic_fw_offline(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1)
         self.lp.add_wf(fw)
@@ -152,7 +153,7 @@ class MongoTests(unittest.TestCase):
         self.lp.recover_offline(launch["launch_id"])
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 
-    def test_offline_fw_passinfo(self):
+    def test_offline_fw_passinfo(self) -> None:
         fw1 = Firework([AdditionTask()], {"input_array": [1, 1]}, name="1")
         fw2 = Firework([AdditionTask()], {"input_array": [2, 2]}, name="2")
         fw3 = Firework([AdditionTask()], {"input_array": [3]}, parents=[fw1, fw2], name="3")
@@ -198,7 +199,7 @@ class MongoTests(unittest.TestCase):
         assert set(child_fw.spec["input_array"]) == {2, 3, 4}
         assert child_fw.launches[0].action.stored_data["sum"] == 9
 
-    def test_multi_fw(self):
+    def test_multi_fw(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         test2 = ScriptTask.from_str("python -c 'print(\"test2\")'", {"store_stdout": True})
         fw = Firework([test1, test2])
@@ -206,7 +207,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test2\n"
 
-    def test_multi_fw_complex(self):
+    def test_multi_fw_complex(self) -> None:
         dest1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "inputs.txt")
         dest2 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "temp_file.txt")
         self._teardown([dest1, dest2])
@@ -234,7 +235,7 @@ class MongoTests(unittest.TestCase):
         finally:
             self._teardown([dest1, dest2])
 
-    def test_backgroundtask(self):
+    def test_backgroundtask(self) -> None:
         dest1 = os.path.join(os.path.dirname(os.path.abspath(__file__)), "hello.txt")
         self._teardown([dest1])
 
@@ -256,13 +257,13 @@ class MongoTests(unittest.TestCase):
         finally:
             self._teardown([dest1])
 
-    def test_add_fw(self):
+    def test_add_fw(self) -> None:
         fw = Firework(AdditionTask(), {"input_array": [5, 7]})
         self.lp.add_wf(fw)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         assert self.lp.get_launch_by_id(1).action.stored_data["sum"] == 12
 
-    def test_org_wf(self):
+    def test_org_wf(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         test2 = ScriptTask.from_str("python -c 'print(\"test2\")'", {"store_stdout": True})
         fw1 = Firework(test1, fw_id=-1)
@@ -274,7 +275,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(2).action.stored_data["stdout"] == "test2\n"
 
-    def test_fibadder(self):
+    def test_fibadder(self) -> None:
         fib = FibonacciAdderTask()
         fw = Firework(fib, {"smaller": 0, "larger": 1, "stop_point": 3})
         self.lp.add_wf(fw)
@@ -285,7 +286,7 @@ class MongoTests(unittest.TestCase):
         assert self.lp.get_launch_by_id(3).action.stored_data == {}
         assert not self.lp.run_exists()
 
-    def test_parallel_fibadder(self):
+    def test_parallel_fibadder(self) -> None:
         # this is really testing to see if a Workflow can handle multiple FWs updating it at once
         parent = Firework(ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True}))
         fib1 = Firework(FibonacciAdderTask(), {"smaller": 0, "larger": 1, "stop_point": 30}, parents=[parent])
@@ -300,7 +301,7 @@ class MongoTests(unittest.TestCase):
         creds_array = [self.lp.to_dict()] * NCORES_PARALLEL_TEST
         p.map(random_launch, creds_array)
 
-    def test_multi_detour(self):
+    def test_multi_detour(self) -> None:
         fw1 = Firework([MultipleDetourTask()], fw_id=1)
         fw2 = Firework([ScriptTask.from_str('echo "DONE"')], parents=[fw1], fw_id=2)
         self.lp.add_wf(Workflow([fw1, fw2]))
@@ -312,7 +313,7 @@ class MongoTests(unittest.TestCase):
         assert set(links[4]) == {2}
         assert set(links[5]) == {2}
 
-    def test_fw_env(self):
+    def test_fw_env(self) -> None:
         t = DummyFWEnvTask()
         fw = Firework(t)
         self.lp.add_wf(fw)
@@ -322,7 +323,7 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, FWorker(env={"hello": "world"}))
         assert self.lp.get_launch_by_id(2).action.stored_data["data"] == "world"
 
-    def test_job_info(self):
+    def test_job_info(self) -> None:
         fw1 = Firework([ScriptTask.from_str('echo "Testing job info"')], spec={"_pass_job_info": True}, fw_id=1)
         fw2 = Firework([DummyJobPassTask()], parents=[fw1], spec={"_pass_job_info": True, "target": 1}, fw_id=2)
         fw3 = Firework([DummyJobPassTask()], parents=[fw2], spec={"target": 2}, fw_id=3)
@@ -361,7 +362,7 @@ class MongoTests(unittest.TestCase):
 
         assert len(modified_spec["_job_info"]) == 2
 
-    def test_files_in_out(self):
+    def test_files_in_out(self) -> None:
         # create the Workflow that passes files_in and files_out
         fw1 = Firework(
             [ScriptTask.from_str('echo "This is the first FireWork" > test1')],
@@ -390,7 +391,7 @@ class MongoTests(unittest.TestCase):
         for f in ["test1", "hello.gz", "fwtest.2"]:
             os.remove(f)
 
-    def test_preserve_fworker(self):
+    def test_preserve_fworker(self) -> None:
         fw1 = Firework(
             [ScriptTask.from_str('echo "Testing preserve FWorker"')], spec={"_preserve_fworker": True}, fw_id=1
         )
@@ -415,14 +416,14 @@ class MongoTests(unittest.TestCase):
 
         assert modified_spec["_fworker"] is not None
 
-    def test_add_lp_and_fw_id(self):
+    def test_add_lp_and_fw_id(self) -> None:
         fw1 = Firework([DummyLPTask()], spec={"_add_launchpad_and_fw_id": True})
         self.lp.add_wf(fw1)
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(1).action.stored_data["fw_id"] == 1
         assert self.lp.get_launch_by_id(1).action.stored_data["host"] is not None
 
-    def test_spec_copy(self):
+    def test_spec_copy(self) -> None:
         task1 = ScriptTask.from_str('echo "Task 1"')
         task2 = ScriptTask.from_str('echo "Task 2"')
 
@@ -436,7 +437,7 @@ class MongoTests(unittest.TestCase):
         assert self.lp.get_fw_by_id(1).tasks[0]["script"][0] == 'echo "Task 1"'
         assert self.lp.get_fw_by_id(2).tasks[0]["script"][0] == 'echo "Task 2"'
 
-    def test_category(self):
+    def test_category(self) -> None:
         task1 = ScriptTask.from_str('echo "Task 1"')
         task2 = ScriptTask.from_str('echo "Task 2"')
 
@@ -453,7 +454,7 @@ class MongoTests(unittest.TestCase):
         assert self.lp.run_exists(FWorker())  # can run any category
         assert self.lp.run_exists(FWorker(category=["dummy_category", "other category"]))
 
-    def test_category_pt2(self):
+    def test_category_pt2(self) -> None:
         task1 = ScriptTask.from_str('echo "Task 1"')
         task2 = ScriptTask.from_str('echo "Task 2"')
 
@@ -467,7 +468,7 @@ class MongoTests(unittest.TestCase):
         assert self.lp.run_exists(FWorker())  # can run any category
         assert not self.lp.run_exists(FWorker(category=["dummy_category", "other category"]))
 
-    def test_delete_fw(self):
+    def test_delete_fw(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1)
         self.lp.add_wf(fw)
@@ -479,7 +480,7 @@ class MongoTests(unittest.TestCase):
         with pytest.raises(ValueError):
             self.lp.get_launch_by_id(1)
 
-    def test_duplicate_delete_fw(self):
+    def test_duplicate_delete_fw(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()})
         self.lp.add_wf(fw)
@@ -496,7 +497,7 @@ class MongoTests(unittest.TestCase):
             self.lp.get_fw_by_id(del_id)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 
-    def test_dupefinder(self):
+    def test_dupefinder(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()})
         self.lp.add_wf(fw)
@@ -516,7 +517,7 @@ class MongoTests(unittest.TestCase):
             print("--------")
         assert self.lp.launches.count_documents({}) == 1
 
-    def test_append_wf(self):
+    def test_append_wf(self) -> None:
         fw1 = Firework([UpdateSpecTask()])
         fw2 = Firework([ModSpecTask()])
         self.lp.add_wf(Workflow([fw1, fw2]))
@@ -548,7 +549,7 @@ class MongoTests(unittest.TestCase):
         with pytest.raises(ValueError):
             self.lp.append_wf(new_wf, [4], detour=True)
 
-    def test_append_wf_detour(self):
+    def test_append_wf_detour(self) -> None:
         fw1 = Firework([ModSpecTask()], fw_id=1)
         fw2 = Firework([ModSpecTask()], fw_id=2, parents=[fw1])
         self.lp.add_wf(Workflow([fw1, fw2]))
@@ -561,7 +562,7 @@ class MongoTests(unittest.TestCase):
 
         assert self.lp.get_fw_by_id(2).spec["dummy2"] == [True, True]
 
-    def test_force_lock_removal(self):
+    def test_force_lock_removal(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1, {"_dupefinder": DupeFinderExact()}, fw_id=1)
         self.lp.add_wf(fw)
@@ -569,7 +570,7 @@ class MongoTests(unittest.TestCase):
         with WFLock(self.lp, 1), WFLock(self.lp, 1, kill=True, expire_secs=1):
             assert True  # dummy to make sure we got here
 
-    def test_fizzle(self):
+    def test_fizzle(self) -> None:
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["Testing; this error is normal."])
         fw = Firework(p)
         self.lp.add_wf(fw)
@@ -577,21 +578,21 @@ class MongoTests(unittest.TestCase):
         assert self.lp.get_fw_by_id(1).state == "FIZZLED"
         assert not launch_rocket(self.lp, self.fworker)
 
-    def test_defuse(self):
+    def test_defuse(self) -> None:
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = Firework(p)
         self.lp.add_wf(fw)
         self.lp.defuse_fw(fw.fw_id)
         assert not launch_rocket(self.lp, self.fworker)
 
-    def test_archive(self):
+    def test_archive(self) -> None:
         p = PyTask(func="fireworks.tests.mongo_tests.throw_error", args=["This should not happen"])
         fw = Firework(p)
         self.lp.add_wf(fw)
         self.lp.archive_wf(fw.fw_id)
         assert not launch_rocket(self.lp, self.fworker)
 
-    def test_stats(self):
+    def test_stats(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
         fw = Firework(test1)
         self.lp.add_wf(fw)

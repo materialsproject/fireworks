@@ -20,7 +20,7 @@ ENCODING_PARAMS = {"encoding": "utf-8"}
 
 @explicit_serialize
 class ExplicitTestSerializer(FWSerializable):
-    def __init__(self, a):
+    def __init__(self, a) -> None:
         self.a = a
 
     def __eq__(self, other):
@@ -35,7 +35,7 @@ class ExplicitTestSerializer(FWSerializable):
 
 
 class SerializationTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         test_date = datetime.datetime.utcnow()
         # A basic datetime test serialized object
         self.obj_1 = TestSerializer("prop1", test_date)
@@ -55,50 +55,50 @@ class SerializationTest(unittest.TestCase):
 
         self.module_dir = os.path.dirname(os.path.abspath(__file__))
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         os.remove("test.json")
         os.remove("test.yaml")
 
-    def test_sanity(self):
+    def test_sanity(self) -> None:
         assert self.obj_1 == self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!"
         assert self.obj_1 != self.obj_2, "The __ne__() method of the TestSerializer is not set up properly!"
         assert self.obj_1 == self.obj_1.from_dict(
             self.obj_1.to_dict()
         ), "The to/from_dict() methods of the TestSerializer are not set up properly!"
 
-    def test_serialize_fw_decorator(self):
+    def test_serialize_fw_decorator(self) -> None:
         m_dict = self.obj_1.to_dict()
         assert m_dict["_fw_name"] == "TestSerializer Name"
 
-    def test_json(self):
+    def test_json(self) -> None:
         obj1_json_string = str(self.obj_1.to_format())  # default format is JSON, make sure this is true
         assert self.obj_1.from_format(obj1_json_string) == self.obj_1, "JSON format export / import fails!"
 
-    def test_yaml(self):
+    def test_yaml(self) -> None:
         obj1_yaml_string = str(self.obj_1.to_format("yaml"))
         assert self.obj_1.from_format(obj1_yaml_string, "yaml") == self.obj_1, "YAML format export / import fails!"
 
-    def test_complex_json(self):
+    def test_complex_json(self) -> None:
         obj2_json_string = str(self.obj_2.to_format())  # default format is JSON, make sure this is true
         assert self.obj_2.from_format(obj2_json_string) == self.obj_2, "Complex JSON format export / import fails!"
 
-    def test_complex_yaml(self):
+    def test_complex_yaml(self) -> None:
         obj2_yaml_string = str(self.obj_2.to_format("yaml"))
         assert (
             self.obj_2.from_format(obj2_yaml_string, "yaml") == self.obj_2
         ), "Complex YAML format export / import fails!"
 
-    def test_unicode_json(self):
+    def test_unicode_json(self) -> None:
         obj3_json_string = str(self.obj_3.to_format())  # default format is JSON, make sure this is true
         assert self.obj_3.from_format(obj3_json_string) == self.obj_3, "Unicode JSON format export / import fails!"
 
-    def test_unicode_yaml(self):
+    def test_unicode_yaml(self) -> None:
         obj3_yaml_string = str(self.obj_3.to_format("yaml"))
         assert (
             self.obj_3.from_format(obj3_yaml_string, "yaml") == self.obj_3
         ), "Unicode YAML format export / import fails!"
 
-    def test_unicode_json_file(self):
+    def test_unicode_json_file(self) -> None:
         with open(os.path.join(self.module_dir, "test_reference.json")) as f, open(
             "test.json", **ENCODING_PARAMS
         ) as f2:
@@ -108,22 +108,22 @@ class SerializationTest(unittest.TestCase):
 
         assert self.obj_3.from_file("test.json") == self.obj_3, "Unicode JSON file import fails!"
 
-    def test_unicode_yaml_file(self):
+    def test_unicode_yaml_file(self) -> None:
         ref_path = os.path.join(self.module_dir, "test_reference.yaml")
         with open(ref_path, **ENCODING_PARAMS) as f, open("test.yaml", **ENCODING_PARAMS) as f2:
             assert f.read() == f2.read(), "Unicode JSON file export fails"
 
         assert self.obj_3.from_file("test.yaml") == self.obj_3, "Unicode YAML file import fails!"
 
-    def test_implicit_serialization(self):
+    def test_implicit_serialization(self) -> None:
         assert (
             load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}) == self.obj_4
         ), "Implicit import fails!"
 
-    def test_as_dict(self):
+    def test_as_dict(self) -> None:
         assert self.obj_1.as_dict() == self.obj_1.to_dict()
 
-    def test_numpy_array(self):
+    def test_numpy_array(self) -> None:
         try:
             import numpy as np
         except Exception:
@@ -135,11 +135,11 @@ class SerializationTest(unittest.TestCase):
 
 
 class ExplicitSerializationTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.s_obj = ExplicitTestSerializer(1)
         self.s_dict = self.s_obj.to_dict()
 
-    def test_explicit_serialization(self):
+    def test_explicit_serialization(self) -> None:
         assert load_object(self.s_dict) == self.s_obj
 
 

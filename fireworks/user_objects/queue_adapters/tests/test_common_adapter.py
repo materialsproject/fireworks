@@ -16,7 +16,7 @@ from fireworks.utilities.fw_serializers import load_object, load_object_from_fil
 
 
 class CommonAdapterTest(unittest.TestCase):
-    def test_serialization(self):
+    def test_serialization(self) -> None:
         p = CommonAdapter(
             q_type="PBS",
             q_name="hello",
@@ -38,7 +38,7 @@ class CommonAdapterTest(unittest.TestCase):
         assert p.get_script_str("here").split("\n")[-1] != "# world"
         assert "_fw_template_file" not in p.to_dict()
 
-    def test_yaml_load(self):
+    def test_yaml_load(self) -> None:
         # Test yaml loading.
         p = load_object_from_file(os.path.join(os.path.dirname(__file__), "pbs.yaml"))
         p = CommonAdapter(q_type="PBS", q_name="hello", ppnode="8:ib", nnodes=1, hello="world", queue="random")
@@ -48,7 +48,7 @@ class CommonAdapterTest(unittest.TestCase):
         yaml.dump(p.to_dict(), sys.stdout)
         print()
 
-    def test_parse_njobs(self):
+    def test_parse_njobs(self) -> None:
         pbs = """
 tscc-mgr.sdsc.edu:
                                                                                   Req'd    Req'd       Elap
@@ -89,7 +89,7 @@ JobId   User    Queue     Jobname  Nodes  Procs  Mode    WallTime  State    RunT
         p = CommonAdapter(q_type="SGE", q_name="hello", queue="all.q", hello="world")
         assert p._parse_njobs(sge, "ongsp") == 3
 
-    def test_parse_jobid(self):
+    def test_parse_jobid(self) -> None:
         p = CommonAdapter(q_type="SLURM", q_name="hello", queue="home-ong", hello="world")
         sbatch_output = """
 SOME PREAMBLE
@@ -107,14 +107,14 @@ Project: JCESR2015
         qsub_output = 'Your job 44275 ("jobname") has been submitted'
         assert p._parse_jobid(qsub_output) == "44275"
 
-    def test_status_cmd_pbs(self):
+    def test_status_cmd_pbs(self) -> None:
         p = load_object_from_file(
             os.path.join(os.path.dirname(__file__), "pbs_override.yaml")  # intentional red herring to test deepcopy
         )
         p = CommonAdapter(q_type="PBS")
         assert p._get_status_cmd("my_name") == ["qstat", "-u", "my_name"]
 
-    def test_override(self):
+    def test_override(self) -> None:
         p = load_object_from_file(os.path.join(os.path.dirname(__file__), "pbs_override.yaml"))
 
         assert p._get_status_cmd("my_name") == ["my_qstatus", "-u", "my_name"]

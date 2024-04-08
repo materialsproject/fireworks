@@ -21,7 +21,7 @@ fw_version = f"v{metadata.version('fireworks')}"
 
 
 @task
-def make_doc(ctx):
+def make_doc(ctx) -> None:
     with cd("docs_rst"):
         ctx.run("sphinx-apidoc -o . -f ../fireworks")
         ctx.run("make html")
@@ -36,7 +36,7 @@ def make_doc(ctx):
 
 
 @task
-def update_doc(ctx):
+def update_doc(ctx) -> None:
     make_doc(ctx)
     with cd("docs"):
         ctx.run("git add .")
@@ -45,12 +45,12 @@ def update_doc(ctx):
 
 
 @task
-def publish(ctx):
+def publish(ctx) -> None:
     ctx.run("python setup.py release")
 
 
 @task
-def release_github(ctx):
+def release_github(ctx) -> None:
     payload = {
         "tag_name": fw_version,
         "target_commitish": "master",
@@ -71,13 +71,13 @@ def release_github(ctx):
 
 
 @task
-def release(ctx):
+def release(ctx) -> None:
     publish(ctx)
     update_doc(ctx)
     release_github(ctx)
 
 
 @task
-def open_doc(ctx):
+def open_doc(ctx) -> None:
     pth = os.path.abspath("docs/index.html")
     webbrowser.open("file://" + pth)
