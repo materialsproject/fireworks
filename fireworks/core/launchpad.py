@@ -376,7 +376,9 @@ class LaunchPad(FWSerializable):
         Add workflow(or firework) to the launchpad. The firework ids will be reassigned.
 
         Args:
-            wf (Workflow/Firework)
+            wf (Workflow/Firework): Workflow or Firework object
+            reassign_all (bool): If True, the firework ids will be assigned
+                starting from the next available id. Defaults to True.
 
         Returns:
             dict: mapping between old and new Firework ids
