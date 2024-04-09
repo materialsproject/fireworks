@@ -153,9 +153,9 @@ class FWAction(FWSerializable):
                 not only to direct children, but to all dependent FireWorks
                 down to the Workflow's leaves.
         """
-        mod_spec = mod_spec if mod_spec is not None else []
-        additions = additions if additions is not None else []
-        detours = detours if detours is not None else []
+        mod_spec = mod_spec or []
+        additions = additions or []
+        detours = detours or []
 
         self.stored_data = stored_data if stored_data else {}
         self.exit = exit
@@ -267,13 +267,13 @@ class Firework(FWSerializable):
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launches = launches if launches else []
-        self.archived_launches = archived_launches if archived_launches else []
+        self.launches = launches or []
+        self.archived_launches = archived_launches or []
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
         parents = [parents] if isinstance(parents, Firework) else parents
-        self.parents = parents if parents else []
+        self.parents = parents or []
 
         self._state = state
 
@@ -476,9 +476,9 @@ class Launch(FWSerializable):
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
-        self.trackers = trackers if trackers else []
+        self.trackers = trackers or []
         self.action = action if action else None
-        self.state_history = state_history if state_history else []
+        self.state_history = state_history or []
         self.state = state
         self.launch_id = launch_id
         self.fw_id = fw_id
@@ -643,7 +643,7 @@ class Launch(FWSerializable):
             now_time = datetime.utcnow()
             new_history_entry = {"state": state, "created_on": now_time}
             if state != "COMPLETED" and last_checkpoint:
-                new_history_entry.update({"checkpoint": last_checkpoint})
+                new_history_entry.update(checkpoint=last_checkpoint)
             self.state_history.append(new_history_entry)
             if state in ["RUNNING", "RESERVED"]:
                 self.touch_history()  # add updated_on key
