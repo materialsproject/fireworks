@@ -471,7 +471,7 @@ class Launch(FWSerializable):
             fw_id (int): id of the Firework this Launch is running.
         """
         if state not in Firework.STATE_RANKS:
-            raise ValueError(f"Invalid launch state: {state}")
+            raise ValueError(f"Invalid launch {state=}")
         self.launch_dir = launch_dir
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
@@ -1029,7 +1029,7 @@ class Workflow(FWSerializable):
                     ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
                     if any(ready_run):
                         raise ValueError(
-                            f"fw_id: {fw_id}: Detour option only works if all children "
+                            f"{fw_id=}: Detour option only works if all children "
                             "of detours are not READY to run and have not already run"
                         )
 
