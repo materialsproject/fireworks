@@ -1,6 +1,6 @@
 # from __future__ import unicode_literals
 
-from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, TestSerializer
+from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, UnitTestSerializer
 from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_dict
 from fireworks.utilities.fw_utilities import explicit_serialize
 
@@ -38,11 +38,13 @@ class SerializationTest(unittest.TestCase):
     def setUp(self) -> None:
         test_date = datetime.datetime.utcnow()
         # A basic datetime test serialized object
-        self.obj_1 = TestSerializer("prop1", test_date)
-        self.obj_1_copy = TestSerializer("prop1", test_date)
+        self.obj_1 = UnitTestSerializer("prop1", test_date)
+        self.obj_1_copy = UnitTestSerializer("prop1", test_date)
 
         # A nested test serialized object
-        self.obj_2 = TestSerializer({"p1": 1234, "p2": 5.0, "p3": "Hi!", "p4": datetime.datetime.utcnow()}, test_date)
+        self.obj_2 = UnitTestSerializer(
+            {"p1": 1234, "p2": 5.0, "p3": "Hi!", "p4": datetime.datetime.utcnow()}, test_date
+        )
 
         # A unicode test serialized object
         unicode_str = "\xe4\xf6\xfc"
