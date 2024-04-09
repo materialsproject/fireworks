@@ -21,13 +21,13 @@ module_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FileWriteDeleteTest(unittest.TestCase):
-    def test_init(self):
+    def test_init(self) -> None:
         FileWriteTask(files_to_write="hello")
         FileWriteTask({"files_to_write": "hello"})
         with pytest.raises(RuntimeError):
             FileWriteTask()
 
-    def test_run(self):
+    def test_run(self) -> None:
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))
         t.run_task({})
         for i in range(2):
@@ -41,11 +41,11 @@ class FileWriteDeleteTest(unittest.TestCase):
 
 
 class CompressDecompressArchiveDirTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.cwd = os.getcwd()
         os.chdir(module_dir)
 
-    def test_compress_dir(self):
+    def test_compress_dir(self) -> None:
         c = CompressDirTask(compression="gz")
         c.run_task({})
         assert os.path.exists("delete.yaml.gz")
@@ -55,13 +55,13 @@ class CompressDecompressArchiveDirTest(unittest.TestCase):
         assert not os.path.exists("delete.yaml.gz")
         assert os.path.exists("delete.yaml")
 
-    def test_archive_dir(self):
+    def test_archive_dir(self) -> None:
         a = ArchiveDirTask(base_name="archive", format="gztar")
         a.run_task({})
         assert os.path.exists("archive.tar.gz")
         os.remove("archive.tar.gz")
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         os.chdir(self.cwd)
 
 

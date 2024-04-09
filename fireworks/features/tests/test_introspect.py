@@ -6,7 +6,7 @@ __author__ = "Anubhav Jain <ajain@lbl.gov>"
 
 
 class IntrospectTest(unittest.TestCase):
-    def test_flatten_dict(self):
+    def test_flatten_dict(self) -> None:
         assert set(flatten_to_keys({"d": {"e": {"f": 4}, "f": 10}}, max_recurs=1)) == {
             f"d{separator_str}<TRUNCATED_OBJECT>"
         }

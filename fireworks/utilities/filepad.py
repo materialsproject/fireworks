@@ -37,7 +37,7 @@ class FilePad(MSONable):
         logdir=None,
         strm_lvl=None,
         text_mode=False,
-    ):
+    ) -> None:
         """
         Args:
             host (str): hostname
@@ -106,7 +106,7 @@ class FilePad(MSONable):
         # build indexes
         self.build_indexes()
 
-    def build_indexes(self, indexes=None, background=True):
+    def build_indexes(self, indexes=None, background=True) -> None:
         """
         Build the indexes.
 
@@ -194,7 +194,7 @@ class FilePad(MSONable):
             cursor = self.filepad.find(query).sort(sort_key, sort_direction)
         return [self._get_file_contents(d) for d in cursor]
 
-    def delete_file(self, identifier):
+    def delete_file(self, identifier) -> None:
         """
         Delete the document with the matching identifier. The contents in the gridfs as well as the
         associated document in the filepad are deleted.
@@ -224,7 +224,7 @@ class FilePad(MSONable):
         doc = self.filepad.find_one({"identifier": identifier})
         return self._update_file_contents(doc, path, compress)
 
-    def delete_file_by_id(self, gfs_id):
+    def delete_file_by_id(self, gfs_id) -> None:
         """
         Args:
             gfs_id (str): the file id.
@@ -232,7 +232,7 @@ class FilePad(MSONable):
         self.gridfs.delete(gfs_id)
         self.filepad.delete_one({"gfs_id": gfs_id})
 
-    def delete_file_by_query(self, query):
+    def delete_file_by_query(self, query) -> None:
         """
         Args:
             query (dict): pymongo query dict.
@@ -366,7 +366,7 @@ class FilePad(MSONable):
             return FilePad.from_db_file(LAUNCHPAD_LOC)
         return FilePad()
 
-    def reset(self):
+    def reset(self) -> None:
         """Reset filepad and the gridfs collections."""
         self.filepad.delete_many({})
         self.db[self.gridfs_coll_name].files.delete_many({})

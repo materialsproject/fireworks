@@ -183,11 +183,11 @@ htmlhelp_basename = "FireWorksdoc"
 
 latex_elements = {
     # The paper size ('letterpaper' or 'a4paper').
-    #'papersize': 'letterpaper',
+    # 'papersize': 'letterpaper',
     # The font size ('10pt', '11pt' or '12pt').
-    #'pointsize': '10pt',
+    # 'pointsize': '10pt',
     # Additional stuff for the LaTeX preamble.
-    #'preamble': '',
+    # 'preamble': '',
 }
 
 # Grouping the document tree into LaTeX files. List of tuples
@@ -309,5 +309,5 @@ def skip(app, what, name, obj, skip, options):
 
 
 # AJ: a hack found online to get __init__ to show up in docs
-def setup(app):
+def setup(app) -> None:
     app.connect("autodoc-skip-member", skip)

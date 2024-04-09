@@ -43,7 +43,7 @@ class DAGFlow(Graph):
     visualization of workflows.
     """
 
-    def __init__(self, steps, links=None, nlinks=None, name=None, **kwargs):
+    def __init__(self, steps, links=None, nlinks=None, name=None, **kwargs) -> None:
         Graph.__init__(self, directed=True, graph_attrs={"name": name}, **kwargs)
 
         for step in steps:
@@ -69,7 +69,7 @@ class DAGFlow(Graph):
             step = {}
             step["name"] = fwk["name"]
             step["id"] = fwk["fw_id"]
-            step["state"] = fwk["state"] if "state" in fwk else None
+            step["state"] = fwk.get("state", None)
             steps.append(step)
 
         links = []
@@ -108,7 +108,7 @@ class DAGFlow(Graph):
 
             step_data = []
             for task in step["_tasks"]:
-                true_task = task["task"] if "task" in task else task
+                true_task = task.get("task", task)
                 step_data.extend(task_input(true_task, fwk["spec"]))
                 if "outputs" in true_task:
                     assert isinstance(true_task["outputs"], list), "outputs must be a list in fw_id " + str(step["id"])
@@ -136,14 +136,14 @@ class DAGFlow(Graph):
             links.append((source, target))
         return links
 
-    def _add_ctrlflow_links(self, links):
+    def _add_ctrlflow_links(self, links) -> None:
         """Adds graph edges corresponding to control flow links."""
         for link in links:
             source = self._get_index(link[0])
             target = self._get_index(link[1])
             self.add_edge(source, target, label=" ")
 
-    def _add_dataflow_links(self, step_id=None, mode="both"):
+    def _add_dataflow_links(self, step_id=None, mode="both") -> None:
         """Adds graph edges corresponding to data flow links."""
         if step_id:
             vidx = self._get_index(step_id)
@@ -205,13 +205,13 @@ class DAGFlow(Graph):
         return lst
 
     @staticmethod
-    def _set_io_fields(step):
+    def _set_io_fields(step) -> None:
         """Set io keys as step attributes."""
         for item in ["inputs", "outputs", "output"]:
             step[item] = []
             for task in step["_tasks"]:
                 # test the case of meta-tasks
-                true_task = task["task"] if "task" in task else task
+                true_task = task.get("task", task)
                 if item in true_task:
                     if isinstance(true_task[item], list):
                         step[item].extend(true_task[item])
@@ -266,22 +266,22 @@ class DAGFlow(Graph):
         """Returns all leaves (i.e. vertices without outgoing edges)."""
         return [i for i, v in enumerate(self.degree(mode=igraph.OUT)) if v == 0]
 
-    def delete_ctrlflow_links(self):
+    def delete_ctrlflow_links(self) -> None:
         """Deletes graph edges corresponding to control flow links."""
         lst = [link.index for link in list(self.es) if link["label"] == " "]
         self.delete_edges(lst)
 
-    def delete_dataflow_links(self):
+    def delete_dataflow_links(self) -> None:
         """Deletes graph edges corresponding to data flow links."""
         lst = [link.index for link in list(self.es) if link["label"] != " "]
         self.delete_edges(lst)
 
-    def add_step_labels(self):
+    def add_step_labels(self) -> None:
         """Labels the workflow steps (i.e. graph vertices)."""
         for vertex in list(self.vs):
             vertex["label"] = vertex["name"] + ", id: " + str(vertex["id"])
 
-    def check(self):
+    def check(self) -> None:
         """Correctness check of the workflow."""
         try:
             assert self.is_dag(), "The workflow graph must be a DAG."
@@ -292,7 +292,7 @@ class DAGFlow(Graph):
         assert len(self.vs["id"]) == len(set(self.vs["id"])), "Workflow steps must have unique IDs."
         self.check_dataflow()
 
-    def check_dataflow(self):
+    def check_dataflow(self) -> None:
         """Checks whether all inputs and outputs match."""
         # check for shared output data entities
         for vertex in list(self.vs):
@@ -323,7 +323,7 @@ class DAGFlow(Graph):
         dct["links"] = self._get_ctrlflow_links()
         return dct
 
-    def to_dot(self, filename="wf.dot", view="combined"):
+    def to_dot(self, filename="wf.dot", view="combined") -> None:
         """Writes the workflow into a file in DOT format."""
         graph = DAGFlow(**self.to_dict())
         if view == "controlflow":

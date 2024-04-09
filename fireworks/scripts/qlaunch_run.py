@@ -1,8 +1,11 @@
 """A runnable script for launching rockets (a command-line interface to queue_launcher.py)."""
+
+from __future__ import annotations
+
 import os
 import time
 from argparse import ArgumentParser
-from typing import Optional, Sequence
+from typing import Sequence
 
 try:
     import fabric
@@ -31,7 +34,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
 
-def do_launch(args):
+def do_launch(args) -> None:
     cfg_files_to_check = [
         ("launchpad", "-l", False, LAUNCHPAD_LOC),
         ("fworker", "-w", False, FWORKER_LOC),
@@ -74,7 +77,7 @@ def do_launch(args):
         )
 
 
-def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def qlaunch(argv: Sequence[str] | None = None) -> int:
     m_description = (
         "This program is used to submit jobs to a queueing system. "
         "Details of the job and queue interaction are handled by the "

@@ -1,4 +1,6 @@
-# <img alt="FireWorks" src="docs_rst/_static/FireWorks_logo.png" width="250">
+<h1 align="center">
+  <img alt="FireWorks" src="docs_rst/_static/fireworks-logo.svg" width="350">
+</h1>
 
 FireWorks stores, executes, and manages calculation workflows.
 
@@ -9,7 +11,8 @@ FireWorks stores, executes, and manages calculation workflows.
 If you like FireWorks, you might also like [rocketsled](https://github.com/hackingmaterials/rocketsled).
 
 If you find FireWorks useful, please consider citing the paper:
-```
+
+```txt
 Jain, A., Ong, S. P., Chen, W., Medasani, B., Qu, X., Kocher, M., Brafman, M.,
 Petretto, G., Rignanese, G.-M., Hautier, G., Gunter, D., and Persson, K. A.
 (2015) FireWorks: a dynamic workflow system designed for high-throughput

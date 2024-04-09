@@ -33,9 +33,11 @@ import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
 import traceback
+from typing import NoReturn
 
-import ruamel.yaml as yaml
 from monty.json import MontyDecoder, MSONable
+from ruamel.yaml import YAML
+from ruamel.yaml.compat import StringIO
 
 from fireworks.fw_config import (
     DECODE_MONTY,
@@ -179,7 +181,7 @@ def serialize_fw(func):
     return _decorator
 
 
-class FWSerializable(metaclass=abc.ABCMeta):
+class FWSerializable(abc.ABC):
     """
     To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.
@@ -205,7 +207,7 @@ class FWSerializable(metaclass=abc.ABCMeta):
             return get_default_serialization(self.__class__)
 
     @abc.abstractmethod
-    def to_dict(self):
+    def to_dict(self) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
     def to_db_dict(self):
@@ -219,10 +221,10 @@ class FWSerializable(metaclass=abc.ABCMeta):
 
     @classmethod
     @abc.abstractmethod
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format="json", **kwargs):
@@ -235,8 +237,12 @@ class FWSerializable(metaclass=abc.ABCMeta):
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
         if f_format == "yaml":
-            # start with the JSON format, and convert to YAML
-            return yaml.safe_dump(self.to_dict(), default_flow_style=YAML_STYLE, allow_unicode=True)
+            yaml = YAML(typ="safe", pure=True)
+            yaml.default_flow_style = YAML_STYLE
+            yaml.allow_unicode = True
+            strm = StringIO()
+            yaml.dump(self.to_dict(), strm)
+            return strm.getvalue()
         raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
@@ -254,14 +260,14 @@ class FWSerializable(metaclass=abc.ABCMeta):
         if f_format == "json":
             dct = json.loads(f_str)
         elif f_format == "yaml":
-            dct = yaml.safe_load(f_str)
+            dct = YAML(typ="safe", pure=True).load(f_str)
         else:
             raise ValueError(f"Unsupported format {f_format}")
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
 
-    def to_file(self, filename, f_format=None, **kwargs):
+    def to_file(self, filename, f_format=None, **kwargs) -> None:
         """
         Write a serialization of this object to a file.
 
@@ -271,8 +277,16 @@ class FWSerializable(metaclass=abc.ABCMeta):
         """
         if f_format is None:
             f_format = filename.split(".")[-1]
-        with open(filename, "w", **ENCODING_PARAMS) as f:
-            f.write(self.to_format(f_format=f_format, **kwargs))
+        with open(filename, "w", **ENCODING_PARAMS) as f_out:
+            if f_format == "json":
+                json.dump(self.to_dict(), f_out, default=DATETIME_HANDLER, **kwargs)
+            elif f_format == "yaml":
+                yaml = YAML(typ="safe", pure=True)
+                yaml.default_flow_style = YAML_STYLE
+                yaml.allow_unicode = True
+                yaml.dump(self.to_dict(), f_out)
+            else:
+                raise ValueError(f"Unsupported format {f_format}")
 
     @classmethod
     def from_file(cls, filename, f_format=None):
@@ -387,7 +401,7 @@ def load_object_from_file(filename, f_format=None):
         if f_format == "json":
             dct = json.loads(f.read())
         elif f_format == "yaml":
-            dct = yaml.safe_load(f)
+            dct = YAML(typ="safe", pure=True).load(f.read())
         else:
             raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 

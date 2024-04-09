@@ -34,7 +34,7 @@ class Command:
     status = None
     output, error = "", ""
 
-    def __init__(self, command):
+    def __init__(self, command) -> None:
         """
         initialize the object.
 
@@ -57,7 +57,7 @@ class Command:
             (status, output, error)
         """
 
-        def target(**kwargs):
+        def target(**kwargs) -> None:
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)
                 self.output, self.error = self.process.communicate()

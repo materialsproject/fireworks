@@ -20,7 +20,7 @@ def lp(capsys):
 
 
 @pytest.mark.parametrize(("detail", "expected_1", "expected_2"), [("count", "0\n", "1\n"), ("ids", "[]\n", "1\n")])
-def test_lpad_get_fws(capsys, lp, detail, expected_1, expected_2):
+def test_lpad_get_fws(capsys, lp, detail, expected_1, expected_2) -> None:
     """Test lpad CLI get_fws command."""
     ret_code = lpad(["get_fws", "-d", detail])
     assert ret_code == 0
@@ -45,7 +45,7 @@ def test_lpad_get_fws(capsys, lp, detail, expected_1, expected_2):
 
 
 @pytest.mark.parametrize("arg", ["-v", "--version"])
-def test_lpad_report_version(capsys, arg):
+def test_lpad_report_version(capsys, arg) -> None:
     """Test lpad CLI version flag."""
     with pytest.raises(SystemExit, match="0"):
         lpad([arg])
@@ -56,7 +56,7 @@ def test_lpad_report_version(capsys, arg):
     assert stderr == ""
 
 
-def test_lpad_config_file_flags():
+def test_lpad_config_file_flags() -> None:
     """Test lpad CLI throws errors on missing config file flags."""
     with pytest.raises(FileNotFoundError, match="launchpad_file '' does not exist!"):
         lpad(["-l", "", "get_fws"])

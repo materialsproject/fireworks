@@ -150,7 +150,7 @@ Let's explore custom Firetasks with an example: a custom Python script for addin
            input_array = fw_spec['input_array']
            m_sum = sum(input_array)
 
-           print(f"The sum of {input_array} is: {m_sum}"
+           print(f"The sum of {input_array} is: {m_sum}")
 
            return FWAction(stored_data={'sum': m_sum}, mod_spec=[{'_push': {'input_array': m_sum}}])
 

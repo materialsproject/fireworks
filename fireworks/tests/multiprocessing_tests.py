@@ -17,7 +17,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestLinks(TestCase):
-    def test_pickle(self):
+    def test_pickle(self) -> None:
         links1 = Workflow.Links({1: 2, 3: [5, 7, 8]})
         s = pickle.dumps(links1)
         links2 = pickle.loads(s)
@@ -28,7 +28,7 @@ class TestCheckoutFW(TestCase):
     lp = None
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
@@ -37,14 +37,14 @@ class TestCheckoutFW(TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost: 27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)
         if os.path.exists(os.path.join("FW.json")):
@@ -53,7 +53,7 @@ class TestCheckoutFW(TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    def test_checkout_fw(self):
+    def test_checkout_fw(self) -> None:
         os.chdir(MODULE_DIR)
         self.lp.add_wf(
             Firework(ScriptTask.from_str(shell_cmd='echo "hello 1"', parameters={"stdout_file": "task.out"}), fw_id=1)
@@ -76,7 +76,7 @@ class TestEarlyExit(TestCase):
     lp = None
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
@@ -85,14 +85,14 @@ class TestEarlyExit(TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)
         if os.path.exists(os.path.join("FW.json")):
@@ -101,7 +101,7 @@ class TestEarlyExit(TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    def test_early_exit(self):
+    def test_early_exit(self) -> None:
         os.chdir(MODULE_DIR)
         script_text = "echo hello from process $PPID; sleep 2"
         fw1 = Firework(ScriptTask.from_str(shell_cmd=script_text, parameters={"stdout_file": "task.out"}), fw_id=1)

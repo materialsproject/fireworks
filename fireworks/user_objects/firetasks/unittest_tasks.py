@@ -12,7 +12,7 @@ __date__ = "Jan 21, 2014"
 class TestSerializer(FWSerializable):
     _fw_name = "TestSerializer Name"
 
-    def __init__(self, a, m_date):
+    def __init__(self, a, m_date) -> None:
         if not isinstance(m_date, datetime.datetime):
             raise ValueError("m_date must be a datetime instance!")
 
@@ -34,7 +34,7 @@ class TestSerializer(FWSerializable):
 class ExportTestSerializer(FWSerializable):
     _fw_name = "TestSerializer Export Name"
 
-    def __init__(self, a):
+    def __init__(self, a) -> None:
         self.a = a
 
     def __eq__(self, other):

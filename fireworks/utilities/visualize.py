@@ -1,4 +1,6 @@
-from typing import Any, Dict, Optional
+from __future__ import annotations
+
+from typing import Any
 
 from monty.dev import requires
 
@@ -23,7 +25,7 @@ def plot_wf(
     markersize=10,
     markerfacecolor="blue",
     fontsize=12,
-):
+) -> None:
     """
     Generate a visual representation of the workflow. Useful for checking whether the firework
     connections are in order before launching the workflow.
@@ -60,7 +62,7 @@ def plot_wf(
     # the rest
     for k in keys:
         for i, j in enumerate(wf.links[k]):
-            if not points_map.get(j, None):
+            if not points_map.get(j):
                 points_map[j] = ((i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
@@ -98,7 +100,7 @@ def plot_wf(
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow, dag_kwargs: Optional[Dict[str, Any]] = None, wf_show_tasks: bool = True) -> Digraph:
+def wf_to_graph(wf: Workflow, dag_kwargs: dict[str, Any] | None = None, wf_show_tasks: bool = True) -> Digraph:
     """Renders a graph representation of a workflow or firework. Workflows are rendered as the
     control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.
 
@@ -150,7 +152,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: Optional[Dict[str, Any]] = None, wf_sh
                 if idx == 0:
                     subgraph.edge(str(fw.fw_id), node_id)
                 else:
-                    subgraph.edge(f"{fw.fw_id}-{idx-1}", node_id)
+                    subgraph.edge(f"{fw.fw_id}-{idx - 1}", node_id)
 
             dag.subgraph(subgraph)
 

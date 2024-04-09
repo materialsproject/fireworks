@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import contextlib
 import datetime
 import errno
@@ -10,7 +12,6 @@ import sys
 import traceback
 from logging import Formatter, Logger
 from multiprocessing.managers import BaseManager
-from typing import Tuple
 
 from fireworks.fw_config import DS_PASSWORD, FW_BLOCK_FORMAT, FW_LOGGING_FORMAT, FWData
 
@@ -28,7 +29,7 @@ DEFAULT_FORMATTER = Formatter(FW_LOGGING_FORMAT)
 def get_fw_logger(
     name: str,
     l_dir: None = None,
-    file_levels: Tuple[str, str] = ("DEBUG", "ERROR"),
+    file_levels: tuple[str, str] = ("DEBUG", "ERROR"),
     stream_level: str = "DEBUG",
     formatter: Formatter = DEFAULT_FORMATTER,
     clear_logs: bool = False,
@@ -71,7 +72,7 @@ def get_fw_logger(
     return logger
 
 
-def log_multi(m_logger, msg, log_lvl="info"):
+def log_multi(m_logger, msg, log_lvl="info") -> None:
     """
     Args:
         m_logger (logger): The logger object
@@ -85,7 +86,7 @@ def log_multi(m_logger, msg, log_lvl="info"):
         _log_fnc(msg)
 
 
-def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False):
+def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
     """
     A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
@@ -167,7 +168,7 @@ _g_ip, _g_host = None, None
 
 
 def get_my_ip():
-    global _g_ip
+    global _g_ip  # noqa: PLW0603
     if _g_ip is None:
         try:
             _g_ip = socket.gethostbyname(socket.gethostname())
@@ -177,7 +178,7 @@ def get_my_ip():
 
 
 def get_my_host():
-    global _g_host
+    global _g_host  # noqa: PLW0603
     if _g_host is None:
         _g_host = socket.gethostname()
     return _g_host

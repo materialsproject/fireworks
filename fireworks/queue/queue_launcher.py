@@ -179,7 +179,7 @@ def rapidfire(
     strm_lvl="INFO",
     timeout=None,
     fill_mode=False,
-):
+) -> None:
     """
     Submit many jobs to the queue.
 
@@ -330,7 +330,7 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
     raise RuntimeError("Unable to determine number of jobs in queue, check queue adapter and queue server status!")
 
 
-def setup_offline_job(launchpad, fw, launch_id):
+def setup_offline_job(launchpad, fw, launch_id) -> None:
     # separate this function out for reuse in unit testing
     fw.to_file("FW.json")
     with open("FW_offline.json", "w") as f:

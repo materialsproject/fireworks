@@ -1,6 +1,5 @@
 """TODO: Modify unittest doc."""
 
-
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
 __maintainer__ = "Shyue Ping Ong"
@@ -17,7 +16,7 @@ from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 class FiretaskBaseTest(unittest.TestCase):
-    def test_init(self):
+    def test_init(self) -> None:
         class DummyTask(FiretaskBase):
             required_params = ["hello"]
 
@@ -38,7 +37,7 @@ class FiretaskBaseTest(unittest.TestCase):
         with pytest.raises(NotImplementedError):
             d.run_task({})
 
-    def test_param_checks(self):
+    def test_param_checks(self) -> None:
         class DummyTask(FiretaskBase):
             _fw_name = "DummyTask"
             required_params = ["param1"]
@@ -60,14 +59,14 @@ class PickleTask(FiretaskBase):
 
 
 class FiretaskPickleTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         import pickle
 
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
         self.upkl_task = pickle.loads(self.pkl_task)
 
-    def test_init(self):
+    def test_init(self) -> None:
         assert isinstance(self.upkl_task, PickleTask)
         assert PickleTask.from_dict(self.task.to_dict()) == self.upkl_task
         assert dir(self.task) == dir(self.upkl_task)
@@ -92,12 +91,12 @@ class Task2(FiretaskBase):
 
 
 class WorkflowTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.fw1 = Firework(Task1())
         self.fw2 = Firework([Task2(), Task2()], parents=self.fw1)
         self.fw3 = Firework(Task1(), parents=self.fw1)
 
-    def test_init(self):
+    def test_init(self) -> None:
         fws = []
         for i in range(5):
             fw = Firework([PyTask(func="print", args=[i])], fw_id=i)
@@ -110,7 +109,7 @@ class WorkflowTest(unittest.TestCase):
         with pytest.raises(ValueError):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
-    def test_copy(self):
+    def test_copy(self) -> None:
         """Test that we can produce a copy of a Workflow but that the copy
         has unique fw_ids.
         """
@@ -135,7 +134,7 @@ class WorkflowTest(unittest.TestCase):
             for child_id, orig_child_id in zip(children, orig_children):
                 assert orig_child_id == wf_copy.id_fw[child_id].name
 
-    def test_remove_leaf_fws(self):
+    def test_remove_leaf_fws(self) -> None:
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
         fws = [self.fw1, self.fw2, self.fw3, fw4]
         wflow = Workflow(fws)
@@ -146,7 +145,7 @@ class WorkflowTest(unittest.TestCase):
         wflow.remove_fws(wflow.leaf_fw_ids)
         assert wflow.leaf_fw_ids == parents
 
-    def test_remove_root_fws(self):
+    def test_remove_root_fws(self) -> None:
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
         fws = [self.fw1, self.fw2, self.fw3, fw4]
         wflow = Workflow(fws)
@@ -157,7 +156,7 @@ class WorkflowTest(unittest.TestCase):
         wflow.remove_fws(wflow.root_fw_ids)
         assert sorted(wflow.root_fw_ids) == sorted(children)
 
-    def test_iter_len_index(self):
+    def test_iter_len_index(self) -> None:
         fws = [self.fw1, self.fw2, self.fw3]
         wflow = Workflow(fws)
         for idx, fw in enumerate(wflow):

@@ -92,7 +92,7 @@ class WFLock:
     Calling functions are responsible for handling the error in order to avoid database inconsistencies.
     """
 
-    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL):
+    def __init__(self, lp, fw_id, expire_secs=WFLOCK_EXPIRATION_SECS, kill=WFLOCK_EXPIRATION_KILL) -> None:
         """
         Args:
             lp (LaunchPad)
@@ -156,7 +156,7 @@ class LaunchPad(FWSerializable):
         authsource=None,
         uri_mode=False,
         mongoclient_kwargs=None,
-    ):
+    ) -> None:
         """
         Args:
             host (str): hostname. If uri_mode is True, a MongoDB connection string URI
@@ -244,7 +244,7 @@ class LaunchPad(FWSerializable):
             "mongoclient_kwargs": self.mongoclient_kwargs,
         }
 
-    def update_spec(self, fw_ids, spec_document, mongo=False):
+    def update_spec(self, fw_ids, spec_document, mongo=False) -> None:
         """
         Update fireworks with a spec. Sometimes you need to modify a firework in progress.
 
@@ -301,7 +301,7 @@ class LaunchPad(FWSerializable):
             return LaunchPad.from_file(LAUNCHPAD_LOC)
         return LaunchPad()
 
-    def reset(self, password, require_password=True, max_reset_wo_password=25):
+    def reset(self, password, require_password=True, max_reset_wo_password=25) -> None:
         """
         Create a new FireWorks database. This will overwrite the existing FireWorks database! To
         safeguard against accidentally erasing an existing database, a password must be entered.
@@ -337,7 +337,7 @@ class LaunchPad(FWSerializable):
         else:
             raise ValueError(f"Invalid password! Password is today's date: {m_password}")
 
-    def maintain(self, infinite=True, maintain_interval=None):
+    def maintain(self, infinite=True, maintain_interval=None) -> None:
         """
         Perform launchpad maintenance: detect lost runs and unreserved RESERVE launches.
 
@@ -377,7 +377,9 @@ class LaunchPad(FWSerializable):
         Add workflow(or firework) to the launchpad. The firework ids will be reassigned.
 
         Args:
-            wf (Workflow/Firework)
+            wf (Workflow/Firework): Workflow or Firework object
+            reassign_all (bool): If True, the firework ids will be assigned
+                starting from the next available id. Defaults to True.
 
         Returns:
             dict: mapping between old and new Firework ids
@@ -398,7 +400,7 @@ class LaunchPad(FWSerializable):
         self.m_logger.info(f"Added a workflow. id_map: {old_new}")
         return old_new
 
-    def bulk_add_wfs(self, wfs):
+    def bulk_add_wfs(self, wfs) -> None:
         """
         Adds a list of workflows to the fireworks database
         using insert_many for both the fws and wfs, is
@@ -439,7 +441,7 @@ class LaunchPad(FWSerializable):
         self.fireworks.insert_many(fw.to_db_dict() for fw in all_fws)
         return
 
-    def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True):
+    def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=True) -> None:
         """
         Append a new workflow on top of an existing workflow.
 
@@ -461,7 +463,7 @@ class LaunchPad(FWSerializable):
         Given a Launch id, return details of the Launch.
 
         Args:
-            launch_id (int): launch id
+            launch_id (int): launch id.
 
         Returns:
             Launch object
@@ -477,7 +479,7 @@ class LaunchPad(FWSerializable):
         Given firework id, return firework dict.
 
         Args:
-            fw_id (int): firework id
+            fw_id (int): Firework id.
 
         Returns:
             dict
@@ -513,11 +515,10 @@ class LaunchPad(FWSerializable):
         return Firework.from_dict(self.get_fw_dict_by_id(fw_id))
 
     def get_wf_by_fw_id(self, fw_id):
-        """
-        Given a Firework id, give back the Workflow containing that Firework.
+        """Given a Firework id, give back the Workflow containing that Firework.
 
         Args:
-            fw_id (int)
+            fw_id (int): Firework id.
 
         Returns:
             A Workflow object
@@ -535,12 +536,11 @@ class LaunchPad(FWSerializable):
             links_dict["updated_on"],
         )
 
-    def get_wf_by_fw_id_lzyfw(self, fw_id):
-        """
-        Given a FireWork id, give back the Workflow containing that FireWork.
+    def get_wf_by_fw_id_lzyfw(self, fw_id: int) -> Workflow:
+        """Given a FireWork id, give back the Workflow containing that FireWork.
 
         Args:
-            fw_id (int)
+            fw_id (int): FireWork id.
 
         Returns:
             A Workflow object
@@ -549,9 +549,10 @@ class LaunchPad(FWSerializable):
         if not links_dict:
             raise ValueError(f"Could not find a Workflow with fw_id: {fw_id}")
 
-        fws = []
-        for fw_id in links_dict["nodes"]:
-            fws.append(LazyFirework(fw_id, self.fireworks, self.launches, self.gridfs_fallback))
+        fws = [
+            LazyFirework(fw_id, self.fireworks, self.launches, self.gridfs_fallback) for fw_id in links_dict["nodes"]
+        ]
+
         # Check for fw_states in links_dict to conform with pre-optimized workflows
         fw_states = {int(k): v for k, v in links_dict["fw_states"].items()} if "fw_states" in links_dict else None
 
@@ -565,13 +566,13 @@ class LaunchPad(FWSerializable):
             fw_states,
         )
 
-    def delete_fws(self, fw_ids, delete_launch_dirs=False):
+    def delete_fws(self, fw_ids, delete_launch_dirs=False) -> None:
         """Delete a set of fireworks identified by their fw_ids.
 
         ATTENTION: This function serves maintenance purposes and will leave
         workflows untouched. Its use will thus result in a corrupted database.
         Use 'delete_wf' instead for consistently deleting workflows together
-        with theit fireworks.
+        with their fireworks.
 
         Args:
             fw_ids ([int]): Firework ids
@@ -580,35 +581,40 @@ class LaunchPad(FWSerializable):
         """
         potential_launch_ids = []
         launch_ids = []
-        for i in fw_ids:
-            fw_dict = self.fireworks.find_one({"fw_id": i})
-            potential_launch_ids += fw_dict["launches"] + fw_dict["archived_launches"]
+        for fw_id in fw_ids:
+            fw_dict = self.fireworks.find_one({"fw_id": fw_id})
+            if fw_dict:
+                potential_launch_ids += fw_dict.get("launches", []) + fw_dict.get("archived_launches", [])
 
-        for i in potential_launch_ids:  # only remove launches if no other fws refer to them
+        launch_ids = [
+            launch_id
+            for launch_id in potential_launch_ids
             if not self.fireworks.find_one(
-                {"$or": [{"launches": i}, {"archived_launches": i}], "fw_id": {"$nin": fw_ids}}, {"launch_id": 1}
-            ):
-                launch_ids.append(i)
+                {"$or": [{"launches": launch_id}, {"archived_launches": launch_id}], "fw_id": {"$nin": fw_ids}},
+                {"launch_id": 1},
+            )
+        ]
 
         if delete_launch_dirs:
-            launch_dirs = []
-            for i in launch_ids:
-                launch_dirs.append(self.launches.find_one({"launch_id": i}, {"launch_dir": 1})["launch_dir"])
+            launch_dirs = [
+                self.launches.find_one({"launch_id": launch_id}, {"launch_dir": 1})["launch_dir"]
+                for launch_id in launch_ids
+            ]
             print(f"Remove folders {launch_dirs}")
-            for d in launch_dirs:
-                shutil.rmtree(d, ignore_errors=True)
+            for launch_dir in launch_dirs:
+                shutil.rmtree(launch_dir, ignore_errors=True)
 
         print(f"Remove fws {fw_ids}")
         if self.gridfs_fallback is not None:
-            for lid in launch_ids:
-                for f in self.gridfs_fallback.find({"metadata.launch_id": lid}):
-                    self.gridfs_fallback.delete(f._id)
+            for launch_id in launch_ids:
+                for file_id in self.gridfs_fallback.find({"metadata.launch_id": launch_id}):
+                    self.gridfs_fallback.delete(file_id._id)
         print(f"Remove launches {launch_ids}")
         self.launches.delete_many({"launch_id": {"$in": launch_ids}})
         self.offline_runs.delete_many({"launch_id": {"$in": launch_ids}})
         self.fireworks.delete_many({"fw_id": {"$in": fw_ids}})
 
-    def delete_wf(self, fw_id, delete_launch_dirs=False):
+    def delete_wf(self, fw_id, delete_launch_dirs=False) -> None:
         """
         Delete the workflow containing firework with the given id.
 
@@ -643,8 +649,7 @@ class LaunchPad(FWSerializable):
         if mode != "less":
             wf_fields.append("updated_on")
             fw_fields.extend(["name", "launches"])
-            launch_fields.append("launch_id")
-            launch_fields.append("launch_dir")
+            launch_fields.extend(("launch_id", "launch_dir"))
 
         if mode == "reservations":
             launch_fields.append("state_history.reservation_id")
@@ -883,7 +888,7 @@ class LaunchPad(FWSerializable):
         q = fworker.query if fworker else {}
         return bool(self._get_a_fw_to_run(query=q, checkout=False))
 
-    def future_run_exists(self, fworker=None):
+    def future_run_exists(self, fworker=None) -> bool:
         """Check if database has any current OR future Fireworks available.
 
         Returns:
@@ -906,7 +911,7 @@ class LaunchPad(FWSerializable):
         # there is no future work to do
         return False
 
-    def tuneup(self, bkground=True):
+    def tuneup(self, bkground=True) -> None:
         """Database tuneup: build indexes."""
         self.m_logger.info("Performing db tune-up")
 
@@ -1027,7 +1032,7 @@ class LaunchPad(FWSerializable):
             self._refresh_wf(fw_id)
         return f
 
-    def defuse_wf(self, fw_id, defuse_all_states=True):
+    def defuse_wf(self, fw_id, defuse_all_states=True) -> None:
         """
         Defuse the workflow containing the given firework id.
 
@@ -1040,7 +1045,7 @@ class LaunchPad(FWSerializable):
             if fw.state not in ["COMPLETED", "FIZZLED"] or defuse_all_states:
                 self.defuse_fw(fw.fw_id)
 
-    def pause_wf(self, fw_id):
+    def pause_wf(self, fw_id) -> None:
         """
         Pause the workflow containing the given firework id.
 
@@ -1052,7 +1057,7 @@ class LaunchPad(FWSerializable):
             if fw.state not in ["COMPLETED", "FIZZLED", "DEFUSED"]:
                 self.pause_fw(fw.fw_id)
 
-    def reignite_wf(self, fw_id):
+    def reignite_wf(self, fw_id) -> None:
         """
         Reignite the workflow containing the given firework id.
 
@@ -1063,7 +1068,7 @@ class LaunchPad(FWSerializable):
         for fw in wf:
             self.reignite_fw(fw.fw_id)
 
-    def archive_wf(self, fw_id):
+    def archive_wf(self, fw_id) -> None:
         """
         Archive the workflow containing the given firework id.
 
@@ -1085,7 +1090,7 @@ class LaunchPad(FWSerializable):
                 )
                 self._refresh_wf(fw.fw_id)
 
-    def _restart_ids(self, next_fw_id, next_launch_id):
+    def _restart_ids(self, next_fw_id, next_launch_id) -> None:
         """
         internal method used to reset firework id counters.
 
@@ -1099,7 +1104,7 @@ class LaunchPad(FWSerializable):
         )
         self.m_logger.debug(f"RESTARTED fw_id, launch_id to ({next_fw_id}, {next_launch_id})")
 
-    def _check_fw_for_uniqueness(self, m_fw):
+    def _check_fw_for_uniqueness(self, m_fw) -> bool:
         """
         Check if there are duplicates. If not unique, a new id is assigned and the workflow
         refreshed.
@@ -1183,7 +1188,7 @@ class LaunchPad(FWSerializable):
             fw_id (int): fw_id to be reserved, if desired
 
         Returns:
-            (Firework, int): the checked out firework and the new launch id
+            (Firework, int): the checked out firework and the new launch id.
         """
         return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
@@ -1197,13 +1202,10 @@ class LaunchPad(FWSerializable):
         Returns:
             [int]: list of firework ids.
         """
-        fw_ids = []
         l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {"launch_id": 1})["launch_id"]
-        for fw in self.fireworks.find({"launches": l_id}, {"fw_id": 1}):
-            fw_ids.append(fw["fw_id"])
-        return fw_ids
+        return [fw["fw_id"] for fw in self.fireworks.find({"launches": l_id}, {"fw_id": 1})]
 
-    def cancel_reservation_by_reservation_id(self, reservation_id):
+    def cancel_reservation_by_reservation_id(self, reservation_id) -> None:
         """Given the reservation id, cancel the reservation and rerun the corresponding fireworks."""
         l_id = self.launches.find_one(
             {"state_history.reservation_id": reservation_id, "state": "RESERVED"}, {"launch_id": 1}
@@ -1224,7 +1226,7 @@ class LaunchPad(FWSerializable):
             return None
         return None
 
-    def cancel_reservation(self, launch_id):
+    def cancel_reservation(self, launch_id) -> None:
         """Given the launch id, cancel the reservation and rerun the fireworks."""
         m_launch = self.get_launch_by_id(launch_id)
         m_launch.state = "READY"
@@ -1246,30 +1248,31 @@ class LaunchPad(FWSerializable):
         Returns:
             [int]: list of expired launch ids
         """
-        bad_launch_ids = []
         now_time = datetime.datetime.utcnow()
-        cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
+        cutoff_time_str = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find(
             {
                 "state": "RESERVED",
-                "state_history": {"$elemMatch": {"state": "RESERVED", "updated_on": {"$lte": cutoff_timestr}}},
+                "state_history": {"$elemMatch": {"state": "RESERVED", "updated_on": {"$lte": cutoff_time_str}}},
             },
             {"launch_id": 1, "fw_id": 1},
         )
-        for ld in bad_launch_data:
-            if self.fireworks.find_one({"fw_id": ld["fw_id"], "state": "RESERVED"}, {"fw_id": 1}):
-                bad_launch_ids.append(ld["launch_id"])
+        bad_launch_ids = [
+            ld["launch_id"]
+            for ld in bad_launch_data
+            if self.fireworks.find_one({"fw_id": ld["fw_id"], "state": "RESERVED"}, {"fw_id": 1})
+        ]
         if rerun:
             for lid in bad_launch_ids:
                 self.cancel_reservation(lid)
         return bad_launch_ids
 
-    def mark_fizzled(self, launch_id):
+    def mark_fizzled(self, launch_id) -> None:
         """
         Mark the launch corresponding to the given id as FIZZLED.
 
         Args:
-            launch_id (int): launch id
+            launch_id (int): launch id.
 
         Returns:
             dict: updated launch
@@ -1337,10 +1340,10 @@ class LaunchPad(FWSerializable):
                 potential_lost_fw_ids.append(ld["fw_id"])
 
         for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
-            f = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1, "state": 1})
+            fw = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1, "state": 1}) or {}
             # only RUNNING FireWorks can be "lost", i.e. not defused or archived
-            if f["state"] == "RUNNING":
-                l_ids = f["launches"]
+            if fw.get("state") == "RUNNING":
+                l_ids = fw["launches"]
                 not_lost = [x for x in l_ids if x not in lost_launch_ids]
                 if len(not_lost) == 0:  # all launches are lost - we are lost!
                     lost_fw_ids.append(fw_id)
@@ -1381,7 +1384,7 @@ class LaunchPad(FWSerializable):
 
         return lost_launch_ids, lost_fw_ids, inconsistent_fw_ids
 
-    def set_reservation_id(self, launch_id, reservation_id):
+    def set_reservation_id(self, launch_id, reservation_id) -> None:
         """
         Set reservation id to the launch corresponding to the given launch id.
 
@@ -1407,7 +1410,7 @@ class LaunchPad(FWSerializable):
             state (str): RESERVED or RUNNING, the fetched firework's state will be set to this value.
 
         Returns:
-            (Firework, int): firework and the new launch id
+            (Firework, int): firework and the new launch id.
         """
         m_fw = self._get_a_fw_to_run(fworker.query, fw_id=fw_id)
         if not m_fw:
@@ -1471,7 +1474,7 @@ class LaunchPad(FWSerializable):
 
         return m_fw, launch_id
 
-    def change_launch_dir(self, launch_id, launch_dir):
+    def change_launch_dir(self, launch_id, launch_dir) -> None:
         """
         Change the launch directory corresponding to the given launch id.
 
@@ -1483,7 +1486,7 @@ class LaunchPad(FWSerializable):
         m_launch.launch_dir = launch_dir
         self.launches.find_one_and_replace({"launch_id": m_launch.launch_id}, m_launch.to_db_dict(), upsert=True)
 
-    def restore_backup_data(self, launch_id, fw_id):
+    def restore_backup_data(self, launch_id, fw_id) -> None:
         """For the given launch id and firework id, restore the back up data."""
         if launch_id in self.backup_launch_data:
             self.launches.find_one_and_replace({"launch_id": launch_id}, self.backup_launch_data[launch_id])
@@ -1541,7 +1544,7 @@ class LaunchPad(FWSerializable):
         # change return type to dict to make return type serializable to support job packing
         return m_launch.to_dict()
 
-    def ping_launch(self, launch_id, ptime=None, checkpoint=None):
+    def ping_launch(self, launch_id, ptime=None, checkpoint=None) -> None:
         """
         Ping that a Launch is still alive: updates the 'update_on 'field of the state history of a
         Launch.
@@ -1655,13 +1658,15 @@ class LaunchPad(FWSerializable):
         duplicates = []
         reruns = []
         if rerun_duplicates:
-            f = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}}, {"launches": 1})
-            if f:
-                for d in self.fireworks.find(
-                    {"launches": {"$in": f["launches"]}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}
-                ):
-                    duplicates.append(d["fw_id"])
-            duplicates = list(set(duplicates))
+            fw = self.fireworks.find_one({"fw_id": fw_id, "spec._dupefinder": {"$exists": True}}, {"launches": 1})
+            if fw:
+                duplicates = [
+                    fw_dct["fw_id"]
+                    for fw_dct in self.fireworks.find(
+                        {"launches": {"$in": fw["launches"]}, "fw_id": {"$ne": fw_id}}, {"fw_id": 1}
+                    )
+                ]
+                duplicates = list(set(duplicates))
 
         # Launch recovery
         if recover_launch is not None:
@@ -1691,10 +1696,10 @@ class LaunchPad(FWSerializable):
                 reruns.append(fw_id)
 
         # rerun duplicated FWs
-        for f in duplicates:
-            self.m_logger.info(f"Also rerunning duplicate fw_id: {f}")
+        for fw in duplicates:
+            self.m_logger.info(f"Also rerunning duplicate fw_id: {fw}")
             # False for speed, True shouldn't be needed
-            r = self.rerun_fw(f, rerun_duplicates=False, recover_launch=recover_launch, recover_mode=recover_mode)
+            r = self.rerun_fw(fw, rerun_duplicates=False, recover_launch=recover_launch, recover_mode=recover_mode)
             reruns.extend(r)
 
         return reruns
@@ -1713,7 +1718,7 @@ class LaunchPad(FWSerializable):
         recovery.update({"_prev_dir": launch.launch_dir, "_launch_id": launch.launch_id})
         return recovery
 
-    def _refresh_wf(self, fw_id):
+    def _refresh_wf(self, fw_id) -> None:
         """
         Update the FW state of all jobs in workflow.
 
@@ -1741,7 +1746,7 @@ class LaunchPad(FWSerializable):
             err_message = f"Error refreshing workflow. The full stack trace is: {traceback.format_exc()}"
             raise RuntimeError(err_message)
 
-    def _update_wf(self, wf, updated_ids):
+    def _update_wf(self, wf, updated_ids) -> None:
         """
         Update the workflow with the updated firework ids.
         Note: must be called within an enclosing WFLock.
@@ -1819,7 +1824,7 @@ class LaunchPad(FWSerializable):
                         self.m_logger.info(f"Duplicate found! fwids {thief_fw.fw_id} and {potential_match['fw_id']}")
         return stolen
 
-    def set_priority(self, fw_id, priority):
+    def set_priority(self, fw_id, priority) -> None:
         """
         Set priority to the firework with the given id.
 
@@ -1837,12 +1842,12 @@ class LaunchPad(FWSerializable):
         """
         return self.logdir
 
-    def add_offline_run(self, launch_id, fw_id, name):
+    def add_offline_run(self, launch_id, fw_id, name) -> None:
         """
         Add the launch and firework to the offline_run collection.
 
         Args:
-            launch_id (int): launch id
+            launch_id (int): launch id.
             fw_id (id): firework id
             name (str)
         """
@@ -1860,7 +1865,7 @@ class LaunchPad(FWSerializable):
         Update the launch state using the offline data in FW_offline.json file.
 
         Args:
-            launch_id (int): launch id
+            launch_id (int): launch id.
             ignore_errors (bool)
             print_errors (bool)
 
@@ -1886,7 +1891,7 @@ class LaunchPad(FWSerializable):
                 if not already_running:
                     m_launch.state = "RUNNING"  # this should also add a history item
 
-                checkpoint = offline_data["checkpoint"] if "checkpoint" in offline_data else None
+                checkpoint = offline_data.get("checkpoint", None)
 
                 # look for ping file - update the Firework if this is the case
                 ping_loc = os.path.join(m_launch.launch_dir, "FW_ping.json")
@@ -1952,7 +1957,7 @@ class LaunchPad(FWSerializable):
                 self.offline_runs.update_one({"launch_id": launch_id}, {"$set": {"completed": True}})
             return m_launch.fw_id
 
-    def forget_offline(self, launchid_or_fwid, launch_mode=True):
+    def forget_offline(self, launchid_or_fwid, launch_mode=True) -> None:
         """
         Unmark the offline run for the given launch or firework id.
 
@@ -1988,7 +1993,7 @@ class LaunchPad(FWSerializable):
         fw = self.get_fw_by_id(fw_id)
         return fw.launches[launch_idx].launch_dir if len(fw.launches) > 0 else None
 
-    def log_message(self, level, message):
+    def log_message(self, level, message) -> None:
         """
         Support for job packing.
 
@@ -2010,7 +2015,7 @@ class LazyFirework:
     db_fields = ("name", "fw_id", "spec", "created_on", "state")
     db_launch_fields = ("launches", "archived_launches")
 
-    def __init__(self, fw_id, fw_coll, launch_coll, fallback_fs):
+    def __init__(self, fw_id, fw_coll, launch_coll, fallback_fs) -> None:
         """
         Args:
             fw_id (int): firework id
@@ -2020,7 +2025,7 @@ class LazyFirework:
         # This is the only attribute known w/o a DB query
         self.fw_id = fw_id
         self._fwc, self._lc, self._ffs = fw_coll, launch_coll, fallback_fs
-        self._launches = {k: False for k in self.db_launch_fields}
+        self._launches = dict.fromkeys(self.db_launch_fields, False)
         self._fw, self._lids, self._state = None, None, None
 
     # FireWork methods
@@ -2036,20 +2041,20 @@ class LazyFirework:
         return self._state
 
     @state.setter
-    def state(self, state):
+    def state(self, state) -> None:
         self.partial_fw._state = state
         self.partial_fw.updated_on = datetime.datetime.utcnow()
 
     def to_dict(self):
         return self.full_fw.to_dict()
 
-    def _rerun(self):
+    def _rerun(self) -> None:
         self.full_fw._rerun()
 
     def to_db_dict(self):
         return self.full_fw.to_db_dict()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"LazyFireWork object: (id: {self.fw_id})"
 
     # Properties that shadow FireWork attributes
@@ -2059,7 +2064,7 @@ class LazyFirework:
         return self.partial_fw.tasks
 
     @tasks.setter
-    def tasks(self, value):
+    def tasks(self, value) -> None:
         self.partial_fw.tasks = value
 
     @property
@@ -2067,7 +2072,7 @@ class LazyFirework:
         return self.partial_fw.spec
 
     @spec.setter
-    def spec(self, value):
+    def spec(self, value) -> None:
         self.partial_fw.spec = value
 
     @property
@@ -2075,7 +2080,7 @@ class LazyFirework:
         return self.partial_fw.name
 
     @name.setter
-    def name(self, value):
+    def name(self, value) -> None:
         self.partial_fw.name = value
 
     @property
@@ -2083,7 +2088,7 @@ class LazyFirework:
         return self.partial_fw.created_on
 
     @created_on.setter
-    def created_on(self, value):
+    def created_on(self, value) -> None:
         self.partial_fw.created_on = value
 
     @property
@@ -2091,7 +2096,7 @@ class LazyFirework:
         return self.partial_fw.updated_on
 
     @updated_on.setter
-    def updated_on(self, value):
+    def updated_on(self, value) -> None:
         self.partial_fw.updated_on = value
 
     @property
@@ -2101,7 +2106,7 @@ class LazyFirework:
         return []
 
     @parents.setter
-    def parents(self, value):
+    def parents(self, value) -> None:
         self.partial_fw.parents = value
 
     # Properties that shadow FireWork attributes, but which are
@@ -2112,7 +2117,7 @@ class LazyFirework:
         return self._get_launch_data("launches")
 
     @launches.setter
-    def launches(self, value):
+    def launches(self, value) -> None:
         self._launches["launches"] = True
         self.partial_fw.launches = value
 
@@ -2121,7 +2126,7 @@ class LazyFirework:
         return self._get_launch_data("archived_launches")
 
     @archived_launches.setter
-    def archived_launches(self, value):
+    def archived_launches(self, value) -> None:
         self._launches["archived_launches"] = True
         self.partial_fw.archived_launches = value
 
