@@ -1390,7 +1390,3 @@ class GridfsStoredDataTest(unittest.TestCase):
 
         launch_full = self.lp.get_launch_by_id(1)
         assert len(launch_full.action.detours) == 2000
-
-
-if __name__ == "__main__":
-    unittest.main()

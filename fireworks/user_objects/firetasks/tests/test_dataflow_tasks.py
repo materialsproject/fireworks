@@ -310,7 +310,3 @@ class ImportDataTaskTest(unittest.TestCase):
             assert "value" in root["temperature"]
             assert root["temperature"]["units"] == temperature["units"]
             os.remove(filename)
-
-
-if __name__ == "__main__":
-    unittest.main()

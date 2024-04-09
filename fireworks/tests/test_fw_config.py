@@ -13,7 +13,3 @@ class ConfigTest(unittest.TestCase):
     def test_config(self) -> None:
         d = config_to_dict()
         assert "NEGATIVE_FWID_CTR" not in d
-
-
-if __name__ == "__main__":
-    unittest.main()

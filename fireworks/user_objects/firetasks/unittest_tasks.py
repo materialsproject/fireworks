@@ -9,7 +9,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 21, 2014"
 
 
-class TestSerializer(FWSerializable):
+class UnitTestSerializer(FWSerializable):
     _fw_name = "TestSerializer Name"
 
     def __init__(self, a, m_date) -> None:
@@ -28,7 +28,7 @@ class TestSerializer(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return TestSerializer(m_dict["a"], m_dict["m_date"])
+        return cls(m_dict["a"], m_dict["m_date"])
 
 
 class ExportTestSerializer(FWSerializable):
@@ -45,4 +45,4 @@ class ExportTestSerializer(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict):
-        return ExportTestSerializer(m_dict["a"])
+        return cls(m_dict["a"])

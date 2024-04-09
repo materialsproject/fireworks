@@ -44,7 +44,3 @@ class UpdateCollectionTests(unittest.TestCase):
         assert test_doc["foo_list"][1]["foo2"] == "foo/new/path/bar"
         test_doc_archived = self.lp.db[f"test_coll_xiv_{datetime.date.today()}"].find_one()
         assert test_doc_archived["foo_list"][1]["foo2"] == "foo/old/path/bar"
-
-
-if __name__ == "__main__":
-    unittest.main()

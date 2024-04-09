@@ -135,7 +135,7 @@ class FilePad(MSONable):
         if identifier is not None:
             _, doc = self.get_file(identifier)
             if doc is not None:
-                self.logger.warning(f"identifier: {identifier} exists. Skipping insertion")
+                self.logger.warning(f"{identifier=} exists. Skipping insertion")
                 return doc["gfs_id"], doc["identifier"]
 
         path = os.path.abspath(path)

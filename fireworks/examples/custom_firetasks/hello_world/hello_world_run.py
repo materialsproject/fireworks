@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     # create the workflow and store it in the database
     my_fw = Firework([HelloTask()])
-    my_wflow = Workflow.from_Firework(my_fw)
+    my_wflow = Workflow.from_firework(my_fw)
     lp.add_wf(my_wflow)
 
     # run the workflow

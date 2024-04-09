@@ -97,7 +97,3 @@ class SerializationTests(unittest.TestCase):
             "defuse_children": False,
         }
         FWAction.from_dict(my_dict)
-
-
-if __name__ == "__main__":
-    unittest.main()
