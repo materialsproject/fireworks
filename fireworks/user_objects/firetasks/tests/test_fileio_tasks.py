@@ -63,7 +63,3 @@ class CompressDecompressArchiveDirTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         os.chdir(self.cwd)
-
-
-if __name__ == "__main__":
-    unittest.main()

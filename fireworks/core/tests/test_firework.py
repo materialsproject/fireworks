@@ -165,7 +165,3 @@ class WorkflowTest(unittest.TestCase):
         assert len(wflow) == len(fws)
 
         assert wflow[0] == self.fw1
-
-
-if __name__ == "__main__":
-    unittest.main()

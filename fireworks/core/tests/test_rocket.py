@@ -52,7 +52,3 @@ class RocketTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(1)
 
         assert fw.state == "FIZZLED"
-
-
-if __name__ == "__main__":
-    unittest.main()

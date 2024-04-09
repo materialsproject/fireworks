@@ -143,7 +143,3 @@ class ExplicitSerializationTest(unittest.TestCase):
 
     def test_explicit_serialization(self) -> None:
         assert load_object(self.s_dict) == self.s_obj
-
-
-if __name__ == "__main__":
-    unittest.main()

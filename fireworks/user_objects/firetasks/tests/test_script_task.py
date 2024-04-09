@@ -92,7 +92,3 @@ class PyTaskTest(unittest.TestCase):
         action = PyTask(**params).run_task(spec)
         assert action.update_spec["first"] == 1
         assert action.update_spec["second"] == 2
-
-
-if __name__ == "__main__":
-    unittest.main()

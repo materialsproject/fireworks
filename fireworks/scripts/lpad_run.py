@@ -771,7 +771,7 @@ def forget_offline(args: Namespace) -> None:
     for f in fw_ids:
         lp.forget_offline(f, launch_mode=False)
         lp.m_logger.debug(f"Processed fw_id: {f}")
-    lp.m_logger.info(f"Finished forget_offine, processed {len(fw_ids)} FWs")
+    lp.m_logger.info(f"Finished forget_offline, processed {len(fw_ids)} FWs")
 
 
 def report(args: Namespace) -> None:

@@ -57,7 +57,3 @@ class FilePadTest(unittest.TestCase):
 
     def tearDown(self) -> None:
         self.fp.reset()
-
-
-if __name__ == "__main__":
-    unittest.main()

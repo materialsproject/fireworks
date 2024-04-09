@@ -608,7 +608,3 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         workflow_results = s.get_workflow_summary(time_field="updated_on")
         assert (workflow_results[0]["_id"], workflow_results[0]["count"]) == ("COMPLETED", 3)
-
-
-if __name__ == "__main__":
-    unittest.main()

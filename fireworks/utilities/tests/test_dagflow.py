@@ -175,7 +175,3 @@ class DAGFlowTest(unittest.TestCase):
         dagf.to_dot(filename, view="controlflow")
         assert os.path.exists(filename)
         os.remove(filename)
-
-
-if __name__ == "__main__":
-    unittest.main()
