@@ -1331,10 +1331,10 @@ class Workflow(FWSerializable):
                 created_on,
                 updated_on,
             )
-        return Workflow.from_Firework(Firework.from_dict(m_dict))
+        return Workflow.from_firework(Firework.from_dict(m_dict))
 
     @classmethod
-    def from_Firework(cls, fw: Firework, name: str | None = None, metadata=None) -> Workflow:
+    def from_firework(cls, fw: Firework, name: str | None = None, metadata=None) -> Workflow:
         """
         Return Workflow from the given Firework.
 

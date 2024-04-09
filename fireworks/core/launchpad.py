@@ -373,7 +373,7 @@ class LaunchPad(FWSerializable):
             dict: mapping between old and new Firework ids
         """
         if isinstance(wf, Firework):
-            wf = Workflow.from_Firework(wf)
+            wf = Workflow.from_firework(wf)
         # sets the root FWs as READY
         # prefer to wf.refresh() for speed reasons w/many root FWs
         for fw_id in wf.root_fw_ids:
