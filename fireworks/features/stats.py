@@ -197,8 +197,8 @@ class FWStats:
             "created_on": self._query_datetime_range(start_time=query_start, end_time=query_end, **args),
         }
         if include_ids:
-            project_query.update(fw_id=1)
-            group_query.update(fw_id={"$push": "$fw_id"})
+            project_query.update({"fw_id": 1})
+            group_query.update({"fw_id": {"$push": "$fw_id"}})
         if query:
             match_query.update(query)
         return self._aggregate(
@@ -306,11 +306,11 @@ class FWStats:
             }
         match_query.update(query)
         if runtime_stats:
-            project_query.update(runtime_secs=1)
+            project_query.update({"runtime_secs": 1})
             group_query.update(RUNTIME_STATS)
         if include_ids:
             project_query.update({id_field: 1})
-            group_query.update(ids={"$push": "$" + id_field})
+            group_query.update({"ids": {"$push": "$" + id_field}})
         return self._aggregate(
             coll=coll,
             match=match_query,
@@ -357,7 +357,7 @@ class FWStats:
         for arg in [match, project, unwind, group_op]:
             if arg is None:
                 arg = {}
-        group_op.update(_id=f"${group_by}")
+        group_op.update({"_id": "$" + group_by})
         if sort is None:
             sort_query = ("_id", 1)
         query = [{"$match": match}, {"$project": project}, {"$group": group_op}, {"$sort": SON([sort_query])}]

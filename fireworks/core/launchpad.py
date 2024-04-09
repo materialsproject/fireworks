@@ -185,15 +185,15 @@ class LaunchPad(FWSerializable):
         self.password = password
         self.authsource = authsource or self.name
         self.mongoclient_kwargs = mongoclient_kwargs or {}
-        self.uri_mode = bool(uri_mode)
+        self.uri_mode = uri_mode
 
         # set up logger
         self.logdir = logdir
         self.strm_lvl = strm_lvl if strm_lvl else "INFO"
         self.m_logger = get_fw_logger("launchpad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.user_indices = user_indices or []
-        self.wf_user_indices = wf_user_indices or []
+        self.user_indices = user_indices if user_indices else []
+        self.wf_user_indices = wf_user_indices if wf_user_indices else []
 
         # get connection
         if uri_mode:
@@ -267,20 +267,31 @@ class LaunchPad(FWSerializable):
             )
 
     @classmethod
-    def from_dict(cls, dct):
+    def from_dict(cls, d):
+        port = d.get("port", None)
+        name = d.get("name", None)
+        username = d.get("username", None)
+        password = d.get("password", None)
+        logdir = d.get("logdir", None)
+        strm_lvl = d.get("strm_lvl", None)
+        user_indices = d.get("user_indices", [])
+        wf_user_indices = d.get("wf_user_indices", [])
+        authsource = d.get("authsource", None)
+        uri_mode = d.get("uri_mode", False)
+        mongoclient_kwargs = d.get("mongoclient_kwargs", None)
         return LaunchPad(
-            dct["host"],
-            port=dct.get("port"),
-            name=dct.get("name"),
-            username=dct.get("username"),
-            password=dct.get("password"),
-            logdir=dct.get("logdir"),
-            strm_lvl=dct.get("strm_lvl"),
-            user_indices=dct.get("user_indices"),
-            wf_user_indices=dct.get("wf_user_indices"),
-            authsource=dct.get("authsource"),
-            uri_mode=dct.get("uri_mode", False),
-            mongoclient_kwargs=dct.get("mongoclient_kwargs"),
+            d["host"],
+            port,
+            name,
+            username,
+            password,
+            logdir,
+            strm_lvl,
+            user_indices,
+            wf_user_indices,
+            authsource,
+            uri_mode,
+            mongoclient_kwargs,
         )
 
     @classmethod
@@ -1659,7 +1670,7 @@ class LaunchPad(FWSerializable):
         # Launch recovery
         if recover_launch is not None:
             recovery = self.get_recovery(fw_id, recover_launch)
-            recovery.update(_mode=recover_mode)
+            recovery.update({"_mode": recover_mode})
             set_spec = recursive_dict({"$set": {"spec._recovery": recovery}})
             if recover_mode == "prev_dir":
                 prev_dir = self.get_launch_by_id(recovery.get("_launch_id")).launch_dir
@@ -1703,7 +1714,7 @@ class LaunchPad(FWSerializable):
         m_fw = self.get_fw_by_id(fw_id)
         launch = m_fw.launches[-1] if launch_id == "last" else self.get_launch_by_id(launch_id)
         recovery = launch.state_history[-1].get("checkpoint")
-        recovery.update(_prev_dir=launch.launch_dir, _launch_id=launch.launch_id)
+        recovery.update({"_prev_dir": launch.launch_dir, "_launch_id": launch.launch_id})
         return recovery
 
     def _refresh_wf(self, fw_id) -> None:
