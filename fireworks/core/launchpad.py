@@ -49,7 +49,7 @@ def sort_aggregation(sort):
 
     Args:
         sort [(str,int)]: sorting keys and directions as a list of
-                          (str, int) tuples, i.e. [('updated_on', 1)]
+            (str, int) tuples, i.e. [('updated_on', 1)]
     """
     # Fix for sorting by dates which are actually stored as strings:
     # Not sure about the underlying issue's source, but apparently some
@@ -887,7 +887,7 @@ class LaunchPad(FWSerializable):
             return True
         # retrieve all [RUNNING/RESERVED] fireworks
         q = fworker.query if fworker else {}
-        q.update(state={"$in": ["RUNNING", "RESERVED"]})
+        q.update({"state": {"$in": ["RUNNING", "RESERVED"]}})
         active = self.get_fw_ids(q)
         # then check if they have WAITING children
         for fw_id in active:
