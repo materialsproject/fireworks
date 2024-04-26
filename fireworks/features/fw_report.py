@@ -69,7 +69,7 @@ class FWReport:
         coll = self.db[coll]
 
         pipeline = []
-        match_q = additional_query if additional_query else {}
+        match_q = additional_query or {}
         if num_intervals:
             now_time = datetime.utcnow()
             start_time = now_time - relativedelta(**{interval: num_intervals})

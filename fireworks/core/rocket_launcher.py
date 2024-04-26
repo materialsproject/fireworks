@@ -85,8 +85,8 @@ def rapidfire(
         local_redirect (bool): redirect standard input and output to local file
         pdb_on_exception (bool): if True, python will start the debugger on a firework exception
     """
-    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
-    curdir = m_dir if m_dir else os.getcwd()
+    sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
+    curdir = m_dir or os.getcwd()
     l_logger = get_fw_logger("rocket.launcher", l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
     fworker = get_fworker(fworker)

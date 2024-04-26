@@ -189,11 +189,11 @@ class LaunchPad(FWSerializable):
 
         # set up logger
         self.logdir = logdir
-        self.strm_lvl = strm_lvl if strm_lvl else "INFO"
+        self.strm_lvl = strm_lvl or "INFO"
         self.m_logger = get_fw_logger("launchpad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
-        self.user_indices = user_indices if user_indices else []
-        self.wf_user_indices = wf_user_indices if wf_user_indices else []
+        self.user_indices = user_indices or []
+        self.wf_user_indices = wf_user_indices or []
 
         # get connection
         if uri_mode:
@@ -344,7 +344,7 @@ class LaunchPad(FWSerializable):
             infinite (bool)
             maintain_interval (seconds): sleep time
         """
-        maintain_interval = maintain_interval if maintain_interval else MAINTAIN_INTERVAL
+        maintain_interval = maintain_interval or MAINTAIN_INTERVAL
 
         while True:
             self.m_logger.info("Performing maintenance on Launchpad...")
@@ -729,7 +729,7 @@ class LaunchPad(FWSerializable):
             list: list of firework ids matching the query
         """
         coll = "launches" if launches_mode else "fireworks"
-        criteria = query if query else {}
+        criteria = query or {}
         if launches_mode:
             lids = self._get_active_launch_ids()
             criteria["launch_id"] = {"$in": lids}
@@ -775,7 +775,7 @@ class LaunchPad(FWSerializable):
         Returns:
             list: list of firework ids
         """
-        criteria = query if query else {}
+        criteria = query or {}
         aggregation = []
 
         if criteria is not None:

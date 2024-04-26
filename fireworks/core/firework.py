@@ -153,13 +153,13 @@ class FWAction(FWSerializable):
                 not only to direct children, but to all dependent FireWorks
                 down to the Workflow's leaves.
         """
-        mod_spec = mod_spec if mod_spec is not None else []
-        additions = additions if additions is not None else []
-        detours = detours if detours is not None else []
+        mod_spec = mod_spec or []
+        additions = additions or []
+        detours = detours or []
 
-        self.stored_data = stored_data if stored_data else {}
+        self.stored_data = stored_data or {}
         self.exit = exit
-        self.update_spec = update_spec if update_spec else {}
+        self.update_spec = update_spec or {}
         self.mod_spec = mod_spec if isinstance(mod_spec, (list, tuple)) else [mod_spec]
         self.additions = additions if isinstance(additions, (list, tuple)) else [additions]
         self.detours = detours if isinstance(detours, (list, tuple)) else [detours]
@@ -267,13 +267,13 @@ class Firework(FWSerializable):
             NEGATIVE_FWID_CTR -= 1
             self.fw_id = NEGATIVE_FWID_CTR
 
-        self.launches = launches if launches else []
-        self.archived_launches = archived_launches if archived_launches else []
+        self.launches = launches or []
+        self.archived_launches = archived_launches or []
         self.created_on = created_on or datetime.utcnow()
         self.updated_on = updated_on or datetime.utcnow()
 
         parents = [parents] if isinstance(parents, Firework) else parents
-        self.parents = parents if parents else []
+        self.parents = parents or []
 
         self._state = state
 
@@ -476,9 +476,9 @@ class Launch(FWSerializable):
         self.fworker = fworker or FWorker()
         self.host = host or get_my_host()
         self.ip = ip or get_my_ip()
-        self.trackers = trackers if trackers else []
-        self.action = action if action else None
-        self.state_history = state_history if state_history else []
+        self.trackers = trackers or []
+        self.action = action or None
+        self.state_history = state_history or []
         self.state = state
         self.launch_id = launch_id
         self.fw_id = fw_id
@@ -579,7 +579,7 @@ class Launch(FWSerializable):
         """
         start = self.time_reserved
         if start:
-            end = self.time_start if self.time_start else datetime.utcnow()
+            end = self.time_start or datetime.utcnow()
             return (end - start).total_seconds()
         return None
 
@@ -986,7 +986,7 @@ class Workflow(FWSerializable):
         Returns:
             list[int]: list of Firework ids that were updated.
         """
-        updated_ids = updated_ids if updated_ids else set()
+        updated_ids = updated_ids or set()
         m_fw = self.id_fw[fw_id]
         m_fw._rerun()
         updated_ids.add(fw_id)
@@ -1089,7 +1089,7 @@ class Workflow(FWSerializable):
             set(int): list of Firework ids that were updated
         """
         # these are the fw_ids to re-enter into the database
-        updated_ids = updated_ids if updated_ids else set()
+        updated_ids = updated_ids or set()
 
         fw = self.id_fw[fw_id]
         prev_state = fw.state
@@ -1346,7 +1346,7 @@ class Workflow(FWSerializable):
         Returns:
             Workflow
         """
-        name = name if name else fw.name
+        name = name or fw.name
         return Workflow([fw], None, name=name, metadata=metadata, created_on=fw.created_on, updated_on=fw.updated_on)
 
     def __str__(self) -> str:
