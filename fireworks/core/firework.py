@@ -153,9 +153,9 @@ class FWAction(FWSerializable):
                 not only to direct children, but to all dependent FireWorks
                 down to the Workflow's leaves.
         """
-        mod_spec = mod_spec or []
-        additions = additions or []
-        detours = detours or []
+        mod_spec = mod_spec if mod_spec is not None else []
+        additions = additions if additions is not None else []
+        detours = detours if detours is not None else []
 
         self.stored_data = stored_data or {}
         self.exit = exit
