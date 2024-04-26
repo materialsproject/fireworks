@@ -96,7 +96,7 @@ def launch_rocket_to_queue(
 
                 # update qadapter job_name based on FW name
                 job_name = get_slug(fw.name)[0:QUEUE_JOBNAME_MAXLEN]
-                qadapter.update({"job_name": job_name})
+                qadapter.update(job_name=job_name)
 
                 if "_queueadapter" in fw.spec:
                     l_logger.debug("updating queue params using Firework spec..")

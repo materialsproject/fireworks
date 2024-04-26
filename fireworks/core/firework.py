@@ -643,7 +643,7 @@ class Launch(FWSerializable):
             now_time = datetime.utcnow()
             new_history_entry = {"state": state, "created_on": now_time}
             if state != "COMPLETED" and last_checkpoint:
-                new_history_entry.update({"checkpoint": last_checkpoint})
+                new_history_entry.update(checkpoint=last_checkpoint)
             self.state_history.append(new_history_entry)
             if state in ["RUNNING", "RESERVED"]:
                 self.touch_history()  # add updated_on key

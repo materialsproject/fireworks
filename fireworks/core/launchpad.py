@@ -898,7 +898,7 @@ class LaunchPad(FWSerializable):
             return True
         # retrieve all [RUNNING/RESERVED] fireworks
         q = fworker.query if fworker else {}
-        q.update({"state": {"$in": ["RUNNING", "RESERVED"]}})
+        q.update(state={"$in": ["RUNNING", "RESERVED"]})
         active = self.get_fw_ids(q)
         # then check if they have WAITING children
         for fw_id in active:
@@ -1670,7 +1670,7 @@ class LaunchPad(FWSerializable):
         # Launch recovery
         if recover_launch is not None:
             recovery = self.get_recovery(fw_id, recover_launch)
-            recovery.update({"_mode": recover_mode})
+            recovery.update(_mode=recover_mode)
             set_spec = recursive_dict({"$set": {"spec._recovery": recovery}})
             if recover_mode == "prev_dir":
                 prev_dir = self.get_launch_by_id(recovery.get("_launch_id")).launch_dir
@@ -1714,7 +1714,7 @@ class LaunchPad(FWSerializable):
         m_fw = self.get_fw_by_id(fw_id)
         launch = m_fw.launches[-1] if launch_id == "last" else self.get_launch_by_id(launch_id)
         recovery = launch.state_history[-1].get("checkpoint")
-        recovery.update({"_prev_dir": launch.launch_dir, "_launch_id": launch.launch_id})
+        recovery.update(_prev_dir=launch.launch_dir, _launch_id=launch.launch_id)
         return recovery
 
     def _refresh_wf(self, fw_id) -> None:
