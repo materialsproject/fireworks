@@ -58,7 +58,7 @@ def launch_rocket_to_queue(
             (only in non-reservation mode)
         fw_id (int): specific fw_id to reserve (reservation mode only)
     """
-    fworker = fworker if fworker else FWorker()
+    fworker = fworker or FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger("queue.launcher", l_dir=launchpad.logdir, stream_level=strm_lvl)
 
@@ -96,7 +96,7 @@ def launch_rocket_to_queue(
 
                 # update qadapter job_name based on FW name
                 job_name = get_slug(fw.name)[0:QUEUE_JOBNAME_MAXLEN]
-                qadapter.update({"job_name": job_name})
+                qadapter.update(job_name=job_name)
 
                 if "_queueadapter" in fw.spec:
                     l_logger.debug("updating queue params using Firework spec..")
@@ -201,7 +201,7 @@ def rapidfire(
         fill_mode (bool): whether to submit jobs even when there is nothing to run (only in
             non-reservation mode)
     """
-    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
+    sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
     nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
     l_logger = get_fw_logger("queue.launcher", l_dir=launchpad.logdir, stream_level=strm_lvl)
@@ -334,5 +334,5 @@ def setup_offline_job(launchpad, fw, launch_id) -> None:
     # separate this function out for reuse in unit testing
     fw.to_file("FW.json")
     with open("FW_offline.json", "w") as f:
-        f.write('{"launch_id":%s}' % launch_id)
+        f.write(f'{{"launch_id":{launch_id}}}')
     launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)

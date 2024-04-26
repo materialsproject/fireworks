@@ -281,10 +281,10 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: bool | None = 
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format or "more"
 
     if args.fw_id:
         query = {"fw_id": {"$in": args.fw_id}}
@@ -370,10 +370,10 @@ def get_fws_in_wfs(args: Namespace) -> None:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]) == 0:
         args.fw_query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format or "more"
 
     if args.fw_fw_id:
         fw_query = {"fw_id": {"$in": args.fw_fw_id}}
@@ -425,9 +425,9 @@ def get_wfs(args: Namespace) -> None:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     else:
-        args.display_format = args.display_format if args.display_format else "more"
+        args.display_format = args.display_format or "more"
 
     if args.fw_id:
         query = {"nodes": {"$in": args.fw_id}}
@@ -733,8 +733,8 @@ def webgui(args: Namespace) -> None:
 
 def add_scripts(args: Namespace) -> None:
     lp = get_lp(args)
-    args.names = args.names if args.names else [None] * len(args.scripts)
-    args.wf_name = args.wf_name if args.wf_name else args.names[0]
+    args.names = args.names or [None] * len(args.scripts)
+    args.wf_name = args.wf_name or args.names[0]
     fws = []
     links = {}
     for idx, s in enumerate(args.scripts):

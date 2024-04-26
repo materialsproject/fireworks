@@ -96,8 +96,8 @@ def pluralize(number, singular="", plural="s"):
 def home():
     fw_querystr = request.args.get("fw_query")
     wf_querystr = request.args.get("wf_query")
-    fw_querystr = fw_querystr if fw_querystr else ""
-    wf_querystr = wf_querystr if wf_querystr else ""
+    fw_querystr = fw_querystr or ""
+    wf_querystr = wf_querystr or ""
 
     session["fw_filt"] = parse_querystr(fw_querystr, app.lp.fireworks) if fw_querystr else {}
     session["wf_filt"] = parse_querystr(wf_querystr, app.lp.workflows) if wf_querystr else {}
