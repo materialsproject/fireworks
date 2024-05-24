@@ -64,3 +64,8 @@ isort.split-on-trailing-comma = false
 "tests/**" = ["D"]
 "tasks.py" = ["D"]
 "fw_tutorials/**" = ["D"]
+
+[tool.pytest.ini_options]
+markers = [
+    "mongodb: marks tests that need mongodb (deselect with '-m \"not mongodb\"')",
+]
