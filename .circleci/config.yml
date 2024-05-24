@@ -1,7 +1,7 @@
 version: 2
 
 jobs:
-  pytest:
+  pytest_mongodb:
     working_directory: ~/fireworks
     docker:
       - image: continuumio/miniconda3:4.6.14
@@ -26,7 +26,37 @@ jobs:
             pip install .[workflow-checks,graph-plotting,flask-plotting]
             pytest fireworks
 
+  pytest_mongomock:
+    working_directory: ~/fireworks
+    docker:
+      - image: continuumio/miniconda3:4.6.14
+    steps:
+      - checkout
+      - run:
+          command: |
+            export PATH=$HOME/miniconda3/bin:$PATH
+            conda config --set always_yes yes --set changeps1 no
+            conda update -q conda
+            conda info -a
+            conda create -q -n test-environment python=3.8
+            source activate test-environment
+            conda update --quiet --all
+            pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
+      - run:
+          name: Run fireworks tests
+          command: |
+            export PATH=$HOME/miniconda3/bin:$PATH
+            source activate test-environment
+            pip install .[workflow-checks,graph-plotting,flask-plotting]
+            server_store_file=$PWD/server_store_${RANDOM}-${RANDOM}-${RANDOM}.json
+            echo "{}" > $server_store_file
+            export MONGOMOCK_SERVERSTORE_FILE=$server_store_file
+            pytest -m "not mongodb" fireworks
+            rm $server_store_file
+
 workflows:
   version: 2
   build_and_test:
-    jobs: [pytest]
+    jobs:
+    - pytest_mongodb
+    - pytest_mongomock
