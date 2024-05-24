@@ -8,7 +8,7 @@ from typing import Any
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
 import pymongo
-import mongomock
+import mongomock_persistence
 import mongomock.gridfs
 
 __author__ = "Anubhav Jain"
@@ -169,7 +169,7 @@ def override_user_settings() -> None:
     if globals()['MONGOMOCK_SERVERSTORE_FILE']:
         if not os.environ.get('MONGOMOCK_SERVERSTORE_FILE'):
             os.environ['MONGOMOCK_SERVERSTORE_FILE'] = globals()['MONGOMOCK_SERVERSTORE_FILE']
-        globals()['MongoClient'] = getattr(mongomock, 'MongoClient')
+        globals()['MongoClient'] = getattr(mongomock_persistence, 'MongoClient')
         if globals()['GRIDFS_FALLBACK_COLLECTION']:
             mongomock.gridfs.enable_gridfs_integration()
 

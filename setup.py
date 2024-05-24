@@ -39,7 +39,7 @@ if __name__ == "__main__":
             "tqdm>=4.8.4",
             "importlib-metadata>=4.8.2; python_version<'3.8'",
             "typing-extensions; python_version<'3.8'",
-            "mongomock @ git+https://github.com/ikondov/mongomock.git@persistence",
+            "mongomock-persistence>=0.0.3",
         ],
         extras_require={
             "rtransfer": ["paramiko>=2.4.2"],
