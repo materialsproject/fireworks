@@ -5,7 +5,7 @@ Two-minute installation, setup and quickstart
 Install and setup
 =================
 
-Supposed you have a :doc:`virtual environment </virtualenv_tutorial>` with the `pip`` package installed. Then simply type::
+Supposed you have a :doc:`virtual environment </virtualenv_tutorial>` with the `pip` package installed. Then simply type::
 
     pip install fireworks[mongomock]
     mkdir -p ~/.fireworks
@@ -57,6 +57,7 @@ Now we can run the firework in our workflow locally with this simple command::
     rlaunch singleshot
 
 *Output*::
+
     2024-06-07 17:15:08,515 INFO Hostname/IP lookup (this will take a few seconds)
     2024-06-07 17:15:08,517 INFO Launching Rocket
     2024-06-07 17:15:08,608 INFO RUNNING fw_id: 1 in directory: /home/ubuntu
@@ -68,8 +69,7 @@ Now we can run the firework in our workflow locally with this simple command::
 Further steps
 =============
 
-This setup uses a JSON file on the local computer as a database instead of MongoDB. You can carry out many of the following tutorials
-and do local testing by using this setting.
-
-If you want to complete the more advanced tutorials, such as the :doc:`queue tutorial </queue_tutorial>`, or use FireWorks productively on 
-a computing cluster, then you should consider :doc:`installing and setting up FireWorks </installation>` with a MongoDB server.
+This setup uses a JSON file on the local computer as a database instead of MongoDB. You can continue with the other tutorials
+and do local testing by using this setting. If you want to complete the more advanced tutorials, such as the
+:doc:`queue tutorial </queue_tutorial>`, or use FireWorks productively on a computing cluster, then you should consider
+:doc:`installing and setting up FireWorks </installation>` with a MongoDB server.
