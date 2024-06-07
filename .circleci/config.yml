@@ -47,7 +47,7 @@ jobs:
           command: |
             export PATH=$HOME/miniconda3/bin:$PATH
             source activate test-environment
-            pip install .[workflow-checks,graph-plotting,flask-plotting]
+            pip install .[workflow-checks,graph-plotting,flask-plotting,mongomock]
             server_store_file=$PWD/server_store_${RANDOM}-${RANDOM}-${RANDOM}.json
             echo "{}" > $server_store_file
             export MONGOMOCK_SERVERSTORE_FILE=$server_store_file

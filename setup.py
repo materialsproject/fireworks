@@ -39,7 +39,6 @@ if __name__ == "__main__":
             "tqdm>=4.8.4",
             "importlib-metadata>=4.8.2; python_version<'3.8'",
             "typing-extensions; python_version<'3.8'",
-            "mongomock-persistence>=0.0.3",
         ],
         extras_require={
             "rtransfer": ["paramiko>=2.4.2"],
@@ -48,6 +47,7 @@ if __name__ == "__main__":
             "flask-plotting": ["matplotlib>=2.0.1"],
             "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
+            "mongomock": ["mongomock-persistence>=0.0.3"],
         },
         classifiers=[
             "Programming Language :: Python",
