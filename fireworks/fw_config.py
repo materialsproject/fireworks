@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import os
+import importlib
 from typing import Any
 
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
 import pymongo
-import mongomock_persistence
-import mongomock.gridfs
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -167,11 +166,18 @@ def override_user_settings() -> None:
     if 'MONGOMOCK_SERVERSTORE_FILE' in os.environ:
         globals()['MONGOMOCK_SERVERSTORE_FILE'] = os.environ['MONGOMOCK_SERVERSTORE_FILE']
     if globals()['MONGOMOCK_SERVERSTORE_FILE']:
+        try:
+            mongomock_persistence = importlib.import_module('mongomock_persistence')
+            mongomock_gridfs = importlib.import_module('mongomock.gridfs')
+        except (ModuleNotFoundError, ImportError) as err:
+            msg = ('\nTo use mongomock instead of mongodb the extra mongomock must'
+                   ' be installed, for example like this:\npip install fireworks[mongomock]')
+            raise RuntimeError(msg) from err
         if not os.environ.get('MONGOMOCK_SERVERSTORE_FILE'):
             os.environ['MONGOMOCK_SERVERSTORE_FILE'] = globals()['MONGOMOCK_SERVERSTORE_FILE']
         globals()['MongoClient'] = getattr(mongomock_persistence, 'MongoClient')
         if globals()['GRIDFS_FALLBACK_COLLECTION']:
-            mongomock.gridfs.enable_gridfs_integration()
+            mongomock_gridfs.enable_gridfs_integration()
 
 
 override_user_settings()
