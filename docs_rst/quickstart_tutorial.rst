@@ -5,7 +5,7 @@ Two-minute installation, setup and quickstart
 Install and setup
 =================
 
-Supposed you have a :doc:`virtual environment </virtualenv_tutorial>` with the `pip`` package installed. Then simply type:
+Supposed you have a :doc:`virtual environment </virtualenv_tutorial>` with the `pip`` package installed. Then simply type::
 
     pip install fireworks[mongomock]
     mkdir -p ~/.fireworks
@@ -13,7 +13,7 @@ Supposed you have a :doc:`virtual environment </virtualenv_tutorial>` with the `
     echo '{}' > ~/.fireworks/mongomock.json
     lpad reset --password="$(date +%Y-%m-%d)"
 
-See that the database contains no workflows:
+See that the database contains no workflows::
 
     lpad get_wflows
 
@@ -21,15 +21,14 @@ See that the database contains no workflows:
 
     []
 
-
 Add and display a workflow
 ==========================
 
-Add a script that prints the date as a single firework in a workflow:
+Add a script that prints the date as a single firework in a workflow::
 
     lpad add_scripts 'date' -n date_printer_firework -w date_printer_workflow
 
-Let us display the workflow just added:
+Let us display the workflow just added::
 
     lpad get_wflows -d more
 
@@ -53,7 +52,7 @@ We have only one workflow with only one firework on the database.
 Run a workflow
 ==============
 
-Now we can run the firework in our workflow locally with this simple command:
+Now we can run the firework in our workflow locally with this simple command::
 
     rlaunch singleshot
 
