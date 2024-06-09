@@ -119,7 +119,3 @@ Project: JCESR2015
 
         assert p._get_status_cmd("my_name") == ["my_qstatus", "-u", "my_name"]
         assert p.q_commands["PBS"]["submit_cmd"] == "my_qsubmit"
-
-
-if __name__ == "__main__":
-    unittest.main()

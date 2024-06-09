@@ -66,7 +66,7 @@ class CommonAdapter(QueueAdapterBase):
         )
         self.q_name = q_name or q_type
         self.timeout = timeout or 5
-        self.update(dict(kwargs))
+        self.update(kwargs)
 
         self.q_commands = copy.deepcopy(CommonAdapter.default_q_commands)
         if "_q_commands_override" in self:

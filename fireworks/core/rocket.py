@@ -51,7 +51,7 @@ def do_ping(launchpad: LaunchPad, launch_id: int) -> None:
         launchpad.ping_launch(launch_id)
     else:
         with open("FW_ping.json", "w") as f:
-            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
+            f.write(f'{{"ping_time": "{datetime.utcnow().isoformat()}"}}')
 
 
 def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_thread: Thread) -> None:
@@ -468,7 +468,7 @@ class Rocket:
             for k, v in my_spec.get("_files_out").items():
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
-                    filepath = sorted(files)[-1]
+                    filepath = max(files)
                     fwaction.mod_spec.append({"_set": {f"_files_prev->{k:s}": filepath}})
 
         return fwaction

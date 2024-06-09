@@ -35,7 +35,3 @@ class TemplateWriterTaskTest(unittest.TestCase):
         os.remove("out_template.txt")
         if os.path.exists("test_template.txt"):
             os.remove("test_template.txt")
-
-
-if __name__ == "__main__":
-    unittest.main()

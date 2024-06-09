@@ -546,7 +546,7 @@ class MongoTests(unittest.TestCase):
         assert new_fw.spec["dummy2"] == [True]
 
         new_wf = Workflow([Firework([ModSpecTask()])])
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Cannot append to a FW that is not in the original Workflow"):
             self.lp.append_wf(new_wf, [4], detour=True)
 
     def test_append_wf_detour(self) -> None:
@@ -608,7 +608,3 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         workflow_results = s.get_workflow_summary(time_field="updated_on")
         assert (workflow_results[0]["_id"], workflow_results[0]["count"]) == ("COMPLETED", 3)
-
-
-if __name__ == "__main__":
-    unittest.main()

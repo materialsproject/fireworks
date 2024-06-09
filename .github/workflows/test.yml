@@ -28,9 +28,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt -r requirements-ci.txt
+          pip install '.[workflow-checks,graph-plotting,flask-plotting]'
 
       - name: Run fireworks tests
-        shell: bash -l {0}
-        run: |
-          pip install .[workflow-checks,graph-plotting,flask-plotting]
-          pytest fireworks
+        run: pytest fireworks

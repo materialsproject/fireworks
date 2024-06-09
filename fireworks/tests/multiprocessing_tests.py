@@ -118,7 +118,3 @@ class TestEarlyExit(TestCase):
         with open(os.path.join(fw3.launches[0].launch_dir, "task.out")) as f:
             fw3_text = f.read()
         assert fw2_text != fw3_text
-
-
-if __name__ == "__main__":
-    unittest.main()

@@ -100,7 +100,7 @@ class FilePad(MSONable):
 
         # logging
         self.logdir = logdir
-        self.strm_lvl = strm_lvl if strm_lvl else "INFO"
+        self.strm_lvl = strm_lvl or "INFO"
         self.logger = get_fw_logger("filepad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
         # build indexes
@@ -114,7 +114,7 @@ class FilePad(MSONable):
             indexes (list): list of single field indexes to be built.
             background (bool): Run in the background or not.
         """
-        indexes = indexes if indexes else ["identifier", "gfs_id"]
+        indexes = indexes or ["identifier", "gfs_id"]
         for i in indexes:
             self.filepad.create_index(i, unique=True, background=background)
 
@@ -136,7 +136,7 @@ class FilePad(MSONable):
         if identifier is not None:
             _, doc = self.get_file(identifier)
             if doc is not None:
-                self.logger.warning(f"identifier: {identifier} exists. Skipping insertion")
+                self.logger.warning(f"{identifier=} exists. Skipping insertion")
                 return doc["gfs_id"], doc["identifier"]
 
         path = os.path.abspath(path)

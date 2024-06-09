@@ -96,8 +96,8 @@ def pluralize(number, singular="", plural="s"):
 def home():
     fw_querystr = request.args.get("fw_query")
     wf_querystr = request.args.get("wf_query")
-    fw_querystr = fw_querystr if fw_querystr else ""
-    wf_querystr = wf_querystr if wf_querystr else ""
+    fw_querystr = fw_querystr or ""
+    wf_querystr = wf_querystr or ""
 
     session["fw_filt"] = parse_querystr(fw_querystr, app.lp.fireworks) if fw_querystr else {}
     session["wf_filt"] = parse_querystr(wf_querystr, app.lp.workflows) if wf_querystr else {}
@@ -114,23 +114,22 @@ def home():
 
     # Newest Workflows table data
     wfs_shown = app.lp.workflows.find(_addq_WF({}), limit=PER_PAGE, sort=[("_id", DESCENDING)])
-    wf_info = []
-    for item in wfs_shown:
-        wf_info.append(
-            {
-                "id": item["nodes"][0],
-                "name": item["name"],
-                "state": item["state"],
-                "fireworks": list(
-                    app.lp.fireworks.find(
-                        {"fw_id": {"$in": item["nodes"]}},
-                        limit=PER_PAGE,
-                        sort=[("fw_id", DESCENDING)],
-                        projection=["state", "name", "fw_id"],
-                    )
-                ),
-            }
-        )
+    wf_info = [
+        {
+            "id": item["nodes"][0],
+            "name": item["name"],
+            "state": item["state"],
+            "fireworks": list(
+                app.lp.fireworks.find(
+                    {"fw_id": {"$in": item["nodes"]}},
+                    limit=PER_PAGE,
+                    sort=[("fw_id", DESCENDING)],
+                    projection=["state", "name", "fw_id"],
+                )
+            ),
+        }
+        for item in wfs_shown
+    ]
 
     PLOTTING = False
     try:
@@ -144,7 +143,7 @@ def home():
 @app.route("/fw/<int:fw_id>/details")
 @requires_auth
 def get_fw_details(fw_id):
-    # just fill out whatever attributse you want to see per step, then edit the handlebars template in
+    # just fill out whatever attributes you want to see per step, then edit the handlebars template in
     # wf_details.html
     # to control their display
     fw = app.lp.get_fw_dict_by_id(fw_id)
@@ -162,7 +161,7 @@ def fw_details(fw_id):
     try:
         int(fw_id)
     except Exception:
-        raise ValueError(f"Invalid fw_id: {fw_id}")
+        raise ValueError(f"Invalid {fw_id=}")
     fw = app.lp.get_fw_dict_by_id(fw_id)
     fw = json.loads(json.dumps(fw, default=DATETIME_HANDLER))  # formats ObjectIds
     return render_template("fw_details.html", **locals())

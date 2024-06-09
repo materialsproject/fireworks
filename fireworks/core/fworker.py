@@ -35,8 +35,8 @@ class FWorker(FWSerializable):
         """
         self.name = name
         self.category = category
-        self._query = query if query else {}
-        self.env = env if env else {}
+        self._query = query or {}
+        self.env = env or {}
 
     @recursive_serialize
     def to_dict(self):

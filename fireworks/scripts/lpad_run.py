@@ -174,7 +174,7 @@ def init_yaml(args: Namespace) -> None:
     print("Please supply the following configuration values")
     print("(press Enter if you want to accept the defaults)\n")
     for k, default, helptext in fields:
-        val = input(f"Enter {k} parameter. (default: {default}). {helptext}: ")
+        val = input(f"Enter {k} parameter. ({default=}). {helptext}: ")
         doc[k] = val or default
     if "port" in doc:
         doc["port"] = int(doc["port"])  # enforce the port as an int
@@ -281,10 +281,10 @@ def get_fw_ids_helper(lp: LaunchPad, args: Namespace, count_only: bool | None = 
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     if sum(bool(x) for x in [args.fw_id, args.name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format or "more"
 
     if args.fw_id:
         query = {"fw_id": {"$in": args.fw_id}}
@@ -370,10 +370,10 @@ def get_fws_in_wfs(args: Namespace) -> None:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.fw_state, args.fw_query]) == 0:
         args.fw_query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     if sum(bool(x) for x in [args.fw_fw_id, args.fw_name, args.qid]) > 1:
         raise ValueError("Please specify exactly one of (fw_id, name, qid)")
-    args.display_format = args.display_format if args.display_format else "more"
+    args.display_format = args.display_format or "more"
 
     if args.fw_fw_id:
         fw_query = {"fw_id": {"$in": args.fw_fw_id}}
@@ -425,9 +425,9 @@ def get_wfs(args: Namespace) -> None:
         raise ValueError("Please specify exactly one of (fw_id, name, state, query)")
     if sum(bool(x) for x in [args.fw_id, args.name, args.state, args.query]) == 0:
         args.query = "{}"
-        args.display_format = args.display_format if args.display_format else "ids"
+        args.display_format = args.display_format or "ids"
     else:
-        args.display_format = args.display_format if args.display_format else "more"
+        args.display_format = args.display_format or "more"
 
     if args.fw_id:
         query = {"nodes": {"$in": args.fw_id}}
@@ -627,7 +627,7 @@ def rerun_fws(args: Namespace) -> None:
         launch_ids = [None] * len(fw_ids)
     for fw_id, l_id in zip(fw_ids, launch_ids):
         lp.rerun_fw(int(fw_id), recover_launch=l_id, recover_mode=args.recover_mode)
-        lp.m_logger.debug(f"Processed fw_id: {fw_id}")
+        lp.m_logger.debug(f"Processed {fw_id=}")
     lp.m_logger.info(f"Finished setting {len(fw_ids)} FWs to rerun")
 
 
@@ -645,10 +645,10 @@ def refresh(args: Namespace) -> None:
 def unlock(args: Namespace) -> None:
     lp = get_lp(args)
     fw_ids = parse_helper(lp, args, wf_mode=True)
-    for f in fw_ids:
-        with WFLock(lp, f, expire_secs=0, kill=True):
-            lp.m_logger.warning(f"FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {f}")
-            lp.m_logger.debug(f"Processed Workflow with fw_id: {f}")
+    for fw_id in fw_ids:
+        with WFLock(lp, fw_id, expire_secs=0, kill=True):
+            lp.m_logger.warning(f"FORCIBLY RELEASING LOCK DUE TO USER COMMAND, WF: {fw_id}")
+            lp.m_logger.debug(f"Processed Workflow with {fw_id=}")
     lp.m_logger.info(f"Finished unlocking {len(fw_ids)} Workflows")
 
 
@@ -733,8 +733,8 @@ def webgui(args: Namespace) -> None:
 
 def add_scripts(args: Namespace) -> None:
     lp = get_lp(args)
-    args.names = args.names if args.names else [None] * len(args.scripts)
-    args.wf_name = args.wf_name if args.wf_name else args.names[0]
+    args.names = args.names or [None] * len(args.scripts)
+    args.wf_name = args.wf_name or args.names[0]
     fws = []
     links = {}
     for idx, s in enumerate(args.scripts):
@@ -771,7 +771,7 @@ def forget_offline(args: Namespace) -> None:
     for f in fw_ids:
         lp.forget_offline(f, launch_mode=False)
         lp.m_logger.debug(f"Processed fw_id: {f}")
-    lp.m_logger.info(f"Finished forget_offine, processed {len(fw_ids)} FWs")
+    lp.m_logger.info(f"Finished forget_offline, processed {len(fw_ids)} FWs")
 
 
 def report(args: Namespace) -> None:
@@ -813,16 +813,16 @@ def track_fws(args: Namespace) -> None:
     include = args.include
     exclude = args.exclude
     first_print = True  # used to control newline
-    for f in fw_ids:
-        data = lp.get_tracker_data(f)
+    for fw_id in fw_ids:
+        data = lp.get_tracker_data(fw_id)
         output = []
-        for d in data:
-            for t in d["trackers"]:
-                if (not include or t.filename in include) and (not exclude or t.filename not in exclude):
-                    output.extend((f"## Launch id: {d['launch_id']}", str(t)))
+        for dct in data:
+            for tracker in dct["trackers"]:
+                if (not include or tracker.filename in include) and (not exclude or tracker.filename not in exclude):
+                    output.extend((f"## Launch id: {dct['launch_id']}", str(tracker)))
         if output:
-            name = lp.fireworks.find_one({"fw_id": f}, {"name": 1})["name"]
-            output.insert(0, f"# FW id: {f}, FW name: {name}")
+            name = lp.fireworks.find_one({"fw_id": fw_id}, {"name": 1})["name"]
+            output.insert(0, f"# FW id: {fw_id}, FW {name=}")
             if first_print:
                 first_print = False
             else:
