@@ -50,13 +50,10 @@ jobs:
           pip install -r requirements.txt -r requirements-ci.txt
           pip install '.[workflow-checks,graph-plotting,flask-plotting,mongomock]'
 
-      - name: Setup mongomock server store
+      - name: Setup mongomock server store and run pytest
         run: |
           server_store_file=$PWD/server_store_${RANDOM}-${RANDOM}-${RANDOM}.json
           echo "{}" > $server_store_file
           export MONGOMOCK_SERVERSTORE_FILE=$server_store_file
-
-      - name: Run fireworks tests with mongomock
-        run: |
           pytest -m "not mongodb" fireworks
           rm -f $server_store_file
