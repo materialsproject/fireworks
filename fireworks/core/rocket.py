@@ -5,7 +5,6 @@ completes the Launch.
 
 from __future__ import annotations
 
-import distutils.dir_util
 import errno
 import glob
 import json
@@ -201,7 +200,7 @@ class Rocket:
                             logging.INFO,
                             f"Copying data from recovery folder {recovery_dir} to folder {launch_dir}.",
                         )
-                    distutils.dir_util.copy_tree(recovery_dir, launch_dir, update=1)
+                    shutil.copytree(recovery_dir, launch_dir, dirs_exist_ok=True)
 
             else:
                 starting_task = 0
