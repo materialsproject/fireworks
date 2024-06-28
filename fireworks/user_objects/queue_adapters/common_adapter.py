@@ -251,7 +251,7 @@ class CommonAdapter(QueueAdapterBase):
 
         # run qstat
         qstat = Command(self._get_status_cmd(username))
-        p = qstat.run(timeout=self.timeout)
+        p = qstat.run(timeout=self.timeout, shell=True)
 
         # parse the result
         if p[0] == 0:
