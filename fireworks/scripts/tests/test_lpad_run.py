@@ -19,6 +19,7 @@ def lp(capsys):
         lp.reset(password=None, require_password=False)
 
 
+@pytest.mark.mongodb
 @pytest.mark.parametrize(("detail", "expected_1", "expected_2"), [("count", "0\n", "1\n"), ("ids", "[]\n", "1\n")])
 def test_lpad_get_fws(capsys, lp, detail, expected_1, expected_2) -> None:
     """Test lpad CLI get_fws command."""

@@ -47,6 +47,7 @@ if __name__ == "__main__":
             "flask-plotting": ["matplotlib>=2.0.1"],
             "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
+            "mongomock": ["mongomock-persistence>=0.0.3"],
         },
         classifiers=[
             "Programming Language :: Python",

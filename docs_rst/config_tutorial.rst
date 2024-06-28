@@ -76,6 +76,7 @@ A few basic parameters that can be tweaked are:
 * ``WEBSERVER_HOST: 127.0.0.1`` - the default host on which to run the web server
 * ``WEBSERVER_PORT: 5000`` - the default port on which to run the web server
 * ``QUEUE_JOBNAME_MAXLEN: 20`` - the max length of the job name to send to the queuing system (some queuing systems limit the size of job names)
+* ``MONGOMOCK_SERVERSTORE_FILE`` - path to a non-empty JSON file, if set then mongomock will be used instead of MongoDB; this file should be initialized with '{}'
 * ``ROCKET_STREAM_LOGLEVEL: INFO`` - the streaming log level of the rocket launcher logger (valid values: DEBUG, INFO, WARNING, ERROR, CRITICAL)
 
 Parameters that you probably shouldn't change

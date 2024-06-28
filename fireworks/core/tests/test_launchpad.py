@@ -15,7 +15,6 @@ from multiprocessing import Process
 
 import pytest
 from monty.os import cd
-from pymongo import MongoClient
 from pymongo import __version__ as PYMONGO_VERSION
 from pymongo.errors import OperationFailure
 
@@ -43,7 +42,7 @@ class AuthenticationTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         try:
-            client = MongoClient()
+            client = fireworks.fw_config.MongoClient()
             client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
@@ -1310,7 +1309,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         assert fw.state == "FIZZLED"
 
-
+@pytest.mark.mongodb
 class GridfsStoredDataTest(unittest.TestCase):
     """
     Tests concerning the storage of data in Gridfs when the size of the
@@ -1343,6 +1342,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         os.chdir(self.old_wd)
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
+
 
     def test_many_detours(self) -> None:
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)

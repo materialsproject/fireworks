@@ -1,7 +1,11 @@
 import os
-
+import json
+from glob import glob
+from pymongo import DESCENDING
+from ruamel.yaml import YAML
 from fireworks.core.firework import FiretaskBase
 from fireworks.utilities.filepad import FilePad
+from fireworks.utilities.dict_mods import arrow_to_dot
 
 __author__ = "Kiran Mathew, Johannes Hoermann"
 __email__ = "kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de"
@@ -28,7 +32,6 @@ class AddFilesTask(FiretaskBase):
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec) -> None:
-        from glob import glob
 
         directory = os.path.abspath(self.get("directory", "."))
 
@@ -143,19 +146,12 @@ class GetFilesByQueryTask(FiretaskBase):
     ]
 
     def run_task(self, fw_spec) -> None:
-        import json
-
-        import pymongo
-        from ruamel.yaml import YAML
-
-        from fireworks.utilities.dict_mods import arrow_to_dot
-
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
         sort_key = self.get("sort_key", None)
-        sort_direction = self.get("sort_direction", pymongo.DESCENDING)
+        sort_direction = self.get("sort_direction", DESCENDING)
         limit = self.get("limit", None)
         fizzle_empty_result = self.get("fizzle_empty_result", True)
         fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name", True)

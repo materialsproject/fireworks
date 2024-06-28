@@ -15,11 +15,12 @@ import gridfs
 from bson import ObjectId
 from monty.os.path import zpath
 from monty.serialization import loadfn
-from pymongo import ASCENDING, DESCENDING, MongoClient
+from pymongo import ASCENDING, DESCENDING
 from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
+from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
@@ -413,7 +414,7 @@ class LaunchPad(FWSerializable):
 
         """
         # Make all fireworks workflows
-        wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
+        wfs = [Workflow.from_Firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum(len(wf) for wf in wfs)
