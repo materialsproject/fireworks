@@ -22,6 +22,7 @@ from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
 from fireworks.utilities import reservation_finder
+from fireworks.utilities import reservation_finder2
 from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
@@ -1218,14 +1219,8 @@ class LaunchPad(FWSerializable):
 
     def get_reservation_id_from_fw_id(self, fw_id):
         """Given the firework id, return the reservation id."""
-        fw = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1})
-        if fw:
-            for launch in self.launches.find({"launch_id": {"$in": fw["launches"]}}, {"state_history": 1}):
-                for d in launch["state_history"]:
-                    if "reservation_id" in d:
-                        return d["reservation_id"]
-            return None
-        return None
+        jobid=reservation_finder2.main(fw_id)
+        return jobid
 
     def cancel_reservation(self, launch_id) -> None:
         """Given the launch id, cancel the reservation and rerun the fireworks."""
