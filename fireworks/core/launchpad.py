@@ -21,7 +21,7 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
-from fireworks.fireworks.utilities import reservation_finder
+from fireworks.utilities import reservation_finder
 from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
