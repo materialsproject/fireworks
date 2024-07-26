@@ -1194,8 +1194,14 @@ class LaunchPad(FWSerializable):
         """
         return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
-    def get_fw_ids_from_reservation_id(self, reservation_id):
-        
+    def get_fw_id_from_reservation_id(self, reservation_id):
+        """
+        Given the reservation id, return the list of firework ids.
+        Args:
+            reservation_id (int)
+        Returns:
+            [int]: Return the firework id.
+        """
         fw_id=reservation_finder.get_fwid(reservation_id)
 
         return fw_id
