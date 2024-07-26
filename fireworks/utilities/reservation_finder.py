@@ -10,7 +10,8 @@ def execute_command(command):
     try:
         result = subprocess.run(command, shell=True, capture_output=True, text=True)
         if result.returncode != 0:
-            raise Exception(f"Command failed: {command}\n{result.stderr}")
+            #raise Exception(f"Command failed: {command}\n{result.stderr}")
+            raise Exception('Running fireworks locally')
         ssh=None
         return result.stdout.strip(),ssh
     except Exception as e:
