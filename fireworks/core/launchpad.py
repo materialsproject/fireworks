@@ -10,7 +10,9 @@ import traceback
 import warnings
 from collections import defaultdict
 from itertools import chain
-from sustodian import FindMyFW
+
+#from sustodian import FindMyFW
+from fireworks.core import reservation_finder
 
 import gridfs
 from bson import ObjectId
@@ -1195,7 +1197,7 @@ class LaunchPad(FWSerializable):
 
     def get_fw_ids_from_reservation_id(self, reservation_id):
         
-        fw_id=FindMyFW.get_fwid(reservation_id)
+        fw_id=reservation_finder.get_fwid(reservation_id)
         return fw_id
 
     def cancel_reservation_by_reservation_id(self, reservation_id) -> None:
