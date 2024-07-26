@@ -80,10 +80,20 @@ def process_all_jobs(job_list,ssh=None):
     if not job_lines:
         print(f"{RED}No jobs found!{NC}")
         sys.exit(1)
-    
-    for line in job_lines:
+    load_length=len(job_lines)
+    for i,line in enumerate(job_lines):
+        i=i+1
         job_id = line.split()[0]
-        print(f"{ORANGE}Processing job ID: {CYAN}{job_id}{NC}")
+        percent_complete = (i / load_length) * 100
+        
+        # Create the bar part of the output
+        bar = '#' * i + '-' * (load_length - i)
+        
+        # Display the loading bar along with the percentage
+        sys.stdout.write(f'\r[{bar}] {percent_complete:.2f}%')
+        sys.stdout.flush()
+        print("\n")
+        #print(f"{ORANGE}Processing job ID: {CYAN}{job_id}{NC}")
         fw_id = process_single_job(job_id, ssh)
         fw_dict[fw_id] = job_id
 
@@ -155,7 +165,7 @@ def dir_rapidfire(base_dir, ssh=None):
     spec_mpid = data.get('spec', {}).get('MPID')
     fw_id = data.get('fw_id')
     #print(f"spec.MPID: {spec_mpid}")
-    print(f"fw_id: {fw_id}")
+    #print(f"fw_id: {fw_id}")
     return fw_id
 
 def print_warning(dir_path):

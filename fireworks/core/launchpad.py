@@ -21,8 +21,8 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
-from fireworks.utilities import reservation_finder
-from fireworks.utilities import reservation_finder2
+from fireworks.utilities import fw_id_from_reservation_id
+from fireworks.utilities import reservation_id_from_fw_id
 from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
@@ -1203,7 +1203,7 @@ class LaunchPad(FWSerializable):
         Returns:
             [int]: Return the firework id.
         """
-        fw_id=reservation_finder.get_fwid(reservation_id)
+        fw_id=fw_id_from_reservation_id.get_fwid(reservation_id)
 
         return fw_id
 
@@ -1219,7 +1219,7 @@ class LaunchPad(FWSerializable):
 
     def get_reservation_id_from_fw_id(self, fw_id):
         """Given the firework id, return the reservation id."""
-        jobid=reservation_finder2.main(fw_id)
+        jobid=reservation_id_from_fw_id.main(fw_id)
         return jobid
 
     def cancel_reservation(self, launch_id) -> None:
