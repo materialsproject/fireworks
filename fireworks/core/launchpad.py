@@ -1220,6 +1220,8 @@ class LaunchPad(FWSerializable):
     def get_reservation_id_from_fw_id(self, fw_id):
         """Given the firework id, return the reservation id."""
         jobid=reservation_id_from_fw_id.main(fw_id)
+        if jobid==None:
+            print('No matching fw_id-JobID pair. The firework may be a lost run')
         return jobid
 
     def cancel_reservation(self, launch_id) -> None:
