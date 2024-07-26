@@ -11,8 +11,6 @@ import warnings
 from collections import defaultdict
 from itertools import chain
 
-#from sustodian import FindMyFW
-from fireworks.core import reservation_finder
 
 import gridfs
 from bson import ObjectId
@@ -23,6 +21,7 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
+from fireworks.core import reservation_finder
 from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
@@ -1198,6 +1197,7 @@ class LaunchPad(FWSerializable):
     def get_fw_ids_from_reservation_id(self, reservation_id):
         
         fw_id=reservation_finder.get_fwid(reservation_id)
+
         return fw_id
 
     def cancel_reservation_by_reservation_id(self, reservation_id) -> None:

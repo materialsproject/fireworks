@@ -39,7 +39,6 @@ def extract_username_hostname(input_string):
 # SSH login and execute remote command
 def ssh_login(command):
     input_string = input("Enter username@hostname: ").strip()
-    # Replace with your hostname and username
     username, hostname = extract_username_hostname(input_string)
     password = getpass.getpass('Enter password+OTP: ')
 
