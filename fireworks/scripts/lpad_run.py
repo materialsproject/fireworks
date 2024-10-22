@@ -752,7 +752,7 @@ def recover_offline(args: Namespace) -> None:
     recovered_fws = []
 
     for launch in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
-        if fworker_name and lp.launches.count({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0:
+        if fworker_name and lp.launches.count_documents({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0:
             continue
         fw = lp.recover_offline(launch["launch_id"], args.ignore_errors, args.print_errors)
         if fw:
