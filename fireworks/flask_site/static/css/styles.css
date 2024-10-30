@@ -19,8 +19,8 @@ footer .navbar .nav {
 .pull-up { margin-bottom: 30px;}
 
 .fw-link {
-	border-bottom: 1px dotted;
-	margin-left: 10px;
+  border-bottom: 1px dotted; /* Dotted underline */
+  margin-left: 10px; /* Left margin */
 }
 
 .table td{
@@ -121,4 +121,21 @@ form.query button[type=submit] {
 
 hr.myhrline{
  margin:5px;
+}
+
+.wf-name strong {
+  display: inline-block;
+  max-width: 150px; /* Adjust maximum width as needed */
+  white-space: nowrap; /* Prevent text from wrapping */
+  overflow: hidden; /* Hide the overflowed part */
+  text-overflow: ellipsis; /* Show ellipsis for overflowed text */
+  vertical-align: bottom;
+}
+
+.wf-name {
+  text-decoration: none; /* Remove underline from the link */
+}
+
+.wf-name strong:hover {
+  cursor: pointer; /* Change cursor to pointer on hover */
 }

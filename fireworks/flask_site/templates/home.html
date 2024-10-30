@@ -23,7 +23,9 @@
                     <td>
                         <div class="row pull-down-sm">
                             <div class="span2">
-                                <a href="/wf/{{ wf.id }}"><strong>{{ wf.name }}</strong></a>
+                                <a href="/wf/{{ wf.id }}" class="wf-name" title="{{ wf.name }}">
+                                    <strong>{{ wf.name }}</strong>
+                                </a>
                             </div>
                             <div class="span3">
                                 <span class="label {{wf.state}}">{{wf.state}}</span>
@@ -31,13 +33,12 @@
                                     ID: <a href="/wf/{{ wf.id }}">{{ wf.id }}</a>
                                 </span>
                             </div>
-
                         </div>
                         <hr>
                         <div class="pull-up">
                             {% for fw  in wf.fireworks %}
                             <div>
-                                <small><a class="fw-link {{fw.state}}" href="/fw/{{ fw.fw_id }}">{{fw.name}}</a></small>
+                                <small><a class="fw-link {{fw.state}}" href="/fw/{{ fw.fw_id }}" title="{{fw.name}}">{{fw.name}}</a></small>
                             </div>
                             {% endfor %}
                         </div>
