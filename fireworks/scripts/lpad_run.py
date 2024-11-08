@@ -1415,9 +1415,16 @@ def lpad(argv: Sequence[str] | None = None) -> int:
     recover_parser.set_defaults(func=recover_offline)
 
     forget_parser = subparsers.add_parser("forget_offline", help="forget offline workflows")
+    forget_parser.add_argument(*fw_id_args, **fw_id_kwargs)
     forget_parser.add_argument("-n", "--name", help="name")
     forget_parser.add_argument(*state_args, **state_kwargs)
     forget_parser.add_argument(*query_args, **query_kwargs)
+    forget_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)    
+    forget_parser.add_argument(
+        "--password",
+        help="Today's date, e.g. 2012-02-25. Password or positive response to "
+        f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
+    )    
     forget_parser.set_defaults(func=forget_offline)
 
     # admin commands
