@@ -203,10 +203,11 @@ class LaunchPad(FWSerializable):
                 raise ValueError("Must specify a database name when using a MongoDB URI string.")
             self.db = self.connection[self.name]
         else:
+            if not "socketTimeoutMS" in self.mongoclient_kwargs:
+                self.mongoclient_kwargs["socketTimeoutMS"] = MONGO_SOCKET_TIMEOUT_MS
             self.connection = MongoClient(
                 self.host,
                 self.port,
-                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                 username=self.username,
                 password=self.password,
                 authSource=self.authsource,
