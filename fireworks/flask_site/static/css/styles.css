@@ -19,8 +19,15 @@ footer .navbar .nav {
 .pull-up { margin-bottom: 30px;}
 
 .fw-link {
-  border-bottom: 1px dotted; /* Dotted underline */
-  margin-left: 10px; /* Left margin */
+  display: inline-block; 
+  max-width: 50%; 
+  overflow: hidden; 
+  white-space: nowrap;
+  text-overflow: ellipsis; 
+  color: white;
+  padding: 2px 5px;
+  border-radius: 3px;
+  box-shadow: 0px 1px 0px #aaa;
 }
 
 .table td{
