@@ -325,17 +325,20 @@ class Firework(FWSerializable):
         a Workflow because a refresh is needed after calling this method.
         """
         if self.state == "FIZZLED":
-            last_launch = self.launches[-1]
-            if (
-                EXCEPT_DETAILS_ON_RERUN
-                and last_launch.action
-                and last_launch.action.stored_data.get("_exception", {}).get("_details")
-            ):
-                # add the exception details to the spec
-                self.spec["_exception_details"] = last_launch.action.stored_data["_exception"]["_details"]
-            else:
-                # clean spec from stale details
+            if len(self.launches) == 0:
                 self.spec.pop("_exception_details", None)
+            else:
+                last_launch = self.launches[-1]
+                if (
+                    EXCEPT_DETAILS_ON_RERUN
+                    and last_launch.action
+                    and last_launch.action.stored_data.get("_exception", {}).get("_details")
+                ):
+                    # add the exception details to the spec
+                    self.spec["_exception_details"] = last_launch.action.stored_data["_exception"]["_details"]
+                else:
+                    # clean spec from stale details
+                    self.spec.pop("_exception_details", None)
 
         self.archived_launches.extend(self.launches)
         self.archived_launches = list(set(self.archived_launches))  # filter duplicates
