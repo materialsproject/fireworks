@@ -1,25 +1,23 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>fireworks.flask_site package &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>fireworks.flask_site package &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -28,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.flask_site package</a></li> 
       </ul>
     </div>  
@@ -38,122 +36,121 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="fireworks-flask-site-package">
-<h1>fireworks.flask_site package<a class="headerlink" href="#fireworks-flask-site-package" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-fireworks.flask_site.app">
-<span id="fireworks-flask-site-app-module"></span><h2>fireworks.flask_site.app module<a class="headerlink" href="#module-fireworks.flask_site.app" title="Permalink to this headline">¶</a></h2>
+  <section id="fireworks-flask-site-package">
+<h1>fireworks.flask_site package<a class="headerlink" href="#fireworks-flask-site-package" title="Link to this heading">¶</a></h1>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
+</section>
+<section id="module-fireworks.flask_site.app">
+<span id="fireworks-flask-site-app-module"></span><h2>fireworks.flask_site.app module<a class="headerlink" href="#module-fireworks.flask_site.app" title="Link to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="fireworks.flask_site.app.authenticate">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">authenticate</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.authenticate" title="Permalink to this definition">¶</a></dt>
-<dd><p>Sends a 401 response that enables basic auth</p>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.authenticate">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">authenticate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.authenticate" title="Link to this definition">¶</a></dt>
+<dd><p>Sends a 401 response that enables basic auth.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.check_auth">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">check_auth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">username</span></em>, <em class="sig-param"><span class="n">password</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.check_auth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.check_auth">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">check_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">password</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.check_auth" title="Link to this definition">¶</a></dt>
 <dd><p>This function is called to check if a username /
 password combination is valid.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.dashboard">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">dashboard</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.dashboard" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.dashboard">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">dashboard</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.dashboard" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.datetime">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">datetime</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.datetime" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.datetime">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">datetime</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.datetime" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.fw_details">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">fw_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.fw_details" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.fw_details">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">fw_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.fw_details" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.fw_state">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">fw_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">sorting_key</span><span class="o">=</span><span class="default_value">'_id'</span></em>, <em class="sig-param"><span class="n">sorting_order</span><span class="o">=</span><span class="default_value">'DESCENDING'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.fw_state" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.fw_state">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">fw_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DESCENDING'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.fw_state" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.get_fw_details">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">get_fw_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fw_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.get_fw_details" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.get_fw_details">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">get_fw_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.get_fw_details" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.home">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">home</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.home" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.home">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">home</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.home" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.parse_querystr">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">parse_querystr</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">querystr</span></em>, <em class="sig-param"><span class="n">coll</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.parse_querystr" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.parse_querystr">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">parse_querystr</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">querystr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coll</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.parse_querystr" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.pluralize">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">pluralize</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">number</span></em>, <em class="sig-param"><span class="n">singular</span><span class="o">=</span><span class="default_value">''</span></em>, <em class="sig-param"><span class="n">plural</span><span class="o">=</span><span class="default_value">'s'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.pluralize" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.pluralize">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">pluralize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">number</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">singular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plural</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'s'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.pluralize" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.report">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">report</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">interval</span></em>, <em class="sig-param"><span class="n">num_intervals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.report" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.report">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_intervals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.report" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.requires_auth">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">requires_auth</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">f</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.requires_auth" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.requires_auth">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">requires_auth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.requires_auth" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.simple">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">simple</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">coll</span></em>, <em class="sig-param"><span class="n">interval</span></em>, <em class="sig-param"><span class="n">num_intervals</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.simple" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.simple">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">simple</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">coll</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interval</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_intervals</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.simple" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.wf_details">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">wf_details</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_details" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.wf_details">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">wf_details</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wf_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_details" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.wf_metadata_find">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">wf_metadata_find</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">key</span></em>, <em class="sig-param"><span class="n">value</span></em>, <em class="sig-param"><span class="n">state</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_metadata_find" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.wf_metadata_find">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">wf_metadata_find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">state</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_metadata_find" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.wf_state">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">wf_state</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">state</span></em>, <em class="sig-param"><span class="n">sorting_key</span><span class="o">=</span><span class="default_value">'_id'</span></em>, <em class="sig-param"><span class="n">sorting_order</span><span class="o">=</span><span class="default_value">'DESCENDING'</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_state" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.wf_state">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">wf_state</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">state</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'_id'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sorting_order</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'DESCENDING'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.wf_state" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.app.workflow_json">
-<code class="sig-prename descclassname">fireworks.flask_site.app.</code><code class="sig-name descname">workflow_json</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">wf_id</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.workflow_json" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.app.workflow_json">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.app.</span></span><span class="sig-name descname"><span class="pre">workflow_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">wf_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.app.workflow_json" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-fireworks.flask_site.gunicorn">
-<span id="fireworks-flask-site-gunicorn-module"></span><h2>fireworks.flask_site.gunicorn module<a class="headerlink" href="#module-fireworks.flask_site.gunicorn" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-fireworks.flask_site.gunicorn">
+<span id="fireworks-flask-site-gunicorn-module"></span><h2>fireworks.flask_site.gunicorn module<a class="headerlink" href="#module-fireworks.flask_site.gunicorn" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="fireworks.flask_site.gunicorn.StandaloneApplication">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.flask_site.gunicorn.</code><code class="sig-name descname">StandaloneApplication</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">app</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">gunicorn.app.base.BaseApplication</span></code></p>
+<dt class="sig sig-object py" id="fireworks.flask_site.gunicorn.StandaloneApplication">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.gunicorn.</span></span><span class="sig-name descname"><span class="pre">StandaloneApplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseApplication</span></code></p>
 <dl class="py method">
-<dt id="fireworks.flask_site.gunicorn.StandaloneApplication.__init__">
-<code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">app</span></em>, <em class="sig-param"><span class="n">options</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.__init__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt id="fireworks.flask_site.gunicorn.StandaloneApplication.load">
-<code class="sig-name descname">load</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.gunicorn.StandaloneApplication.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">app</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">options</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
-<dt id="fireworks.flask_site.gunicorn.StandaloneApplication.load_config">
-<code class="sig-name descname">load_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load_config" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.gunicorn.StandaloneApplication.load">
+<span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.flask_site.gunicorn.StandaloneApplication.load_config">
+<span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load_config" title="Link to this definition">¶</a></dt>
 <dd><p>This method is used to load the configuration from one or several input(s).
 Custom Command line, configuration file.
 You have to override this method in your class.</p>
@@ -162,49 +159,49 @@ You have to override this method in your class.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.gunicorn.number_of_workers">
-<code class="sig-prename descclassname">fireworks.flask_site.gunicorn.</code><code class="sig-name descname">number_of_workers</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.number_of_workers" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.gunicorn.number_of_workers">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.gunicorn.</span></span><span class="sig-name descname"><span class="pre">number_of_workers</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.gunicorn.number_of_workers" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-fireworks.flask_site.helpers">
-<span id="fireworks-flask-site-helpers-module"></span><h2>fireworks.flask_site.helpers module<a class="headerlink" href="#module-fireworks.flask_site.helpers" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="module-fireworks.flask_site.helpers">
+<span id="fireworks-flask-site-helpers-module"></span><h2>fireworks.flask_site.helpers module<a class="headerlink" href="#module-fireworks.flask_site.helpers" title="Link to this heading">¶</a></h2>
 <dl class="py function">
-<dt id="fireworks.flask_site.helpers.fw_filt_given_wf_filt">
-<code class="sig-prename descclassname">fireworks.flask_site.helpers.</code><code class="sig-name descname">fw_filt_given_wf_filt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filt</span></em>, <em class="sig-param"><span class="n">lp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.fw_filt_given_wf_filt" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt id="fireworks.flask_site.helpers.get_totals">
-<code class="sig-prename descclassname">fireworks.flask_site.helpers.</code><code class="sig-name descname">get_totals</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">states</span></em>, <em class="sig-param"><span class="n">lp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.get_totals" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.helpers.fw_filt_given_wf_filt">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.helpers.</span></span><span class="sig-name descname"><span class="pre">fw_filt_given_wf_filt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.fw_filt_given_wf_filt" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.helpers.uses_index">
-<code class="sig-prename descclassname">fireworks.flask_site.helpers.</code><code class="sig-name descname">uses_index</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filt</span></em>, <em class="sig-param"><span class="n">coll</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.uses_index" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.helpers.get_totals">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.helpers.</span></span><span class="sig-name descname"><span class="pre">get_totals</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">states</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.get_totals" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.helpers.wf_filt_given_fw_filt">
-<code class="sig-prename descclassname">fireworks.flask_site.helpers.</code><code class="sig-name descname">wf_filt_given_fw_filt</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">filt</span></em>, <em class="sig-param"><span class="n">lp</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.wf_filt_given_fw_filt" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.helpers.uses_index">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.helpers.</span></span><span class="sig-name descname"><span class="pre">uses_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coll</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.uses_index" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
-</div>
-<div class="section" id="module-fireworks.flask_site.util">
-<span id="fireworks-flask-site-util-module"></span><h2>fireworks.flask_site.util module<a class="headerlink" href="#module-fireworks.flask_site.util" title="Permalink to this headline">¶</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="fireworks.flask_site.helpers.wf_filt_given_fw_filt">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.helpers.</span></span><span class="sig-name descname"><span class="pre">wf_filt_given_fw_filt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lp</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.helpers.wf_filt_given_fw_filt" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</section>
+<section id="module-fireworks.flask_site.util">
+<span id="fireworks-flask-site-util-module"></span><h2>fireworks.flask_site.util module<a class="headerlink" href="#module-fireworks.flask_site.util" title="Link to this heading">¶</a></h2>
 <dl class="py class">
-<dt id="fireworks.flask_site.util.MongoJsonEncoder">
-<em class="property">class </em><code class="sig-prename descclassname">fireworks.flask_site.util.</code><code class="sig-name descname">MongoJsonEncoder</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span></em>, <em class="sig-param"><span class="n">skipkeys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">ensure_ascii</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">check_circular</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">allow_nan</span><span class="o">=</span><span class="default_value">True</span></em>, <em class="sig-param"><span class="n">sort_keys</span><span class="o">=</span><span class="default_value">False</span></em>, <em class="sig-param"><span class="n">indent</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">separators</span><span class="o">=</span><span class="default_value">None</span></em>, <em class="sig-param"><span class="n">default</span><span class="o">=</span><span class="default_value">None</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.MongoJsonEncoder" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">json.encoder.JSONEncoder</span></code></p>
+<dt class="sig sig-object py" id="fireworks.flask_site.util.MongoJsonEncoder">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.util.</span></span><span class="sig-name descname"><span class="pre">MongoJsonEncoder</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipkeys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ensure_ascii</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_circular</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_nan</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sort_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">separators</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.MongoJsonEncoder" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">JSONEncoder</span></code></p>
 <dl class="py method">
-<dt id="fireworks.flask_site.util.MongoJsonEncoder.default">
-<code class="sig-name descname">default</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">obj</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.MongoJsonEncoder.default" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.flask_site.util.MongoJsonEncoder.default">
+<span class="sig-name descname"><span class="pre">default</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.MongoJsonEncoder.default" title="Link to this definition">¶</a></dt>
 <dd><p>Implement this method in a subclass such that it returns
 a serializable object for <code class="docutils literal notranslate"><span class="pre">o</span></code>, or calls the base implementation
 (to raise a <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>).</p>
 <p>For example, to support arbitrary iterators, you could
 implement default like this:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">o</span><span class="p">):</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">iterable</span> <span class="o">=</span> <span class="nb">iter</span><span class="p">(</span><span class="n">o</span><span class="p">)</span>
     <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
@@ -220,38 +217,81 @@ implement default like this:</p>
 </dd></dl>
 
 <dl class="py function">
-<dt id="fireworks.flask_site.util.jsonify">
-<code class="sig-prename descclassname">fireworks.flask_site.util.</code><code class="sig-name descname">jsonify</code><span class="sig-paren">(</span><em class="sig-param"><span class="o">*</span><span class="n">args</span></em>, <em class="sig-param"><span class="o">**</span><span class="n">kwargs</span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.jsonify" title="Permalink to this definition">¶</a></dt>
-<dd><p>flask.json.jsonify with cls=MongoJsonEncoder passed to flask.json.dumps</p>
+<dt class="sig sig-object py" id="fireworks.flask_site.util.jsonify">
+<span class="sig-prename descclassname"><span class="pre">fireworks.flask_site.util.</span></span><span class="sig-name descname"><span class="pre">jsonify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.flask_site.util.jsonify" title="Link to this definition">¶</a></dt>
+<dd><p>flask.json.jsonify with cls=MongoJsonEncoder passed to flask.json.dumps.</p>
 <p>Body copied from flask==1.0.2 (latest);</p>
 </dd></dl>
 
-</div>
-<div class="section" id="module-fireworks.flask_site">
-<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.flask_site" title="Permalink to this headline">¶</a></h2>
-</div>
-</div>
+</section>
+<section id="module-fireworks.flask_site">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.flask_site" title="Link to this heading">¶</a></h2>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">fireworks.flask_site package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-fireworks.flask_site.app">fireworks.flask_site.app module</a></li>
-<li><a class="reference internal" href="#module-fireworks.flask_site.gunicorn">fireworks.flask_site.gunicorn module</a></li>
-<li><a class="reference internal" href="#module-fireworks.flask_site.helpers">fireworks.flask_site.helpers module</a></li>
-<li><a class="reference internal" href="#module-fireworks.flask_site.util">fireworks.flask_site.util module</a></li>
+<li><a class="reference internal" href="#module-fireworks.flask_site.app">fireworks.flask_site.app module</a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.app.authenticate"><code class="docutils literal notranslate"><span class="pre">authenticate()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.check_auth"><code class="docutils literal notranslate"><span class="pre">check_auth()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.dashboard"><code class="docutils literal notranslate"><span class="pre">dashboard()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.datetime"><code class="docutils literal notranslate"><span class="pre">datetime()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.fw_details"><code class="docutils literal notranslate"><span class="pre">fw_details()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.fw_state"><code class="docutils literal notranslate"><span class="pre">fw_state()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.get_fw_details"><code class="docutils literal notranslate"><span class="pre">get_fw_details()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.home"><code class="docutils literal notranslate"><span class="pre">home()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.parse_querystr"><code class="docutils literal notranslate"><span class="pre">parse_querystr()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.pluralize"><code class="docutils literal notranslate"><span class="pre">pluralize()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.report"><code class="docutils literal notranslate"><span class="pre">report()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.requires_auth"><code class="docutils literal notranslate"><span class="pre">requires_auth()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.simple"><code class="docutils literal notranslate"><span class="pre">simple()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.wf_details"><code class="docutils literal notranslate"><span class="pre">wf_details()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.wf_metadata_find"><code class="docutils literal notranslate"><span class="pre">wf_metadata_find()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.wf_state"><code class="docutils literal notranslate"><span class="pre">wf_state()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.app.workflow_json"><code class="docutils literal notranslate"><span class="pre">workflow_json()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.flask_site.gunicorn">fireworks.flask_site.gunicorn module</a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.gunicorn.StandaloneApplication"><code class="docutils literal notranslate"><span class="pre">StandaloneApplication</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.gunicorn.StandaloneApplication.__init__"><code class="docutils literal notranslate"><span class="pre">StandaloneApplication.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load"><code class="docutils literal notranslate"><span class="pre">StandaloneApplication.load()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.gunicorn.StandaloneApplication.load_config"><code class="docutils literal notranslate"><span class="pre">StandaloneApplication.load_config()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.flask_site.gunicorn.number_of_workers"><code class="docutils literal notranslate"><span class="pre">number_of_workers()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.flask_site.helpers">fireworks.flask_site.helpers module</a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.helpers.fw_filt_given_wf_filt"><code class="docutils literal notranslate"><span class="pre">fw_filt_given_wf_filt()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.helpers.get_totals"><code class="docutils literal notranslate"><span class="pre">get_totals()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.helpers.uses_index"><code class="docutils literal notranslate"><span class="pre">uses_index()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.flask_site.helpers.wf_filt_given_fw_filt"><code class="docutils literal notranslate"><span class="pre">wf_filt_given_fw_filt()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.flask_site.util">fireworks.flask_site.util module</a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.util.MongoJsonEncoder"><code class="docutils literal notranslate"><span class="pre">MongoJsonEncoder</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.flask_site.util.MongoJsonEncoder.default"><code class="docutils literal notranslate"><span class="pre">MongoJsonEncoder.default()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.flask_site.util.jsonify"><code class="docutils literal notranslate"><span class="pre">jsonify()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-fireworks.flask_site">Module contents</a></li>
 </ul>
 </li>
 </ul>
 
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -259,21 +299,21 @@ implement default like this:</p>
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -282,14 +322,14 @@ implement default like this:</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.flask_site package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Worker Tutorial &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Worker Tutorial &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Launch Rockets through a queue" href="queue_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Worker Tutorial</a></li> 
       </ul>
     </div>  
@@ -46,23 +44,23 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="worker-tutorial">
-<h1>Worker Tutorial<a class="headerlink" href="#worker-tutorial" title="Permalink to this headline">¶</a></h1>
+  <section id="worker-tutorial">
+<h1>Worker Tutorial<a class="headerlink" href="#worker-tutorial" title="Link to this heading">¶</a></h1>
 <p>If you’ve set up your FireServer, this tutorial will help you to:</p>
 <ul class="simple">
 <li><p>Set up a remote worker that connects to the FireServer to retrieve and execute jobs</p></li>
 </ul>
 <p>Like the previous tutorial, our purpose is to get you set up as quickly as possible; it isn’t intended to demonstrate the features of FireWorks or explain things in great detail. This tutorial can be safely completed from the command line, and requires no programming.</p>
-<div class="section" id="launch-a-rocket-on-a-worker-machine-fireworker">
-<h2>Launch a Rocket on a worker machine (FireWorker)<a class="headerlink" href="#launch-a-rocket-on-a-worker-machine-fireworker" title="Permalink to this headline">¶</a></h2>
+<section id="launch-a-rocket-on-a-worker-machine-fireworker">
+<h2>Launch a Rocket on a worker machine (FireWorker)<a class="headerlink" href="#launch-a-rocket-on-a-worker-machine-fireworker" title="Link to this heading">¶</a></h2>
 <p>In the Introductory tutorial, we entered a Firework (job) in the LaunchPad (database) on the FireServer (central server). We then launched a Rocket that fetched the Firework from the database and executed it, all within the same machine.</p>
 <p>A more interesting use case of FireWorks is to store FireWorks in the FireServer, but execute them on one or several outside ‘worker’ machine (FireWorkers). For example, you may have one node on a supercomputing resource dedicated to running MongoDB, but want to run FireWorks you have set up on that machine on a different supercomputing resource (e.g. running fireworks on ORNL or ALCF using a NERSC Fireserver).  We’ll next configure a worker machine.</p>
-<div class="section" id="install-fireworks-on-the-fireworker">
-<h3>Install FireWorks on the FireWorker<a class="headerlink" href="#install-fireworks-on-the-fireworker" title="Permalink to this headline">¶</a></h3>
+<section id="install-fireworks-on-the-fireworker">
+<h3>Install FireWorks on the FireWorker<a class="headerlink" href="#install-fireworks-on-the-fireworker" title="Link to this heading">¶</a></h3>
 <p>On the worker machine, follow the instructions listed at <a class="reference internal" href="installation.html"><span class="doc">Basic FireWorks Installation</span></a>.</p>
-</div>
-<div class="section" id="reset-the-fireworks-database">
-<h3>Reset the FireWorks database<a class="headerlink" href="#reset-the-fireworks-database" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="reset-the-fireworks-database">
+<h3>Reset the FireWorks database<a class="headerlink" href="#reset-the-fireworks-database" title="Link to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Back at the <strong>FireServer</strong>, let’s reset our database and add a Firework:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">reset</span>
@@ -73,9 +71,9 @@
 </li>
 </ol>
 <p>Make sure to keep the MongoDB running on the FireServer, and do not launch a Rocket yet!</p>
-</div>
-<div class="section" id="connect-to-the-fireserver-from-the-fireworker">
-<h3>Connect to the FireServer from the FireWorker<a class="headerlink" href="#connect-to-the-fireserver-from-the-fireworker" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="connect-to-the-fireserver-from-the-fireworker">
+<h3>Connect to the FireServer from the FireWorker<a class="headerlink" href="#connect-to-the-fireserver-from-the-fireworker" title="Link to this heading">¶</a></h3>
 <p>The FireWorker needs to know the login information for the FireServer. On the <strong>FireWorker</strong>,</p>
 <ol class="arabic">
 <li><p>Navigate to the worker tutorial directory:</p>
@@ -105,9 +103,9 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="configure-your-fireworker">
-<h3>Configure your FireWorker<a class="headerlink" href="#configure-your-fireworker" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="configure-your-fireworker">
+<h3>Configure your FireWorker<a class="headerlink" href="#configure-your-fireworker" title="Link to this heading">¶</a></h3>
 <p>The FireWorker file contains information about this worker’s configuration. Staying in the <code class="docutils literal notranslate"><span class="pre">worker</span></code> tutorial directory on the FireWorker, modify your <code class="docutils literal notranslate"><span class="pre">my_fworker.yaml</span></code> by changing the <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter to something that will help you identify the worker that ran your Firework later on. For example, you might want to use the hostname of the worker machine.</p>
 <blockquote>
 <div><div class="admonition note">
@@ -115,9 +113,9 @@
 <p>The name <code class="docutils literal notranslate"><span class="pre">my_fworker.yaml</span></code> is a special filename that contains your FireWorker’s credentials. By default, FireWorks checks for this file in the current directory. You can also specify its location manually using the <code class="docutils literal notranslate"><span class="pre">-w</span></code> parameter of <code class="docutils literal notranslate"><span class="pre">lpad</span></code>, or you can <a class="reference internal" href="config_tutorial.html"><span class="doc">set up your configuration</span></a> to set the location of this file once and for all.</p>
 </div>
 </div></blockquote>
-</div>
-<div class="section" id="launch-a-rocket-on-the-fireworker">
-<h3>Launch a Rocket on the FireWorker<a class="headerlink" href="#launch-a-rocket-on-the-fireworker" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="launch-a-rocket-on-the-fireworker">
+<h3>Launch a Rocket on the FireWorker<a class="headerlink" href="#launch-a-rocket-on-the-fireworker" title="Link to this heading">¶</a></h3>
 <ol class="arabic">
 <li><p>Staying in the <code class="docutils literal notranslate"><span class="pre">worker</span></code> tutorial directory on your FireWorker, type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">singleshot</span>
@@ -136,10 +134,10 @@
 </li>
 </ol>
 <p>You should notice that the Firework is listed as being <em>COMPLETED</em>. In addition, the <code class="docutils literal notranslate"><span class="pre">name</span></code> parameter under the <code class="docutils literal notranslate"><span class="pre">launches.fworker</span></code> field should match the name that you gave to your FireWorker in <code class="docutils literal notranslate"><span class="pre">my_fworker.yaml</span></code>. If you have multiple FireWorkers, this can help you identify where your job ran later on.</p>
-</div>
-</div>
-<div class="section" id="running-rapidfire-mode-on-the-fireworker">
-<h2>Running rapidfire mode on the FireWorker<a class="headerlink" href="#running-rapidfire-mode-on-the-fireworker" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="running-rapidfire-mode-on-the-fireworker">
+<h2>Running rapidfire mode on the FireWorker<a class="headerlink" href="#running-rapidfire-mode-on-the-fireworker" title="Link to this heading">¶</a></h2>
 <p>Just like on the central server, you can run in rapidfire mode on the FireWorker to process many jobs.</p>
 <ol class="arabic">
 <li><p>Staying in the <code class="docutils literal notranslate"><span class="pre">worker</span></code> tutorial directory on your FireWorker, clean up your directory:</p>
@@ -161,8 +159,8 @@
 </li>
 </ol>
 <p>You’ve now run multiple jobs on your FireWorker! You could even try running the Rocket Launcher in <code class="docutils literal notranslate"><span class="pre">--nlaunches</span> <span class="pre">infinite</span></code> mode - then, you would have FireWorker that continuously ran new jobs added to the LaunchPad on the FireServer.</p>
-<div class="section" id="setting-machine-specific-or-worker-specific-parameter-via-the-env-variable">
-<h3>Setting Machine-specific or worker-specific parameter via the <em>env</em> variable<a class="headerlink" href="#setting-machine-specific-or-worker-specific-parameter-via-the-env-variable" title="Permalink to this headline">¶</a></h3>
+<section id="setting-machine-specific-or-worker-specific-parameter-via-the-env-variable">
+<h3>Setting Machine-specific or worker-specific parameter via the <em>env</em> variable<a class="headerlink" href="#setting-machine-specific-or-worker-specific-parameter-via-the-env-variable" title="Link to this heading">¶</a></h3>
 <p>From v0.7.7, the FireWorker file now supports the <em>env</em> key. As its name
 implies, this key allows you to specify machine-specific (or more accurately, worker-specific) environment settings.
 For example, a particular command called in your Firetasks may be called
@@ -174,35 +172,36 @@ out this command by specifying the differences in the FireWorker file:</p>
 
 <span class="c1"># For the FireWorker file on machine 2</span>
 <span class="n">env</span><span class="p">:</span>
-    <span class="n">command</span><span class="p">:</span> <span class="n">command_v1</span><span class="o">.</span><span class="mi">2</span>
+    <span class="n">command</span><span class="p">:</span> <span class="n">command_v1</span><span class="mf">.2</span>
 </pre></div>
 </div>
 <p>The env can then be accessed within your Firetasks as the “_fw_env” variable
 in the fw_spec. For example, the run_task method for your Firetask may be
 something like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="n">fw_spec</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="n">fw_spec</span><span class="p">):</span>
     <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">fw_spec</span><span class="p">[</span><span class="s2">&quot;_fw_env&quot;</span><span class="p">][</span><span class="s2">&quot;command&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 <p>This provides a clean way to write machine-agnostic Firetasks with an
 abstraction of machine-specific commands and settings. Note that you can also use dfferent fw_env settings on the same machine if you run multiple job launch scripts using different Workers on that machine.</p>
-</div>
-</div>
-<div class="section" id="next-steps">
-<h2>Next Steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next Steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
 <p>A central FireServer and one or more FireWorkers pulling jobs in <code class="docutils literal notranslate"><span class="pre">rapidfire</span></code> mode might be all that you need to automate your application. However, if your FireWorker is a shared resource you might want to run jobs through an external queuing system rather than directly run <code class="docutils literal notranslate"><span class="pre">rlaunch</span></code> on your FireWorker. A description of how to run through a queue is given here:  <a class="reference internal" href="queue_tutorial.html"><span class="doc">Launching Rockets through a queue</span></a>. Or, you might return to the <a class="reference internal" href="index.html"><span class="doc">home page</span></a> and pursue a different tutorial.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Worker Tutorial</a><ul>
 <li><a class="reference internal" href="#launch-a-rocket-on-a-worker-machine-fireworker">Launch a Rocket on a worker machine (FireWorker)</a><ul>
 <li><a class="reference internal" href="#install-fireworks-on-the-fireworker">Install FireWorks on the FireWorker</a></li>
@@ -221,12 +220,17 @@ abstraction of machine-specific commands and settings. Note that you can also us
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="design_tips.html"
-                        title="previous chapter">Tips for designing Firetasks, FireWorks, and Workflows</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="queue_tutorial.html"
-                        title="next chapter">Launch Rockets through a queue</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="design_tips.html"
+                          title="previous chapter">Tips for designing Firetasks, FireWorks, and Workflows</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="queue_tutorial.html"
+                          title="next chapter">Launch Rockets through a queue</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -234,21 +238,21 @@ abstraction of machine-specific commands and settings. Note that you can also us
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -263,14 +267,14 @@ abstraction of machine-specific commands and settings. Note that you can also us
         <li class="right" >
           <a href="design_tips.html" title="Tips for designing Firetasks, FireWorks, and Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Worker Tutorial</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

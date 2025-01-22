@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Modifying the FW Config &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Modifying the FW Config &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Improving FireWorks performance" href="performance_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li> 
       </ul>
     </div>  
@@ -46,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="modifying-the-fw-config">
-<h1>Modifying the FW Config<a class="headerlink" href="#modifying-the-fw-config" title="Permalink to this headline">¶</a></h1>
+  <section id="modifying-the-fw-config">
+<h1>Modifying the FW Config<a class="headerlink" href="#modifying-the-fw-config" title="Link to this heading">¶</a></h1>
 <p>Many parameters used by FireWorks can be changed to suit your needs. Some examples include:</p>
 <ul class="simple">
 <li><p>specifying the default locations of your configuration files. This will save you <strong>a lot</strong> of typing when running FireWorks scripts, e.g. <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">-l</span> <span class="pre">my_launchpad.yaml</span> <span class="pre">get_fws</span></code> becomes <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> once you’ve set your default LaunchPad location.</p></li>
@@ -55,8 +53,8 @@
 <li><p>smaller adjustments, e.g. whether to print a <code class="docutils literal notranslate"><span class="pre">FW.json</span></code> file in your run directory</p></li>
 <li><p>performance tweaks (not recommended!)</p></li>
 </ul>
-<div class="section" id="how-to-modify-the-fw-config">
-<h2>How to modify the FW Config<a class="headerlink" href="#how-to-modify-the-fw-config" title="Permalink to this headline">¶</a></h2>
+<section id="how-to-modify-the-fw-config">
+<h2>How to modify the FW Config<a class="headerlink" href="#how-to-modify-the-fw-config" title="Link to this heading">¶</a></h2>
 <p>A sample FW_config file (that does not change any settings) is located in the FireWorks tutorial directory: <code class="docutils literal notranslate"><span class="pre">&lt;INSTALL_DIR&gt;/fw_tutorials/fw_config/FW_config.yaml</span></code>.</p>
 <ol class="arabic">
 <li><dl>
@@ -80,8 +78,8 @@
 </li>
 </ol>
 <p>You should see text printed to the Terminal saying <code class="docutils literal notranslate"><span class="pre">successfully</span> <span class="pre">loaded</span> <span class="pre">your</span> <span class="pre">custom</span> <span class="pre">FW_config.yaml!</span></code>. You can remove this text by deleting the <code class="docutils literal notranslate"><span class="pre">ECHO_TEST</span></code> parameter from your <code class="docutils literal notranslate"><span class="pre">FW_config.yaml</span></code> file.</p>
-<div class="section" id="specifying-default-locations-for-the-config-files">
-<span id="configfile-label"></span><h3>Specifying default locations for the config files<a class="headerlink" href="#specifying-default-locations-for-the-config-files" title="Permalink to this headline">¶</a></h3>
+<section id="specifying-default-locations-for-the-config-files">
+<span id="configfile-label"></span><h3>Specifying default locations for the config files<a class="headerlink" href="#specifying-default-locations-for-the-config-files" title="Link to this heading">¶</a></h3>
 <p>It can be annoying to manually type in the <code class="docutils literal notranslate"><span class="pre">-l</span></code>, <code class="docutils literal notranslate"><span class="pre">-w</span></code>, and <code class="docutils literal notranslate"><span class="pre">-q</span></code> parameters in FireWorks scripts (corresponding to the locations of the LaunchPad, FireWorker, and QueueAdapter files, respectively). You can set these parameters once and for all by specifying the following variables in your FWConfig:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">LAUNCHPAD_LOC</span><span class="p">:</span> <span class="n">fullpath</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my_launchpad</span><span class="o">.</span><span class="n">yaml</span>
 <span class="n">FWORKER_LOC</span><span class="p">:</span> <span class="n">fullpath</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">my_fworker</span><span class="o">.</span><span class="n">yaml</span>
@@ -92,13 +90,13 @@
 <p class="admonition-title">Note</p>
 <p>be sure to use full paths, not relative paths or BASH shortcuts!</p>
 </div>
-</div>
-<div class="section" id="specifying-default-locations-for-the-config-files-alternate">
-<h3>Specifying default locations for the config files (alternate)<a class="headerlink" href="#specifying-default-locations-for-the-config-files-alternate" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="specifying-default-locations-for-the-config-files-alternate">
+<h3>Specifying default locations for the config files (alternate)<a class="headerlink" href="#specifying-default-locations-for-the-config-files-alternate" title="Link to this heading">¶</a></h3>
 <p>An alternate strategy is to set a single parameter in FWConfig called <code class="docutils literal notranslate"><span class="pre">CONFIG_FILE_DIR</span></code>. This should be the full path to a directory containing files named <code class="docutils literal notranslate"><span class="pre">my_launchpad.yaml</span></code>, <code class="docutils literal notranslate"><span class="pre">my_fworker.yaml</span></code>, and <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code>. FireWorks looks for these files in the <code class="docutils literal notranslate"><span class="pre">CONFIG_FILE_DIR</span></code> if it cannot find them elsewhere. If unset in the FWConfig, the <code class="docutils literal notranslate"><span class="pre">CONFIG_FILE_DIR</span></code> is automatically set to the directory you are running your FW script in.</p>
-</div>
-<div class="section" id="linking-to-firetasks-in-external-packages">
-<h3>Linking to Firetasks in external packages<a class="headerlink" href="#linking-to-firetasks-in-external-packages" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="linking-to-firetasks-in-external-packages">
+<h3>Linking to Firetasks in external packages<a class="headerlink" href="#linking-to-firetasks-in-external-packages" title="Link to this heading">¶</a></h3>
 <p>If you’ve placed Python code for some of your own custom Firetasks in an external Python package named <em>my_package.firetasks</em>, you can notify FireWorks of the Firetasks in this directory by adding the packages to your config:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ADD_USER_PACKAGES</span><span class="p">:</span>
   <span class="o">-</span> <span class="n">my_package</span><span class="o">.</span><span class="n">firetasks</span>
@@ -109,9 +107,9 @@
 <p>Make sure your package is in your PYTHONPATH! For example, typing <code class="docutils literal notranslate"><span class="pre">from</span> <span class="pre">my_package</span> <span class="pre">import</span> <span class="pre">firetasks</span></code> in an interactive Python terminal should succeed.</p>
 </div>
 <p>An alternative is to give your Firetasks a _fw_name such as <code class="docutils literal notranslate"><span class="pre">{{package.subpackage.module.Class}}</span></code>. When enclosed in double braces, FireWorks will not search USER_PACKAGES and instead directly load the class. The disadvantage of this method is that you <em>must</em> update the <em>FW_NAME_UPDATES</em> key of the FWConfig if you refactor or move the class.</p>
-</div>
-<div class="section" id="parameters-you-might-want-to-change">
-<h3>Parameters you might want to change<a class="headerlink" href="#parameters-you-might-want-to-change" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="parameters-you-might-want-to-change">
+<h3>Parameters you might want to change<a class="headerlink" href="#parameters-you-might-want-to-change" title="Link to this heading">¶</a></h3>
 <p>A few basic parameters that can be tweaked are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">SORT_FWS:</span> <span class="pre">''</span></code> - set to <code class="docutils literal notranslate"><span class="pre">FIFO</span></code> if you want older FireWorks to be run first, <code class="docutils literal notranslate"><span class="pre">FILO</span></code> if you want recent FireWorks run first. Note that higher priority FireWorks are always run first.</p></li>
@@ -126,10 +124,12 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">WEBSERVER_HOST:</span> <span class="pre">127.0.0.1</span></code> - the default host on which to run the web server</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">WEBSERVER_PORT:</span> <span class="pre">5000</span></code> - the default port on which to run the web server</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">QUEUE_JOBNAME_MAXLEN:</span> <span class="pre">20</span></code> - the max length of the job name to send to the queuing system (some queuing systems limit the size of job names)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MONGOMOCK_SERVERSTORE_FILE</span></code> - path to a non-empty JSON file, if set then mongomock will be used instead of MongoDB; this file should be initialized with ‘{}’</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ROCKET_STREAM_LOGLEVEL:</span> <span class="pre">INFO</span></code> - the streaming log level of the rocket launcher logger (valid values: DEBUG, INFO, WARNING, ERROR, CRITICAL)</p></li>
 </ul>
-</div>
-<div class="section" id="parameters-that-you-probably-shouldn-t-change">
-<h3>Parameters that you probably shouldn’t change<a class="headerlink" href="#parameters-that-you-probably-shouldn-t-change" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="parameters-that-you-probably-shouldn-t-change">
+<h3>Parameters that you probably shouldn’t change<a class="headerlink" href="#parameters-that-you-probably-shouldn-t-change" title="Link to this heading">¶</a></h3>
 <p>Some parameters that you can change, but probably shouldn’t, are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">QUEUE_RETRY_ATTEMPTS:</span> <span class="pre">10</span></code> - number of attempts to re-try communicating with queue server when communication fails</p></li>
@@ -144,19 +144,20 @@
 <li><p><code class="docutils literal notranslate"><span class="pre">PW_CHECK_NUM:</span> <span class="pre">10</span></code> - how many FireWorks/Workflows can be changed with a single LaunchPad command (like <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code>) before a password is required.</p></li>
 </ul>
 <p>For a full list of parameters that can be changed, you can browse the <code class="docutils literal notranslate"><span class="pre">fw_config.py</span></code> file in the FireWorks source.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Modifying the FW Config</a><ul>
 <li><a class="reference internal" href="#how-to-modify-the-fw-config">How to modify the FW Config</a><ul>
 <li><a class="reference internal" href="#specifying-default-locations-for-the-config-files">Specifying default locations for the config files</a></li>
@@ -170,12 +171,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="security_tutorial.html"
-                        title="previous chapter">Configuring Security</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="performance_tutorial.html"
-                        title="next chapter">Improving FireWorks performance</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="security_tutorial.html"
+                          title="previous chapter">Configuring Security</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="performance_tutorial.html"
+                          title="next chapter">Improving FireWorks performance</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -183,21 +189,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -212,14 +218,14 @@
         <li class="right" >
           <a href="security_tutorial.html" title="Configuring Security"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Modifying the FW Config</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

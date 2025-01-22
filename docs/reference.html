@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Reference material &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Reference material &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="The Comprehensive Guide to Writing Firetasks with Python" href="guide_to_writing_firetasks.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="json_schema.html" title="Using JSON Schema"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Reference material</a></li> 
       </ul>
     </div>  
@@ -46,20 +44,16 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="reference-material">
-<h1>Reference material<a class="headerlink" href="#reference-material" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="interpretation-of-state-of-fws-and-wfs">
-<h2>Interpretation of ‘state’ of FWs and WFs<a class="headerlink" href="#interpretation-of-state-of-fws-and-wfs" title="Permalink to this headline">¶</a></h2>
+  <section id="reference-material">
+<h1>Reference material<a class="headerlink" href="#reference-material" title="Link to this heading">¶</a></h1>
+<section id="interpretation-of-state-of-fws-and-wfs">
+<h2>Interpretation of ‘state’ of FWs and WFs<a class="headerlink" href="#interpretation-of-state-of-fws-and-wfs" title="Link to this heading">¶</a></h2>
 <p>Recall that a Workflow is a composed of one or more FireWorks. Both FireWorks and Workflows have a <em>state</em> (status).</p>
 <p>You can get the states of FireWorks and Workflows using <a class="reference internal" href="query_tutorial.html"><span class="doc">LaunchPad queries</span></a> or through the <a class="reference internal" href="basesite_tutorial.html"><span class="doc">web interface</span></a>.</p>
-<div class="section" id="fireworks-states">
-<h3>FireWorks states<a class="headerlink" href="#fireworks-states" title="Permalink to this headline">¶</a></h3>
+<section id="fireworks-states">
+<h3>FireWorks states<a class="headerlink" href="#fireworks-states" title="Link to this heading">¶</a></h3>
 <p>A Firework state represents the status of a single job.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 5%" />
-<col style="width: 95%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>State</strong></p></td>
 <td><p><strong>Meaning</strong></p></td>
@@ -90,15 +84,11 @@
 </tr>
 </tbody>
 </table>
-</div>
-<div class="section" id="workflows-states">
-<h3>Workflows states<a class="headerlink" href="#workflows-states" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="workflows-states">
+<h3>Workflows states<a class="headerlink" href="#workflows-states" title="Link to this heading">¶</a></h3>
 <p>The state of a Workflow depends on the states of its component FireWorks.</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 8%" />
-<col style="width: 92%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>State</strong></p></td>
 <td><p><strong>Meaning</strong></p></td>
@@ -126,16 +116,12 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
-<div class="section" id="reserved-keywords-in-fw-spec">
-<h2>Reserved keywords in FW spec<a class="headerlink" href="#reserved-keywords-in-fw-spec" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="reserved-keywords-in-fw-spec">
+<h2>Reserved keywords in FW spec<a class="headerlink" href="#reserved-keywords-in-fw-spec" title="Link to this heading">¶</a></h2>
 <p>The FW spec has certain <strong>reserved keywords</strong> that indicate special instructions to the FireWorks software. They are listed below:</p>
 <table class="docutils align-default">
-<colgroup>
-<col style="width: 14%" />
-<col style="width: 86%" />
-</colgroup>
 <tbody>
 <tr class="row-odd"><td><p><strong>Keyword</strong></p></td>
 <td><p><strong>Meaning</strong></p></td>
@@ -202,18 +188,19 @@
 </tr>
 </tbody>
 </table>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Reference material</a><ul>
 <li><a class="reference internal" href="#interpretation-of-state-of-fws-and-wfs">Interpretation of ‘state’ of FWs and WFs</a><ul>
 <li><a class="reference internal" href="#fireworks-states">FireWorks states</a></li>
@@ -225,12 +212,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="json_schema.html"
-                        title="previous chapter">Using JSON Schema</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="guide_to_writing_firetasks.html"
-                        title="next chapter">The Comprehensive Guide to Writing Firetasks with Python</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="json_schema.html"
+                          title="previous chapter">Using JSON Schema</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="guide_to_writing_firetasks.html"
+                          title="next chapter">The Comprehensive Guide to Writing Firetasks with Python</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -238,21 +230,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -267,14 +259,14 @@
         <li class="right" >
           <a href="json_schema.html" title="Using JSON Schema"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Reference material</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

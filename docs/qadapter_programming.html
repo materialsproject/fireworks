@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Writing Queue Adapters &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Writing Queue Adapters &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Updating values (e.g., directory paths) in the database" href="update_text.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="python_tutorial.html" title="Using Python to command FireWorks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Writing Queue Adapters</a></li> 
       </ul>
     </div>  
@@ -46,11 +44,11 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="writing-queue-adapters">
-<h1>Writing Queue Adapters<a class="headerlink" href="#writing-queue-adapters" title="Permalink to this headline">¶</a></h1>
+  <section id="writing-queue-adapters">
+<h1>Writing Queue Adapters<a class="headerlink" href="#writing-queue-adapters" title="Link to this heading">¶</a></h1>
 <p>FireWorks is intended to support multiple queueing systems. To support a new queueing system, a few functions need to be defined for that queue manager (e.g., what command is used to submit jobs?). In most cases, new queue managers can be supported with minimal effort.</p>
-<div class="section" id="modifying-the-template-of-the-commonadapter">
-<h2>Modifying the template of the CommonAdapter<a class="headerlink" href="#modifying-the-template-of-the-commonadapter" title="Permalink to this headline">¶</a></h2>
+<section id="modifying-the-template-of-the-commonadapter">
+<h2>Modifying the template of the CommonAdapter<a class="headerlink" href="#modifying-the-template-of-the-commonadapter" title="Link to this heading">¶</a></h2>
 <p>The FireWorks CommonAdapter supports several queueing engines such as PBS, SGE, SLURM, and IBM LoadLeveler. If you want to use one of these queueing systems but make minor modifications to how the queue submission file looks, you only need to write a new template file and point your queue adapter to it.</p>
 <ol class="arabic">
 <li><p>Create a template file for job submission. Variables that you want to specify later should be written using the <code class="docutils literal notranslate"><span class="pre">$${var}</span></code> notation.  Save this template file somewhere, e.g. as <code class="docutils literal notranslate"><span class="pre">PBS_template_custom.txt</span></code>. An example template file is given below:</p>
@@ -97,12 +95,12 @@ $${post_rocket}
 </li>
 <li><p>Use this new <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> file (with the <code class="docutils literal notranslate"><span class="pre">_fw_template_file</span></code> key specified) when using the queue launcher. The queue launcher will write scripts according to your custom template, with variables substituted according to your <code class="docutils literal notranslate"><span class="pre">my_qadapter.yaml</span></code> file.</p></li>
 </ol>
-</div>
-<div class="section" id="writing-a-new-queue-adapter">
-<h2>Writing a new queue adapter<a class="headerlink" href="#writing-a-new-queue-adapter" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="writing-a-new-queue-adapter">
+<h2>Writing a new queue adapter<a class="headerlink" href="#writing-a-new-queue-adapter" title="Link to this heading">¶</a></h2>
 <p>If you need to support a new queueing system, you will change the Python code by either (i) modifying the CommonAdapter or (ii) writing a new qadapter from scratch. In either case, we suggest you contact us for help (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>) so that the process is as smooth and painless as possible.</p>
-<div class="section" id="modifying-the-commonadapter">
-<h3>Modifying the CommonAdapter<a class="headerlink" href="#modifying-the-commonadapter" title="Permalink to this headline">¶</a></h3>
+<section id="modifying-the-commonadapter">
+<h3>Modifying the CommonAdapter<a class="headerlink" href="#modifying-the-commonadapter" title="Link to this heading">¶</a></h3>
 <p>The CommonAdapter, which supports several queueing systems, is located in <code class="docutils literal notranslate"><span class="pre">&lt;INSTALL_DIR&gt;/fireworks/user_objects/queue_adapters/common_adapter.py</span></code> (you can find out <code class="docutils literal notranslate"><span class="pre">&lt;INSTALL_DIR</span></code> by typing <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">version</span></code>). Review the code and make changes as necessary for your queue type to <code class="docutils literal notranslate"><span class="pre">commonadapter.py</span></code>.</p>
 <p>Note that you can make basic changes to the submit commands (e.g., <code class="docutils literal notranslate"><span class="pre">qstat</span></code> or <code class="docutils literal notranslate"><span class="pre">squeue</span></code>) by overriding the <code class="docutils literal notranslate"><span class="pre">q_commands_override</span></code> in your qadapter YAML file:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">_q_commands_override</span><span class="p">:</span>
@@ -122,9 +120,9 @@ $${post_rocket}
 <li><p>Set the <code class="docutils literal notranslate"><span class="pre">_fw_name</span></code> to <em>CommonAdapter</em></p></li>
 <li><p>Set the <cite>_fw_q_type`</cite> to your new queue type</p></li>
 </ul>
-</div>
-<div class="section" id="writing-a-new-adapter-from-scratch">
-<h3>Writing a new adapter from scratch<a class="headerlink" href="#writing-a-new-adapter-from-scratch" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="writing-a-new-adapter-from-scratch">
+<h3>Writing a new adapter from scratch<a class="headerlink" href="#writing-a-new-adapter-from-scratch" title="Link to this heading">¶</a></h3>
 <p>If your queue is a complex entity that is different than typical queue managers (maybe a web-based submission framework), you’ll need to write a new class from scratch that extends <code class="docutils literal notranslate"><span class="pre">QueueAdapterBase</span></code> and:</p>
 <ul class="simple">
 <li><p>implement the <code class="docutils literal notranslate"><span class="pre">submit_to_queue()</span></code> method</p></li>
@@ -135,19 +133,20 @@ $${post_rocket}
 </ul>
 <p>You might look at the <em>CommonAdapter</em> class or <em>PBSAdapterNEWT</em> for examples. After writing your new code, decide on a location for your queue adapter Python code and template file. The built-in queue adapters are located in <code class="docutils literal notranslate"><span class="pre">&lt;INSTALL_DIR&gt;/fireworks/user_objects/queue_adapters</span></code>, and FireWorks will discover your code there automatically (you can find out <code class="docutils literal notranslate"><span class="pre">&lt;INSTALL_DIR&gt;</span></code> by typing <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">version</span></code>). However, you can also place your queue adapter in a different Python package if you set the <code class="docutils literal notranslate"><span class="pre">ADD_USER_PACKAGES</span></code> option as in the <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>.</p>
 <p>Again, we suggest that you contact us for help (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>) if you run into any problems during the process.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Writing Queue Adapters</a><ul>
 <li><a class="reference internal" href="#modifying-the-template-of-the-commonadapter">Modifying the template of the CommonAdapter</a></li>
 <li><a class="reference internal" href="#writing-a-new-queue-adapter">Writing a new queue adapter</a><ul>
@@ -159,12 +158,17 @@ $${post_rocket}
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="python_tutorial.html"
-                        title="previous chapter">Using Python to command FireWorks</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="update_text.html"
-                        title="next chapter">Updating values (e.g., directory paths) in the database</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="python_tutorial.html"
+                          title="previous chapter">Using Python to command FireWorks</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="update_text.html"
+                          title="next chapter">Updating values (e.g., directory paths) in the database</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -172,21 +176,21 @@ $${post_rocket}
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -201,14 +205,14 @@ $${post_rocket}
         <li class="right" >
           <a href="python_tutorial.html" title="Using Python to command FireWorks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Writing Queue Adapters</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

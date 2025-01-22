@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Installation Notes on various clusters / supercomputing centers &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation Notes on various clusters / supercomputing centers &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Assigning job priority" href="priority_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="queue_tutorial_pt2.html" title="Advanced queue submission (reservation mode)"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Installation Notes on various clusters / supercomputing centers</a></li> 
       </ul>
     </div>  
@@ -46,13 +44,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="installation-notes-on-various-clusters-supercomputing-centers">
-<h1>Installation Notes on various clusters / supercomputing centers<a class="headerlink" href="#installation-notes-on-various-clusters-supercomputing-centers" title="Permalink to this headline">¶</a></h1>
+  <section id="installation-notes-on-various-clusters-supercomputing-centers">
+<h1>Installation Notes on various clusters / supercomputing centers<a class="headerlink" href="#installation-notes-on-various-clusters-supercomputing-centers" title="Link to this heading">¶</a></h1>
 <p>This page compiles installation notes and tips for getting FireWorks working in different sites.</p>
-<div class="section" id="nersc">
-<h2>NERSC<a class="headerlink" href="#nersc" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="loading-the-fireworks-code">
-<h3>Loading the FireWorks code<a class="headerlink" href="#loading-the-fireworks-code" title="Permalink to this headline">¶</a></h3>
+<section id="nersc">
+<h2>NERSC<a class="headerlink" href="#nersc" title="Link to this heading">¶</a></h2>
+<section id="loading-the-fireworks-code">
+<h3>Loading the FireWorks code<a class="headerlink" href="#loading-the-fireworks-code" title="Link to this heading">¶</a></h3>
 <p>You can simply load FireWorks through the NERSC modules system via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">module</span> <span class="n">unload</span> <span class="n">python</span>
 <span class="n">module</span> <span class="n">load</span> <span class="n">fireworks</span> <span class="n">python</span>
@@ -66,38 +64,39 @@
 </ul>
 </dd>
 </dl>
-</div>
-<div class="section" id="verifying-your-installation-connect-to-a-test-server">
-<h3>Verifying your installation - connect to a test server<a class="headerlink" href="#verifying-your-installation-connect-to-a-test-server" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="verifying-your-installation-connect-to-a-test-server">
+<h3>Verifying your installation - connect to a test server<a class="headerlink" href="#verifying-your-installation-connect-to-a-test-server" title="Link to this heading">¶</a></h3>
 <p>Follow the instructions for <span class="xref std std-ref">remote_test-label</span> to test that you can connect to a FireWorks database hosted externally to NERSC. This verifies that your software installation is OK.</p>
-</div>
-<div class="section" id="installing-the-database">
-<h3>Installing the database<a class="headerlink" href="#installing-the-database" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="installing-the-database">
+<h3>Installing the database<a class="headerlink" href="#installing-the-database" title="Link to this heading">¶</a></h3>
 <p>You’ll need a MongoDB database to store your actual workflows before you get started with the tutorials. You can follow the normal <a class="reference internal" href="installation.html"><span class="doc">installation instructions</span></a> for installing MongoDB; for getting started at NERSC, the best option is likely the free cloud service as you don’t need to install software or configure firewalls. You can also contact NERSC to see if they can host a database for your workflows; this process is slower but might be used in production. For example, NERSC hosts the production databases for the Materials Project.</p>
-</div>
-<div class="section" id="misc-notes">
-<h3>Misc notes<a class="headerlink" href="#misc-notes" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="misc-notes">
+<h3>Misc notes<a class="headerlink" href="#misc-notes" title="Link to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>NERSC times-out your scripts, even if they are performing actions. For example, if you are running the Queue Launcher on Hopper/Carver in infinite mode, the script will time out after a few hours. This makes it difficult to run FireWorks as a “service” that always pulls any new jobs you enter into the database over the span of days or weeks. To get around this, you can try setting up a cron job at NERSC that regularly pulls jobs from the database and submits them to the queue.</p></li>
 <li><p>Once you get the hang of things, make sure you set up your <a class="reference internal" href="config_tutorial.html"><span class="doc">configuration file</span></a> to save time and typing - in particular, set the path to your LaunchPad, FireWorker, and QueueAdapter files.</p></li>
 </ul>
-</div>
-</div>
-<div class="section" id="after-installation">
-<h2>After installation<a class="headerlink" href="#after-installation" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="after-installation">
+<h2>After installation<a class="headerlink" href="#after-installation" title="Link to this heading">¶</a></h2>
 <p>After you’ve installed the FireWorks software and set up a Mongo database for your workflows, you should proceed with the tutorials on the <a class="reference internal" href="index.html"><span class="doc">main page</span></a>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Installation Notes on various clusters / supercomputing centers</a><ul>
 <li><a class="reference internal" href="#nersc">NERSC</a><ul>
 <li><a class="reference internal" href="#loading-the-fireworks-code">Loading the FireWorks code</a></li>
@@ -111,12 +110,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="queue_tutorial_pt2.html"
-                        title="previous chapter">Advanced queue submission (reservation mode)</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="priority_tutorial.html"
-                        title="next chapter">Assigning job priority</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="queue_tutorial_pt2.html"
+                          title="previous chapter">Advanced queue submission (reservation mode)</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="priority_tutorial.html"
+                          title="next chapter">Assigning job priority</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -124,21 +128,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -153,14 +157,14 @@
         <li class="right" >
           <a href="queue_tutorial_pt2.html" title="Advanced queue submission (reservation mode)"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Installation Notes on various clusters / supercomputing centers</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

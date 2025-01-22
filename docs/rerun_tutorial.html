@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Rerunning a Firework or Workflow &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Rerunning a Firework or Workflow &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Dealing with Failures and Crashes" href="failures_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="defuse_tutorial.html" title="Canceling (pausing), restarting, and deleting Workflows"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Rerunning a Firework or Workflow</a></li> 
       </ul>
     </div>  
@@ -46,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="rerunning-a-firework-or-workflow">
-<h1>Rerunning a Firework or Workflow<a class="headerlink" href="#rerunning-a-firework-or-workflow" title="Permalink to this headline">¶</a></h1>
+  <section id="rerunning-a-firework-or-workflow">
+<h1>Rerunning a Firework or Workflow<a class="headerlink" href="#rerunning-a-firework-or-workflow" title="Link to this heading">¶</a></h1>
 <p>In some instances, you may want to rerun a Firework or Workflow. For example, your computing resource may have crashed or been configured incorrectly during the first run, leading to your first launch being <em>FIZZLED</em>. When you rerun a Firework:</p>
 <ul class="simple">
 <li><p>All the Firework’s previous launches are <em>archived</em> into a special section of the Firework called <em>archived_launches</em>. This process also occurs for all the children of the Firework (but not the parents).</p></li>
@@ -58,8 +56,8 @@
 <p class="admonition-title">Warning</p>
 <p>Re-running a Firework does not reset any dynamic actions taken by that Firework, such as creating new Workflow steps or modifying the <strong>spec</strong> of its children.</p>
 </div>
-<div class="section" id="rerunning-a-firework">
-<h2>Rerunning a Firework<a class="headerlink" href="#rerunning-a-firework" title="Permalink to this headline">¶</a></h2>
+<section id="rerunning-a-firework">
+<h2>Rerunning a Firework<a class="headerlink" href="#rerunning-a-firework" title="Link to this heading">¶</a></h2>
 <p>Rerunning a Firework is simple - just type:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">rerun_fws</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
 </pre></div>
@@ -70,41 +68,42 @@
 </pre></div>
 </div>
 <p>Refer to the documentation (<code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">rerun_fws</span> <span class="pre">-h</span></code>) for more information.</p>
-</div>
-<div class="section" id="example-rerunning-all-fizzled-fireworks">
-<h2>Example: Rerunning all FIZZLED FireWorks<a class="headerlink" href="#example-rerunning-all-fizzled-fireworks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="example-rerunning-all-fizzled-fireworks">
+<h2>Example: Rerunning all FIZZLED FireWorks<a class="headerlink" href="#example-rerunning-all-fizzled-fireworks" title="Link to this heading">¶</a></h2>
 <p>A common use case is to rerun all FIZZLED fireworks. You can do this via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">rerun_fws</span> <span class="o">-</span><span class="n">s</span> <span class="n">FIZZLED</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="task-level-reruns">
-<h2>Task-level reruns<a class="headerlink" href="#task-level-reruns" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="task-level-reruns">
+<h2>Task-level reruns<a class="headerlink" href="#task-level-reruns" title="Link to this heading">¶</a></h2>
 <p>A Firework might fail while running one of its intermediate or final Firetasks. In that case, sometimes it is desirable not to rerun the entire FireWork, but rather just the tasks that failed. In case of <em>clean</em> failures, FireWorks stores data about what step failed inside the database. This data can later be used to restart at the task level. The <code class="docutils literal notranslate"><span class="pre">--task-level</span></code> option to the <code class="docutils literal notranslate"><span class="pre">rerun_fws</span></code> command allows this type of recovery. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">rerun_fws</span> <span class="o">-</span><span class="n">s</span> <span class="n">FIZZLED</span>  <span class="o">--</span><span class="n">task</span><span class="o">-</span><span class="n">level</span>
 </pre></div>
 </div>
 <p>Further options exist, e.g. to attempt to copy data from the previous run into the new run attempt (same filesystem only) via <code class="docutils literal notranslate"><span class="pre">--copy-data</span></code> or attempt to rerun in the same directory (<code class="docutils literal notranslate"><span class="pre">--previous-dir</span></code>). Refer to the documentation (<code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">rerun_fws</span> <span class="pre">-h</span></code>) for more information.  Note also that task-level reruns will modify the spec of your firework such that future standard (i.e. non-task-level) reruns will retain the recovery and attempt to restart at the task level using that recovery.  If you want to clear the recovery information from the spec to ensure that fireworks starts from scratch, you can do so by using the <code class="docutils literal notranslate"><span class="pre">--clear-recovery</span></code> flag, e.g. <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">rerun_fws</span> <span class="pre">-i</span> <span class="pre">&lt;FW_IDS&gt;</span> <span class="pre">--clear-recovery</span></code>.</p>
-</div>
-<div class="section" id="rerunning-based-on-error-message">
-<h2>Rerunning based on error message<a class="headerlink" href="#rerunning-based-on-error-message" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="rerunning-based-on-error-message">
+<h2>Rerunning based on error message<a class="headerlink" href="#rerunning-based-on-error-message" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">launches</span></code> collection in the LaunchPad contains data on the stack trace of the error, which is located in the <code class="docutils literal notranslate"><span class="pre">action.stored_data._exception._stacktrace</span></code> key. You can rerun jobs that have a certain text in the error stack trace using something like the following:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">rerun_fws</span> <span class="o">-</span><span class="n">q</span> <span class="s1">&#39;{&quot;action.stored_data._exception._stacktrace&quot;: {&quot;$regex&quot;: &quot;My custom error message&quot;}}&#39;</span> <span class="o">-</span><span class="n">lm</span>
 </pre></div>
 </div>
 <p>Here, the <code class="docutils literal notranslate"><span class="pre">My</span> <span class="pre">custom</span> <span class="pre">error</span> <span class="pre">message</span></code> will be searched as a regular expression inside the stack trace. Note the use of the <code class="docutils literal notranslate"><span class="pre">lm</span></code> argument - this stands for <code class="docutils literal notranslate"><span class="pre">launch_mode</span></code> and indicates that you want to query the <code class="docutils literal notranslate"><span class="pre">launches</span></code> collection data. Note the same arguments will work for other commands, e.g. the <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> command, in case you want to preview your results before rerunning.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Rerunning a Firework or Workflow</a><ul>
 <li><a class="reference internal" href="#rerunning-a-firework">Rerunning a Firework</a></li>
 <li><a class="reference internal" href="#example-rerunning-all-fizzled-fireworks">Example: Rerunning all FIZZLED FireWorks</a></li>
@@ -114,12 +113,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="defuse_tutorial.html"
-                        title="previous chapter">Canceling (pausing), restarting, and deleting Workflows</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="failures_tutorial.html"
-                        title="next chapter">Dealing with Failures and Crashes</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="defuse_tutorial.html"
+                          title="previous chapter">Canceling (pausing), restarting, and deleting Workflows</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="failures_tutorial.html"
+                          title="next chapter">Dealing with Failures and Crashes</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -127,21 +131,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -156,14 +160,14 @@
         <li class="right" >
           <a href="defuse_tutorial.html" title="Canceling (pausing), restarting, and deleting Workflows"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Rerunning a Firework or Workflow</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

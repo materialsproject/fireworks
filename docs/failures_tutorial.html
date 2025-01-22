@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dealing with Failures and Crashes &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Dealing with Failures and Crashes &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Database administration commands" href="maintain_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Dealing with Failures and Crashes</a></li> 
       </ul>
     </div>  
@@ -46,15 +44,15 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="dealing-with-failures-and-crashes">
-<h1>Dealing with Failures and Crashes<a class="headerlink" href="#dealing-with-failures-and-crashes" title="Permalink to this headline">¶</a></h1>
+  <section id="dealing-with-failures-and-crashes">
+<h1>Dealing with Failures and Crashes<a class="headerlink" href="#dealing-with-failures-and-crashes" title="Link to this heading">¶</a></h1>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
 <p>This documentation is written as a <strong>tutorial</strong> that starts from a clean FireWorks database. If you have an existing FireWorks database and need to deal with a failure or crash, do <strong>not</strong> reset your FireWorks database as the tutorial instructs. Instead, first read through this tutorial to get an idea on how failures work in FireWorks. Then, refer to the <a class="reference internal" href="maintain_tutorial.html"><span class="doc">database maintenance instructions</span></a>.</p>
 </div>
 <p>Job exceptions, node failures, and system outages are all unfortunate realities of executing workflows. You’ll likely encounter some of these events when running FireWorks. This tutorial will simulate some of these events, so you can see how FireWorks detects job failures and what you can do about it.</p>
-<div class="section" id="normal-operation">
-<h2>Normal operation<a class="headerlink" href="#normal-operation" title="Permalink to this headline">¶</a></h2>
+<section id="normal-operation">
+<h2>Normal operation<a class="headerlink" href="#normal-operation" title="Link to this heading">¶</a></h2>
 <p>Let’s first introduce normal operation of a Firework that prints <code class="docutils literal notranslate"><span class="pre">starting</span></code>, sleeps for 10 seconds, and then prints <code class="docutils literal notranslate"><span class="pre">ending</span></code>. The Firework is completed successfully only if <code class="docutils literal notranslate"><span class="pre">ending</span></code> gets printed.</p>
 <ol class="arabic">
 <li><p>Move to the <code class="docutils literal notranslate"><span class="pre">failures</span></code> tutorial directory in your installation directory:</p>
@@ -77,9 +75,9 @@
 </li>
 <li><p>Hopefully, your patience was rewarded with <code class="docutils literal notranslate"><span class="pre">ending</span></code> printed to your terminal. If so, let’s keep going!</p></li>
 </ol>
-</div>
-<div class="section" id="error-during-run-a-fizzled-firework">
-<h2>Error during run - a <em>FIZZLED</em> Firework!<a class="headerlink" href="#error-during-run-a-fizzled-firework" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="error-during-run-a-fizzled-firework">
+<h2>Error during run - a <em>FIZZLED</em> Firework!<a class="headerlink" href="#error-during-run-a-fizzled-firework" title="Link to this heading">¶</a></h2>
 <p>If your job throws an exception (error), FireWorks will automatically mark your job as <em>FIZZLED</em>. Any jobs that depend on this job will not run until you fix things. Let’s simulate this situation.</p>
 <ol class="arabic">
 <li><p>Reset your database and add back the sleeping Firework:</p>
@@ -112,9 +110,9 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="catastrophic-failure">
-<h2>Catastrophic Failure<a class="headerlink" href="#catastrophic-failure" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="catastrophic-failure">
+<h2>Catastrophic Failure<a class="headerlink" href="#catastrophic-failure" title="Link to this heading">¶</a></h2>
 <p>The previous failure was easy to detect; the job threw an error, and the Rocket was able to catch that error and tell the LaunchPad to mark the job as <em>FIZZLED</em>. However, more catastrophic failures are possible. For example, you might have a power failure in your computer center. In that case, there is no time for the Rocket to report to FireWorks that there is a failure. Let’s see how to handle this case.</p>
 <ol class="arabic">
 <li><p>Reset your database and add back the sleeping Firework:</p>
@@ -174,9 +172,9 @@ lpad get_fws -i 1 -d all
 <p class="admonition-title">Note</p>
 <p>In production, you can use the <a class="reference internal" href="maintain_tutorial.html"><span class="doc">database maintenance instructions</span></a> instead of calling <code class="docutils literal notranslate"><span class="pre">lpad_detect_lostruns</span> <span class="pre">--fizzle</span></code>.</p>
 </div>
-</div>
-<div class="section" id="life-after-fizzled">
-<h2>Life after <em>FIZZLED</em><a class="headerlink" href="#life-after-fizzled" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="life-after-fizzled">
+<h2>Life after <em>FIZZLED</em><a class="headerlink" href="#life-after-fizzled" title="Link to this heading">¶</a></h2>
 <p>Once FireWorks has identified a job as <em>FIZZLED</em>, you might wonder what comes next. One option is to resubmit your workflow, perhaps with modifications to prevent any problems that might have caused job failure. If you’ve correctly enabled <a class="reference internal" href="duplicates_tutorial.html"><span class="doc">duplicate checking</span></a>, your new workflow will automatically pick up where you left off, and you won’t do any extra calculations. This is the preferred way of dealing with failures. If you haven’t enabled duplicate checking, then you can also <a class="reference internal" href="rerun_tutorial.html"><span class="doc">rerun your workflow</span></a>, starting from the failed job. If the <code class="docutils literal notranslate"><span class="pre">EXCEPT_DETAILS_ON_RERUN</span></code> option is enabled in your <a class="reference internal" href="config_tutorial.html"><span class="doc">FW configuration</span></a>, the exception details serialized during the last launch will be copied in the spec under the key <code class="docutils literal notranslate"><span class="pre">_exception_details</span></code>. Customized exceptions can then be implemented to store information that help properly restart the job. The only caveat to this latter method is that dynamic actions already taken by your workflow will <strong>not</strong> be reset to their initial state.</p>
 <p>Note that you might also find the [python debugger](<a class="reference external" href="https://docs.python.org/3/library/pdb.html">https://docs.python.org/3/library/pdb.html</a>) to be a useful tool in inspecting local variables at the point of failure of a given firework, particularly if your firework is composed of PyTasks.  The debugger can be invoked upon an exception using the <cite>–pdb</cite> option with rlaunch, e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">rlaunch</span> <span class="n">singleshot</span> <span class="o">-</span><span class="n">f</span> <span class="n">FW_ID_HERE</span> <span class="o">--</span><span class="n">pdb</span>
@@ -184,31 +182,32 @@ lpad get_fws -i 1 -d all
 </pre></div>
 </div>
 <p>You can also continue on with the Workflow even after <em>FIZZLED</em> by setting the <code class="docutils literal notranslate"><span class="pre">_allow_fizzled_parents</span></code> parameter in your <strong>spec</strong>. This will allow you to algorithmically fix errors using FireWorks’ dynamic workflow features. This is a fairly advanced use case and will be covered in a future tutorial.</p>
-</div>
-<div class="section" id="database-locks-and-inconsistencies">
-<h2>Database locks and inconsistencies<a class="headerlink" href="#database-locks-and-inconsistencies" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="database-locks-and-inconsistencies">
+<h2>Database locks and inconsistencies<a class="headerlink" href="#database-locks-and-inconsistencies" title="Link to this heading">¶</a></h2>
 <p>When updating the state of the Firework, FireWorks needs to acquire a lock on the database to safely update the state of the whole workflow. As this procedure may require some time, if many Fireworks belonging to the same Workflow try to update their state simultaneously the waiting time could easily reach the limit (see WFLOCK_EXPIRATION_SECS in <a class="reference internal" href="config_tutorial.html"><span class="doc">FW config</span></a>). If this happens, FireWorks by default will let the job stop, leaving the database in an inconsistent state. Like in the previous cases, these jobs could be identified running <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">detect_lostruns</span></code> and the consistency in the database could be restored using the option <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>. This will refresh the state of the Workflow, applying the correct actions where needed.</p>
-</div>
-<div class="section" id="automatically-report-what-parameters-cause-job-failures-beta">
-<h2>Automatically report what parameters cause job failures (beta)<a class="headerlink" href="#automatically-report-what-parameters-cause-job-failures-beta" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="automatically-report-what-parameters-cause-job-failures-beta">
+<h2>Automatically report what parameters cause job failures (beta)<a class="headerlink" href="#automatically-report-what-parameters-cause-job-failures-beta" title="Link to this heading">¶</a></h2>
 <p>It is one thing to know that many jobs failed via the FIZZLED state, but it is better if one can identify the cause of failure. FireWorks can try to automatically detect what parameters are causing jobs to fail by introspecting the database and compiling a report of what keys in the FireWork <code class="docutils literal notranslate"><span class="pre">spec</span></code> and Workflow <code class="docutils literal notranslate"><span class="pre">metadata</span></code> are most associated with failed jobs. Thus, if you have a descriptive spec and metadata, it can be used to automatically classify jobs.</p>
 <p>The introspect feature is in beta, but you can learn more via:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">introspect</span> <span class="o">-</span><span class="n">h</span>
 </pre></div>
 </div>
 <p>The introspect command can be very powerful when used in conjunction with the reporting features (<code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">report</span></code>). Contact FireWorks support for more information.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Dealing with Failures and Crashes</a><ul>
 <li><a class="reference internal" href="#normal-operation">Normal operation</a></li>
 <li><a class="reference internal" href="#error-during-run-a-fizzled-firework">Error during run - a <em>FIZZLED</em> Firework!</a></li>
@@ -220,12 +219,17 @@ lpad get_fws -i 1 -d all
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="rerun_tutorial.html"
-                        title="previous chapter">Rerunning a Firework or Workflow</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="maintain_tutorial.html"
-                        title="next chapter">Database administration commands</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="rerun_tutorial.html"
+                          title="previous chapter">Rerunning a Firework or Workflow</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="maintain_tutorial.html"
+                          title="next chapter">Database administration commands</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -233,21 +237,21 @@ lpad get_fws -i 1 -d all
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -262,14 +266,14 @@ lpad get_fws -i 1 -d all
         <li class="right" >
           <a href="rerun_tutorial.html" title="Rerunning a Firework or Workflow"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Dealing with Failures and Crashes</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
