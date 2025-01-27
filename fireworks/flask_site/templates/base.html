@@ -1,9 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/flat-ui.css') }}">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('fw_webgui_main.static', filename='css/bootstrap.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('fw_webgui_main.static', filename='css/flat-ui.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('fw_webgui_main.static', filename='css/styles.css') }}">
     {% block morehead %}{% endblock %}
     <title>{% block title %}{% endblock %}</title>
 </head>
@@ -11,8 +11,8 @@
 
 <body>
     <div class="container">
-        <a href="/" >
-            <img class="brand" src="{{ url_for('static', filename='images/fw-logo.png') }}"></img>
+        <a href="{{ url_for('fw_webgui_main.home') }}" >
+            <img class="brand" src="{{ url_for('fw_webgui_main.static', filename='images/fw-logo.png') }}"></img>
         </a>
     </div>
     <hr class="myhrline">

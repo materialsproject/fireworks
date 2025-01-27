@@ -3,9 +3,9 @@
 {% block title %}Firework {{ fw_id }} Details{% endblock %}
 
 {% block morehead %}
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.jsonview.css') }}" />
+  <link rel="stylesheet" href="{{ url_for('fw_webgui_main.static', filename='css/jquery.jsonview.css') }}" />
   <script type="text/javascript" src="//code.jquery.com/jquery.min.js"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.jsonview.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('fw_webgui_main.static', filename='js/jquery.jsonview.js') }}"></script>
   <script type="text/javascript">
     var json = {{ fw | tojson }};
 
