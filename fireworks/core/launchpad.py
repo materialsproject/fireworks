@@ -31,6 +31,7 @@ from fireworks.fw_config import (
     SORT_FWS,
     WFLOCK_EXPIRATION_KILL,
     WFLOCK_EXPIRATION_SECS,
+    STREAM_LOGLEVEL
 )
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates, recursive_dict
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -190,7 +191,7 @@ class LaunchPad(FWSerializable):
 
         # set up logger
         self.logdir = logdir
-        self.strm_lvl = strm_lvl or "INFO"
+        self.strm_lvl = strm_lvl or STREAM_LOGLEVEL
         self.m_logger = get_fw_logger("launchpad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
         self.user_indices = user_indices or []

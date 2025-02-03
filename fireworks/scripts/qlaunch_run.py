@@ -21,7 +21,13 @@ from importlib import metadata
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, QUEUEADAPTER_LOC
+from fireworks.fw_config import (
+    CONFIG_FILE_DIR,
+    FWORKER_LOC,
+    LAUNCHPAD_LOC,
+    QUEUEADAPTER_LOC,
+    STREAM_LOGLEVEL
+)
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
@@ -155,7 +161,7 @@ def qlaunch(argv: Sequence[str] | None = None) -> int:
         "--block_dir", help="directory to use as block dir. Can be a new or existing block. Must start with 'block_'"
     )
     parser.add_argument("--logdir", help="path to a directory for logging", default=None)
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
     parser.add_argument("-r", "--reserve", help="reserve a fw", action="store_true")
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")

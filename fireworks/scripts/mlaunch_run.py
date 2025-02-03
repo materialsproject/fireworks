@@ -10,7 +10,7 @@ from typing import Sequence
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STREAM_LOGLEVEL
 
 from ._helpers import _validate_config_file_paths
 
@@ -50,7 +50,7 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
         default=CONFIG_FILE_DIR,
     )
 
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
     parser.add_argument(

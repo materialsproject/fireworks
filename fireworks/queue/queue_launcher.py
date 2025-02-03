@@ -21,6 +21,7 @@ from fireworks.fw_config import (
     QUEUE_UPDATE_INTERVAL,
     RAPIDFIRE_SLEEP_SECS,
     SUBMIT_SCRIPT_NAME,
+    STREAM_LOGLEVEL
 )
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
@@ -38,7 +39,7 @@ def launch_rocket_to_queue(
     qadapter,
     launcher_dir=".",
     reserve=False,
-    strm_lvl="INFO",
+    strm_lvl=STREAM_LOGLEVEL,
     create_launcher_dir=False,
     fill_mode=False,
     fw_id=None,
@@ -176,7 +177,7 @@ def rapidfire(
     njobs_block=500,
     sleep_time=None,
     reserve=False,
-    strm_lvl="INFO",
+    strm_lvl=STREAM_LOGLEVEL,
     timeout=None,
     fill_mode=False,
 ) -> None:

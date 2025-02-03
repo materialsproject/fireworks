@@ -9,7 +9,7 @@ from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
+from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS, STREAM_LOGLEVEL
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, log_multi, redirect_local
 
 if TYPE_CHECKING:
@@ -32,7 +32,7 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_exception=False):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL, pdb_on_exception=False):
     """
     Run a single rocket in the current directory.
 
@@ -64,7 +64,7 @@ def rapidfire(
     nlaunches: int = 0,
     max_loops: int = -1,
     sleep_time: int | None = None,
-    strm_lvl: str = "INFO",
+    strm_lvl: str = STREAM_LOGLEVEL,
     timeout: int | None = None,
     local_redirect: bool = False,
     pdb_on_exception: bool = False,

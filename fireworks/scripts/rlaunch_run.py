@@ -13,7 +13,7 @@ from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STREAM_LOGLEVEL
 from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
 from ._helpers import _validate_config_file_paths
@@ -110,7 +110,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
         default=CONFIG_FILE_DIR,
     )
 
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
     try:
@@ -144,7 +144,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
 
     # prime addr lookups
-    _log = get_fw_logger("rlaunch", stream_level="INFO")
+    _log = get_fw_logger("rlaunch", stream_level=STREAM_LOGLEVEL)
     _log.info("Hostname/IP lookup (this will take a few seconds)")
     get_my_host()
     get_my_ip()
