@@ -66,6 +66,7 @@ QUEUEADAPTER_LOC = None  # where to find the my_qadapter.yaml file
 
 CONFIG_FILE_DIR = "."  # directory containing config files (if not individually set)
 
+STREAM_LOGLEVEL = "INFO"  # the default streaming log level used for various loggers
 ROCKET_STREAM_LOGLEVEL = "INFO"  # the streaming log level of the rocket.launcher logger
 
 QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to always
