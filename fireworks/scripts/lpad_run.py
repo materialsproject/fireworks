@@ -33,6 +33,7 @@ from fireworks.fw_config import (
     RUN_EXPIRATION_SECS,
     WEBSERVER_HOST,
     WEBSERVER_PORT,
+    STREAM_LOGLEVEL
 )
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
@@ -1368,7 +1369,7 @@ def lpad(argv: Sequence[str] | None = None) -> int:
         default=CONFIG_FILE_DIR,
     )
     parser.add_argument("--logdir", help="path to a directory for logging")
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
     webgui_parser = subparsers.add_parser("webgui", help="launch the web GUI")

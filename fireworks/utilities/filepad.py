@@ -13,7 +13,7 @@ from monty.serialization import loadfn
 from bson.objectid import ObjectId
 
 from fireworks.fw_config import MongoClient
-from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS
+from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Kiran Mathew"
@@ -100,7 +100,7 @@ class FilePad(MSONable):
 
         # logging
         self.logdir = logdir
-        self.strm_lvl = strm_lvl or "INFO"
+        self.strm_lvl = strm_lvl or STREAM_LOGLEVEL
         self.logger = get_fw_logger("filepad", l_dir=self.logdir, stream_level=self.strm_lvl)
 
         # build indexes
