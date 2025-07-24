@@ -45,7 +45,7 @@ PRINT_FW_JSON = True
 PRINT_FW_YAML = False
 
 JSON_SCHEMA_VALIDATE = False
-JSON_SCHEMA_VALIDATE_LIST = None
+JSON_SCHEMA_VALIDATE_LIST = []
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
 RUN_EXPIRATION_SECS = PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
