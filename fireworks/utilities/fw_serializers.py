@@ -275,18 +275,19 @@ class FWSerializable(abc.ABC):
             filename(str): filename to write to
             f_format (str): serialization format, default checks the filename extension
         """
+        dct = self.to_dict()
         if f_format is None:
             f_format = filename.split(".")[-1]
+        if f_format not in ("json", "yaml"):
+            raise ValueError(f"Unsupported format {f_format}")
         with open(filename, "w", **ENCODING_PARAMS) as f_out:
             if f_format == "json":
-                json.dump(self.to_dict(), f_out, default=DATETIME_HANDLER, **kwargs)
-            elif f_format == "yaml":
+                json.dump(dct, f_out, default=DATETIME_HANDLER, **kwargs)
+            else:
                 yaml = YAML(typ="safe", pure=True)
                 yaml.default_flow_style = YAML_STYLE
                 yaml.allow_unicode = True
-                yaml.dump(self.to_dict(), f_out)
-            else:
-                raise ValueError(f"Unsupported format {f_format}")
+                yaml.dump(dct, f_out)
 
     @classmethod
     def from_file(cls, filename, f_format=None):
