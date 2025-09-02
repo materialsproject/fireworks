@@ -168,6 +168,7 @@ The parameters of FWAction are as follows:
 * **mod_spec**: ([dict]) This has the same purpose as update_spec - to pass data between Firetasks/FireWorks. However, the update_spec option is limited in that it can't increment variables or append to lists. This parameter allows one to update the child FW's spec using the DictMod language, a Mongo-like syntax that allows more fine-grained changes to the fw_spec.
 * **additions**: ([Workflow]) a list of WFs/FWs to add as children to this Firework.
 * **detours**: ([Workflow]) a list of WFs/FWs to add as children (they will inherit the current FW's children)
+* **append_wfs** ([dict]): generalization of additions and detours with additional parents
 * **defuse_children**: (bool) defuse all the original children of this Firework
 * **defuse_workflow**: (bool) defuse all incomplete FWs in this Workflow
 
