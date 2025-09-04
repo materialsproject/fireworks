@@ -975,7 +975,7 @@ class Workflow(FWSerializable):
                     raise ValueError("Cannot use duplicated fw_ids when dynamically detouring workflows!")
                 updated_ids.extend(new_updates)
 
-        # add append_wfs
+        # add append_wfs Fireworks
         for dct in action.append_wfs:
             fw_ids = [fw_id] + dct['parents']
             detours = [dct['detour']] + [False]*len(dct['parents'])
