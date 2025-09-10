@@ -455,7 +455,7 @@ class LaunchPad(FWSerializable):
             pull_spec_mods (bool): Whether the new Workflow should pull the FWActions of the parent
                 fw_ids
         """
-        wf = self.get_wf_by_fw_id(fw_ids[0])
+        wf = self.get_wf_by_fw_id_lzyfw(fw_ids[0])
         updated_ids = wf.append_wf(new_wf, fw_ids, detour=detour, pull_spec_mods=pull_spec_mods)
         with WFLock(self, fw_ids[0]):
             self._update_wf(wf, updated_ids)
