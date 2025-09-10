@@ -112,7 +112,7 @@ Note that this example is slightly different than the previous one:
 * We did not define any required or optional parameters. The parameters are taken from the ``fw_spec`` rather than ``self``.
 * We are explicitly returning *FWAction* objects. In one case, the object looks to be storing data and adding FireWorks.
 
-Other than those differences, the code is the same format as earlier. The dynamicism comes only from the *FWAction* object; next, we will this object in more detail.
+Other than those differences, the code is the same format as earlier. The dynamicism comes only from the *FWAction* object; next, we will describe this object in more detail.
 
 File-passing Workflows
 ======================
@@ -162,21 +162,61 @@ A Firetask (or a function called by :doc:`PyTask <pytask>`) can return a *FWActi
 
 The parameters of FWAction are as follows:
 
-* **stored_data**: *(dict)* data to store from the run. The data is put in the Launch database along with the rest of the FWAction. Does not affect the operation of FireWorks.
-* **exit**: *(bool)* if set to True, any remaining Firetasks within the same Firework are skipped (like a ``break`` statement for a Firework).
-* **update_spec**: *(dict)* A data dict that will update the spec for any remaining Firetasks *and* the following Firework. Thus, this parameter can be used to pass data between Firetasks or between FireWorks. Note that if the original fw_spec and the update_spec contain the same key, the original will be overwritten.
-* **mod_spec**: ([dict]) This has the same purpose as update_spec - to pass data between Firetasks/FireWorks. However, the update_spec option is limited in that it can't increment variables or append to lists. This parameter allows one to update the child FW's spec using the DictMod language, a Mongo-like syntax that allows more fine-grained changes to the fw_spec.
-* **additions**: ([Workflow]) a list of WFs/FWs to add as children to this Firework.
-* **detours**: ([Workflow]) a list of WFs/FWs to add as children (they will inherit the current FW's children)
-* **defuse_children**: (bool) defuse all the original children of this Firework
-* **defuse_workflow**: (bool) defuse all incomplete FWs in this Workflow
+* **stored_data**: (dict) Data to store from the run. The data is put in the `launches` collection of the database along with the rest of the FWAction. Does not affect the operation of FireWorks.
+* **exit**: (bool) If set to ``True``, all remaining Firetasks within the same Firework are skipped (like a ``break`` statement for a Firework). Default is ``False``.
+* **update_spec**: (dict) A data dict that will update the spec for any remaining Firetasks *and* the following Firework. Thus, this parameter can be used to pass data between Firetasks or between FireWorks. Note that if the original fw_spec and the update_spec contain the same key, the original will be overwritten. Default is empty dict.
+* **mod_spec**: ([dict]) This has the same purpose as update_spec - to pass data between Firetasks/FireWorks. However, the update_spec option is limited in that it can't increment variables or append to lists. This parameter allows one to update the child FW's spec using the DictMod language, a Mongo-like syntax that allows more fine-grained changes to the fw_spec. Default is empty list.
+* **additions**: ([Workflow]) A list of WFs/FWs to add as children to this Firework, default is empty list.
+* **detours**: ([Workflow]) A list of WFs/FWs to add as children (they will inherit the current FW's children), default is empty list
+* **append_wfs** ([dict]): Generalization of additions and detours with additional parents. The dictionary has this structure: ``{'workflow': [Workflow], 'parents': [int], 'detour': bool}``. An optional detour (when ``detour`` is ``True``) is applied to the current Firework (the one returning the FWAction). For the provided ``parents`` list, only additions (no detours) are applied. When ``parents`` is empty, this action is equivalent to either ``detours`` or ``additions`` actions, depending on the ``detour`` value. Default is empty list.
+* **defuse_children**: (bool) Defuse all the original children of this Firework, default is ``False``.
+* **defuse_workflow**: (bool) Defuse all incomplete FWs in this Workflow, default is ``False``.
+* **propagate**: (bool) Propagate spec modifications to all descendant Fireworks, default is ``False``.
 
 The FWAction thereby allows you to *command* the workflow programmatically, allowing for the design of intelligent workflows that react dynamically to results.
+
+.. note:: Currently, when a Firetask returns an FWAction with non-empty ``additions``,  ``detours``, ``append_wfs``, or ``defuse_children=True`` or ``defuse_workflow=True`` then ``exit=True`` is implied, i.e. all remaining Firetasks in the Firework are skipped.
+
+Example: implement the *if* function
+------------------------------------
+
+Here we can show that it is possible to implement the *if* function, ``c = if(x, a, b)`` as a Firetask by using a combination of FWAction parameters. The goal is to write a Firetask such that either the Firework providing ``a`` or the one providing ``b`` is linked as a parent and evaluated depending on the value of ``x``. Thus, one of the *if* arguments is not evaluated. In the "usual" implementation, first both ``a`` and ``b`` are evaluated and only then one of them is used. The full example can be found `here <https://github.com/materialsproject/fireworks/tree/main/fireworks/examples/custom_firetasks/if_function>`_. Here, we will discuss only snippets.
+
+After adding two Fireworks computing ``a`` and ``b`` we write a custom Firetask that creates a detour (if ``fw_if`` has children) or addition and linking one of these two Fireworks::
+
+    @explicit_serialize
+    class IfNonstrictTask(FiretaskBase):
+        required_params = ['condition', 'input_1', 'fw_id_1', 'input_2', 'fw_id_2',
+                           'output'],
+
+        def run_task(self, fw_spec):
+            inp = self['input_1'] if fw_spec[self['condition']] else self['input_2']
+            fw_id = self['fw_id_1'] if fw_spec[self['condition']] else self['fw_id_2']
+            fwk = Firework(tasks=SummationTask(inputs=[inp], output=self['output']))
+            dct = {'detour': True, 'workflow': Workflow(fireworks=[fwk]), 'parents': [fw_id]}
+            return FWAction(append_wfs=dct)
+
+
+    @explicit_serialize
+    class SummationTask(FiretaskBase):
+        required_params = ['inputs', 'output']
+
+        def run_task(self, fw_spec):
+            inp = [fw_spec[i] for i in self['inputs']]
+            return FWAction(update_spec={self['output']: sum(inp)})
+
+
+    tsk_kwargs = {'detour_name': det_name, 'condition': 'x', 'input_1': 'a', 'input_2': 'b',
+                  'fw_id_1': fw_1.fw_id, 'fw_id_2': fw_2.fw_id, 'output': 'c'}
+    fw_if = Firework(tasks=IfNonstrictTask(**tsk_kwargs), spec={'x': True})
+
+The pairs of keys ``'input_1'``, ``'fw_id_1'`` and ``'input_2'``, ``'fw_id_2'`` refer to the values and the parent Firework IDs for ``a`` and ``b`` respectively. The key ``'condition'`` is provided statically in the *spec* in this example (``{'x': True}``) but it can be pushed via ``update_spec`` by another Firework. After adding `fw_if` to LaunchPad and executing it, the ``IfNonstrictTask`` evaluates the condition and creates and, using ``append_wfs``, appends dynamically a Firework which has the relevant Firework with ``fw_id`` as parent and passes the name of the selected ``inp`` (``a`` or ``b``). When the appended Firework is launched, the ``SummationTask`` passes the result using the key specified in ``output`` (here ``c``) to the children Fireworks using `update_spec`. The ``SummationTask`` used in the detour/addition can be replaced by a more generic or more specialized Firetask.
+
 
 Appendix 1: accessing the LaunchPad within the Firetask
 =======================================================
 
-It is generally not good practice to use the LaunchPad within the Firetask because this makes the task specification less explicit. For example, this could make duplicate checking more problematic. However, if you really need to access the LaunchPad within a Firetask, you can set the ``_add_launchpad_and_fw_id`` key of the Firework spec to be True. Then, your tasks will be able to access two new variables, ``launchpad`` (a LaunchPad object) and ``fw_id`` (an int), as members of your Firetask. One example is shown in the unit test ``test_add_lp_and_fw_id()``.
+It is generally no good practice to use the LaunchPad within the Firetask because this makes the task specification less explicit. For example, this could make duplicate checking more problematic. However, if you really need to access the LaunchPad within a Firetask, you can set the ``_add_launchpad_and_fw_id`` key of the Firework spec to be True. Then, your tasks will be able to access two new variables, ``launchpad`` (a LaunchPad object) and ``fw_id`` (an int), as members of your Firetask. One example is shown in the unit test ``test_add_lp_and_fw_id()``.
 
 
 Appendix 2: alternate ways to identify the Firetask and changing the identification
