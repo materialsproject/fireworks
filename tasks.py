@@ -46,11 +46,24 @@ def update_doc(ctx) -> None:
 
 @task
 def publish(ctx) -> None:
-    ctx.run("python setup.py release")
+    """
+    Build and publish the package to PyPI.
+    """
+    # Clean up previous build artifacts
+    ctx.run("rm -rf dist/ build/ *.egg-info")
+
+    # Build source and wheel distributions
+    ctx.run("python -m build")
+
+    # Upload to PyPI using twine
+    ctx.run("twine upload dist/*")
 
 
 @task
 def release_github(ctx) -> None:
+    """
+    Create a new release on GitHub.
+    """
     payload = {
         "tag_name": fw_version,
         "target_commitish": "master",
@@ -72,6 +85,12 @@ def release_github(ctx) -> None:
 
 @task
 def release(ctx) -> None:
+    """
+    Full release process:
+    - Publish the package to PyPI.
+    - Update the documentation.
+    - Create a GitHub release.
+    """
     publish(ctx)
     update_doc(ctx)
     release_github(ctx)
@@ -79,5 +98,9 @@ def release(ctx) -> None:
 
 @task
 def open_doc(ctx) -> None:
+    """
+    Open the local documentation in a web browser.
+    """
     pth = os.path.abspath("docs/index.html")
     webbrowser.open("file://" + pth)
+

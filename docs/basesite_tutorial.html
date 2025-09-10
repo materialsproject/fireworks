@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Using the Web GUI &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Using the Web GUI &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Tracking an output file during execution" href="tracker_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="query_tutorial.html" title="Querying FireWorks and Workflows / Generating Reports"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Using the Web GUI</a></li> 
       </ul>
     </div>  
@@ -46,12 +44,13 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="using-the-web-gui">
-<h1>Using the Web GUI<a class="headerlink" href="#using-the-web-gui" title="Permalink to this headline">¶</a></h1>
+  <section id="using-the-web-gui">
+<h1>Using the Web GUI<a class="headerlink" href="#using-the-web-gui" title="Link to this heading">¶</a></h1>
 <p>An easy way to monitor FireWorks is to use its web interface, which provides an overview of the state of your workflows and provides clickable links to see details on any Firework or Workflow:</p>
-<a class="reference internal image-reference" href="_images/base_site.png"><img alt="Base Site screenshot" class="align-center" src="_images/base_site.png" style="width: 600px;" /></a>
-<div class="section" id="launching-the-web-framework">
-<h2>Launching the web framework<a class="headerlink" href="#launching-the-web-framework" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/base_site.png"><img alt="Base Site screenshot" class="align-center" src="_images/base_site.png" style="width: 600px;" />
+</a>
+<section id="launching-the-web-framework">
+<h2>Launching the web framework<a class="headerlink" href="#launching-the-web-framework" title="Link to this heading">¶</a></h2>
 <p>It is easy to launch the web framework using the LaunchPad:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">webgui</span>
 </pre></div>
@@ -62,28 +61,28 @@
 </div>
 <p>if you need to explicitly specify the LaunchPad file to use.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">-s</span></code> (or <code class="docutils literal notranslate"><span class="pre">--server</span></code>) option runs in ‘server mode’, e.g. skips opening up a browser. Other options include <code class="docutils literal notranslate"><span class="pre">--host</span></code> and <code class="docutils literal notranslate"><span class="pre">--port</span></code>, but you probably won’t need to modify these.</p>
-</div>
-<div class="section" id="using-the-web-framework">
-<h2>Using the web framework<a class="headerlink" href="#using-the-web-framework" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="using-the-web-framework">
+<h2>Using the web framework<a class="headerlink" href="#using-the-web-framework" title="Link to this heading">¶</a></h2>
 <p>The current web framework is limited but simple - just click the links you are interested in. One thing to note is that the URLs can be easily modified to quickly bring up a particular Firework, e.g.:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0</span><span class="o">.</span><span class="mf">0.1</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">fw</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="mf">127.0.0.1</span><span class="p">:</span><span class="mi">5000</span><span class="o">/</span><span class="n">fw</span><span class="o">/</span><span class="mi">1</span><span class="o">/</span>
 </pre></div>
 </div>
 <p>points to the data for Firework id #1 (for the default host and port). You can easily modify this URL to check up on a particular Firework.</p>
 <p>As a more advanced option, the framework now allows users to search fireworks and workflows using custom MongoDB-style queries.</p>
-</div>
-<div class="section" id="authentication">
-<h2>Authentication<a class="headerlink" href="#authentication" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="authentication">
+<h2>Authentication<a class="headerlink" href="#authentication" title="Link to this heading">¶</a></h2>
 <p>You can add basic authentication to the web app by using the <code class="docutils literal notranslate"><span class="pre">--webgui_username</span></code> and <code class="docutils literal notranslate"><span class="pre">--webgui_password</span></code> options, e.g.:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">webgui</span> <span class="o">--</span><span class="n">webgui_username</span> <span class="n">MY_USERNAME</span> <span class="o">--</span><span class="n">webgui_password</span> <span class="n">MY_PASSWORD</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="running-the-flask-app-via-python">
-<h2>Running the Flask app via Python<a class="headerlink" href="#running-the-flask-app-via-python" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="running-the-flask-app-via-python">
+<h2>Running the Flask app via Python<a class="headerlink" href="#running-the-flask-app-via-python" title="Link to this heading">¶</a></h2>
 <p>If you want to run the Flask app via Python you should do something like:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">LaunchPad</span>
-<span class="kn">from</span> <span class="nn">fireworks.flask_site.app</span> <span class="kn">import</span> <span class="n">app</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">LaunchPad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.flask_site.app</span><span class="w"> </span><span class="kn">import</span> <span class="n">app</span>
 
 <span class="n">app</span><span class="o">.</span><span class="n">lp</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>  <span class="c1"># change the LaunchPad info if needed</span>
 <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s2">&quot;WEBGUI_USERNAME&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;MY_APP_USERNAME&quot;</span>  <span class="c1"># optional basic password-protection</span>
@@ -91,18 +90,19 @@
 <span class="n">app</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Using the Web GUI</a><ul>
 <li><a class="reference internal" href="#launching-the-web-framework">Launching the web framework</a></li>
 <li><a class="reference internal" href="#using-the-web-framework">Using the web framework</a></li>
@@ -112,12 +112,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="query_tutorial.html"
-                        title="previous chapter">Querying FireWorks and Workflows / Generating Reports</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="tracker_tutorial.html"
-                        title="next chapter">Tracking an output file during execution</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="query_tutorial.html"
+                          title="previous chapter">Querying FireWorks and Workflows / Generating Reports</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="tracker_tutorial.html"
+                          title="next chapter">Tracking an output file during execution</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -125,21 +130,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -154,14 +159,14 @@
         <li class="right" >
           <a href="query_tutorial.html" title="Querying FireWorks and Workflows / Generating Reports"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Using the Web GUI</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

@@ -1,27 +1,25 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Introductory Tutorial &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Introductory Tutorial &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Defining Jobs using Firetasks" href="firetask_tutorial.html" />
-    <link rel="prev" title="Five-minute quickstart" href="quickstart.html" />
+    <link rel="prev" title="Two-minute installation, setup and quickstart" href="quickstart_tutorial.html" />
  
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -34,9 +32,9 @@
           <a href="firetask_tutorial.html" title="Defining Jobs using Firetasks"
              accesskey="N">next</a> |</li>
         <li class="right" >
-          <a href="quickstart.html" title="Five-minute quickstart"
+          <a href="quickstart_tutorial.html" title="Two-minute installation, setup and quickstart"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Introductory Tutorial</a></li> 
       </ul>
     </div>  
@@ -46,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="introductory-tutorial">
-<h1>Introductory Tutorial<a class="headerlink" href="#introductory-tutorial" title="Permalink to this headline">¶</a></h1>
+  <section id="introductory-tutorial">
+<h1>Introductory Tutorial<a class="headerlink" href="#introductory-tutorial" title="Link to this heading">¶</a></h1>
 <p>In this tutorial, you will:</p>
 <ul class="simple">
 <li><p>Add a simple workflow to the central database via a file</p></li>
@@ -59,8 +57,8 @@
 <p class="admonition-title">Important</p>
 <p>If you are having trouble with this tutorial, please post a message on the <a class="reference external" href="https://github.com/materialsproject/fireworks/issues">FireWorks Github page</a>.</p>
 </div>
-<div class="section" id="reset-initialize-the-fireserver">
-<h2>Reset/Initialize the FireServer<a class="headerlink" href="#reset-initialize-the-fireserver" title="Permalink to this headline">¶</a></h2>
+<section id="reset-initialize-the-fireserver">
+<h2>Reset/Initialize the FireServer<a class="headerlink" href="#reset-initialize-the-fireserver" title="Link to this heading">¶</a></h2>
 <p>In this tutorial, we refer to the machine or infrastructure you use to host mongodb (and run mongod) as your <strong>FireServer</strong>.  You may set it up as follows:</p>
 <ol class="arabic">
 <li><p>If not already running, start MongoDB:</p>
@@ -100,11 +98,12 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="add-a-firework-to-the-launchpad">
-<h2>Add a Firework to the LaunchPad<a class="headerlink" href="#add-a-firework-to-the-launchpad" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="add-a-firework-to-the-launchpad">
+<h2>Add a Firework to the LaunchPad<a class="headerlink" href="#add-a-firework-to-the-launchpad" title="Link to this heading">¶</a></h2>
 <p>A Firework contains a list of computing tasks (Firetasks) to be performed. For this tutorial, we will use a Firework that consists of only a single step. We’ll tackle more complex workflows in other tutorials. Our workflow consisting of one Firework and one Firetask thus looks like this:</p>
-<a class="reference internal image-reference" href="_images/single_fw.png"><img alt="Single Firework" class="align-center" src="_images/single_fw.png" style="width: 200px;" /></a>
+<a class="reference internal image-reference" href="_images/single_fw.png"><img alt="Single Firework" class="align-center" src="_images/single_fw.png" style="width: 200px;" />
+</a>
 <ol class="arabic">
 <li><p>Staying in the tutorial directory, run the following command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">add</span> <span class="n">fw_test</span><span class="o">.</span><span class="n">yaml</span>
@@ -160,8 +159,8 @@
 <p class="admonition-title">Note</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">get_fws</span></code> command is a powerful way to search for FireWorks in the database. For details on its usage, see <a class="reference internal" href="query_tutorial.html"><span class="doc">Querying FireWorks and Workflows</span></a></p>
 </div>
-<div class="section" id="launch-a-rocket-on-the-fireserver">
-<h3>Launch a Rocket on the FireServer<a class="headerlink" href="#launch-a-rocket-on-the-fireserver" title="Permalink to this headline">¶</a></h3>
+<section id="launch-a-rocket-on-the-fireserver">
+<h3>Launch a Rocket on the FireServer<a class="headerlink" href="#launch-a-rocket-on-the-fireserver" title="Link to this heading">¶</a></h3>
 <p>A Rocket fetches a Firework from the LaunchPad and runs it. A Rocket might be run on a separate machine (FireWorker) or through a queuing system. For now, we will run the Rocket on the FireServer itself and without a queue.</p>
 <ol class="arabic">
 <li><p>We can launch Rockets using the Rocket Launcher. Execute the following command (once):</p>
@@ -195,9 +194,9 @@
 <p>The message <code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">FireWorks</span> <span class="pre">are</span> <span class="pre">ready</span> <span class="pre">to</span> <span class="pre">run</span> <span class="pre">and</span> <span class="pre">match</span> <span class="pre">query!</span></code> indicates that the Rocket tried to fetch a Firework from the database, but none could be found. Indeed, we had previously run the only Firework that was in the database.</p>
 </li>
 </ol>
-</div>
-<div class="section" id="launch-many-rockets-rapidfire-mode">
-<h3>Launch many Rockets (rapidfire mode)<a class="headerlink" href="#launch-many-rockets-rapidfire-mode" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="launch-many-rockets-rapidfire-mode">
+<h3>Launch many Rockets (rapidfire mode)<a class="headerlink" href="#launch-many-rockets-rapidfire-mode" title="Link to this heading">¶</a></h3>
 <p>If you just want to run many jobs on the central server itself, the simplest way is to run the Rocket Launcher in “rapidfire mode”. Let’s try this feature:</p>
 <ol class="arabic">
 <li><p>Staying in the same directory, clean up your output files:</p>
@@ -233,9 +232,9 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="running-fireworks-automatically">
-<h3>Running FireWorks automatically<a class="headerlink" href="#running-fireworks-automatically" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="running-fireworks-automatically">
+<h3>Running FireWorks automatically<a class="headerlink" href="#running-fireworks-automatically" title="Link to this heading">¶</a></h3>
 <p>We can set our Rocket Launcher to continuously look for new FireWorks to run. Let’s try this feature.</p>
 <ol class="arabic">
 <li><p>Staying in the same directory, clean up your previous output files:</p>
@@ -269,17 +268,17 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="what-just-happened">
-<h3>What just happened?<a class="headerlink" href="#what-just-happened" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="what-just-happened">
+<h3>What just happened?<a class="headerlink" href="#what-just-happened" title="Link to this heading">¶</a></h3>
 <p>It’s important to understand that when you add a Firework to the LaunchPad using the <code class="docutils literal notranslate"><span class="pre">lpad</span></code> script, the job just sits in the database and waits. The LaunchPad does not submit jobs to a computing resource when a new Firework is added to the LaunchPad. Rather, a computing resource must <em>request</em> a computing task by running the Rocket Launcher.</p>
 <p>By running the Rocket Launcher from different locations, you can have different computing resources run your jobs. Using rapidfire mode is a convenient way of requesting multiple jobs using a single command.</p>
-</div>
-<div class="section" id="python-examples-optional">
-<h3>Python Examples (optional)<a class="headerlink" href="#python-examples-optional" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="python-examples-optional">
+<h3>Python Examples (optional)<a class="headerlink" href="#python-examples-optional" title="Link to this heading">¶</a></h3>
 <p>While it’s possible to work operate FireWorks using YAML or JSON files, a much cleaner mode of operation is to use Python scripts. For example, here is a runnable script that creates our LaunchPad, defines our test Workflow, and runs it:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
-<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="kn">import</span> <span class="n">launch_rocket</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.core.rocket_launcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">launch_rocket</span>
 
 <span class="c1"># set up the LaunchPad and reset it</span>
 <span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
@@ -306,8 +305,8 @@
 </pre></div>
 </div>
 <p>Run in rapid-fire mode:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span><span class="p">,</span> <span class="n">FWorker</span> <span class="c1"># use this line instead of the first line</span>
-<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="kn">import</span> <span class="n">rapidfire</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span><span class="p">,</span> <span class="n">FWorker</span> <span class="c1"># use this line instead of the first line</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.core.rocket_launcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidfire</span>
 <span class="n">rapidfire</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>  <span class="c1"># use this line instead of launch_rocket()</span>
 </pre></div>
 </div>
@@ -336,25 +335,26 @@
 <p>FireWorks automatically detects what type of format you’re writing and reading from based on the extension. Both JSON and YAML are fully supported. Of course, if you’re using Python, there may not be any need to use files at all!</p>
 </div>
 <p>The code above generally does not use a lot of the optional arguments to keep the examples looking clean and sharp. You might experiment with some of the options - for example, to set up logging when initializing the LaunchPad or control the parameters of rapid-fire mode. You can see the additional arguments by browsing the <a class="reference internal" href="modules.html"><span class="doc">modules documentation</span></a>.</p>
-</div>
-<div class="section" id="next-steps">
-<h3>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="next-steps">
+<h3>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h3>
 <p>At this point, you’ve successfully stored a simple job in a database and run it later on command. You even executed multiple jobs with a single command: <code class="docutils literal notranslate"><span class="pre">rlaunch</span> <span class="pre">rapidfire</span></code>, and looked for new jobs automatically using the <strong>infinite</strong> Rocket Launcher. This should give a basic feeling of how you can automate many jobs using FireWorks.</p>
 <p>However, we still haven’t covered many important topics. For example, we have not executed complex workflows, run arbitrary Python code, or run jobs on different types of computing resources. Nor have we really looked into how to monitor and manage jobs and deploy FireWorks in production.</p>
 <p>We suggest that you continue by learning how to <a class="reference internal" href="firetask_tutorial.html"><span class="doc">define jobs using Firetasks</span></a>. Alternatively, you could return to the <a class="reference internal" href="index.html"><span class="doc">home page</span></a> and choose a tutorial topic that suits your application.</p>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Introductory Tutorial</a><ul>
 <li><a class="reference internal" href="#reset-initialize-the-fireserver">Reset/Initialize the FireServer</a></li>
 <li><a class="reference internal" href="#add-a-firework-to-the-launchpad">Add a Firework to the LaunchPad</a><ul>
@@ -370,12 +370,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="quickstart.html"
-                        title="previous chapter">Five-minute quickstart</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="firetask_tutorial.html"
-                        title="next chapter">Defining Jobs using Firetasks</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="quickstart_tutorial.html"
+                          title="previous chapter">Two-minute installation, setup and quickstart</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="firetask_tutorial.html"
+                          title="next chapter">Defining Jobs using Firetasks</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -383,21 +388,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -410,16 +415,16 @@
           <a href="firetask_tutorial.html" title="Defining Jobs using Firetasks"
              >next</a> |</li>
         <li class="right" >
-          <a href="quickstart.html" title="Five-minute quickstart"
+          <a href="quickstart_tutorial.html" title="Two-minute installation, setup and quickstart"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Introductory Tutorial</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

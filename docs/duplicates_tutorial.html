@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Handling Duplicates Automatically &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Handling Duplicates Automatically &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Running Tasks in the Background" href="backgroundtask.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Handling Duplicates Automatically</a></li> 
       </ul>
     </div>  
@@ -46,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="handling-duplicates-automatically">
-<h1>Handling Duplicates Automatically<a class="headerlink" href="#handling-duplicates-automatically" title="Permalink to this headline">¶</a></h1>
+  <section id="handling-duplicates-automatically">
+<h1>Handling Duplicates Automatically<a class="headerlink" href="#handling-duplicates-automatically" title="Link to this heading">¶</a></h1>
 <p>If you are running just a few jobs, or if your set of jobs is well-constrained, you may never have to worry about the possibility of duplicated runs. However, in some applications, duplicate jobs need to be explicitly prevented. This may be the case if:</p>
 <ul class="simple">
 <li><p>Each job is a costly calculation that would be expensive to run again</p></li>
@@ -55,8 +53,8 @@
 <li><p>Multiple users are submitting workflows, and two or more users might submit the same thing.</p></li>
 </ul>
 <p>One way to prevent duplicate jobs is to pre-filter workflows yourself before submitting them to FireWorks. However, FireWorks includes a built-in, customizable duplicate checker. One advantage of this built-in duplicate checker is that it detects duplicates at the Firework (<em>sub-workflow</em>) level. Let’s see how this works.</p>
-<div class="section" id="preventing-trivial-duplicates">
-<h2>Preventing Trivial Duplicates<a class="headerlink" href="#preventing-trivial-duplicates" title="Permalink to this headline">¶</a></h2>
+<section id="preventing-trivial-duplicates">
+<h2>Preventing Trivial Duplicates<a class="headerlink" href="#preventing-trivial-duplicates" title="Link to this heading">¶</a></h2>
 <p>A trivial duplicate might occur if two users submit the same workflow to the FireServer. Let’s see how this plays out when we have duplicate checking enabled for our workflows.</p>
 <ol class="arabic">
 <li><p>Move to the <code class="docutils literal notranslate"><span class="pre">duplicates</span></code> tutorial directory in your installation directory:</p>
@@ -66,10 +64,13 @@
 </li>
 <li><p>Look inside the file <code class="docutils literal notranslate"><span class="pre">wf_12.yaml</span></code>. This contains a workflow in which the first step adds the numbers 1+1, and the second step adds the number 2 to the result. Visually, the workflow looks like this:</p>
 <blockquote>
-<div><div class="figure align-center" id="id1">
-<a class="reference internal image-reference" href="_images/wf_12.png"><img alt="Add and Modify WF" src="_images/wf_12.png" style="width: 200px;" /></a>
-<p class="caption"><span class="caption-text">A schematic view of wf_12.yaml</span><a class="headerlink" href="#id1" title="Permalink to this image">¶</a></p>
-</div>
+<div><figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/wf_12.png"><img alt="Add and Modify WF" src="_images/wf_12.png" style="width: 200px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">A schematic view of wf_12.yaml</span><a class="headerlink" href="#id1" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 </div></blockquote>
 </li>
 <li><p>After having completed the <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">dynamic workflow tutorial</span></a>, the contents of the file <code class="docutils literal notranslate"><span class="pre">wf_12.yaml</span></code> should be familiar to you; it is almost identical to the <code class="docutils literal notranslate"><span class="pre">addmod_wf.yaml</span></code> file that we examined in great detail for that tutorial. However, one section of this workflow is new, and looks like this:</p>
@@ -116,9 +117,9 @@
 <li><p>All four FireWorks - both the ones we ran explicitly and the second set of duplicated runs - show Launch data as if they had been <em>all</em> been run explicitly.</p></li>
 </ol>
 <p>In summary, when the <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> key is specified, FireWorks allows users to submit duplicated runs, but actually runs only the workflows that are unique. A duplicated workflow has its run data copied from an earlier run (in other words, the duplicate run <em>steals</em> the launches of the original run). This process occurs when you run the Rocket Launcher - before running a Firework, the Rocket will check to see if it’s been run before. If so, it will just copy the Launch output from the previous Firework that had the same <strong>spec</strong>.</p>
-</div>
-<div class="section" id="sub-workflow-duplicate-detection">
-<h2>Sub-Workflow Duplicate Detection<a class="headerlink" href="#sub-workflow-duplicate-detection" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="sub-workflow-duplicate-detection">
+<h2>Sub-Workflow Duplicate Detection<a class="headerlink" href="#sub-workflow-duplicate-detection" title="Link to this heading">¶</a></h2>
 <p>One nice feature of FireWorks’ built-in duplicate detection is that it operates on a <em>sub-workflow</em> level. If only a portion of a workflow has been run before, FireWorks can avoid re-running that portion while still running unique sections, even within dynamic workflows.</p>
 <ol class="arabic">
 <li><p>Clear out your previous output in the <code class="docutils literal notranslate"><span class="pre">duplicate</span></code> tutorials directory:</p>
@@ -135,10 +136,13 @@
 </li>
 <li><p>As before, we should have run two FireWorks in agreement with our desired workflow. Now, let’s consider a situation where we insert a three-step workflow, but <strong>two of the steps are duplicated from before</strong>:</p>
 <blockquote>
-<div><div class="figure align-center" id="id2">
-<a class="reference internal image-reference" href="_images/wf_13.png"><img alt="Add and Modify WF" src="_images/wf_13.png" style="width: 200px;" /></a>
-<p class="caption"><span class="caption-text">A schematic view of wf_123.yaml, which contains two steps common to wf_12.yaml</span><a class="headerlink" href="#id2" title="Permalink to this image">¶</a></p>
-</div>
+<div><figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="_images/wf_13.png"><img alt="Add and Modify WF" src="_images/wf_13.png" style="width: 200px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">A schematic view of wf_123.yaml, which contains two steps common to wf_12.yaml</span><a class="headerlink" href="#id2" title="Link to this image">¶</a></p>
+</figcaption>
+</figure>
 </div></blockquote>
 </li>
 <li><p>Ideally, we would want to only run the third step of the workflow from scratch, since it is unique. The first two steps we’ve already run before, and we can just copy the results from a past run. Let’s confirm that this is what happens when we run our new three-step workflow:</p>
@@ -155,38 +159,39 @@
 <li><p>So indeed it looks like we skipped straight to the third step of our workflow (there was no text indicating that the first two steps ran explicitly). You can confirm that only one more <code class="docutils literal notranslate"><span class="pre">launcher_</span></code> directory was added, meaning only the third addition took place!</p></li>
 </ol>
 <p>In summary, with FireWorks’ duplicate checking you are free to submit many workflows in which some or all steps are duplicated from previous workflows. By enabling the <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> field, only the new steps are actually run. The user can thus concentrate on submitting whatever workflows are of interest rather than doing the tedious bookkeeping of figuring out what steps of the workflow have been run before.</p>
-</div>
-<div class="section" id="performance-and-customization">
-<h2>Performance and Customization<a class="headerlink" href="#performance-and-customization" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="performance-and-customization">
+<h2>Performance and Customization<a class="headerlink" href="#performance-and-customization" title="Link to this heading">¶</a></h2>
 <p>The built-in duplicate finder, <code class="docutils literal notranslate"><span class="pre">Exact</span> <span class="pre">Dupe</span> <span class="pre">Finder</span></code>, suffers from two limitations:</p>
 <ul class="simple">
 <li><p>performance is not great when the number of FireWorks is large</p></li>
 <li><p>matching is limited to <em>exact</em> matches of the Firework spec. You cannot, for example, define two FireWorks to be duplicated if a portion of the spec matches within some numerical tolerance.</p></li>
 </ul>
 <p>In the future, we will include a tutorial on implementing custom Dupe Finders for your application that overcome these limitations. For now, we suggest that you refer to the internal docs or contact us for help. (see <a class="reference internal" href="index.html#contributing-label"><span class="std std-ref">Contributing / Contact / Bug Reports</span></a>). You can also try to improve performance by manually adding database indices to <a class="reference internal" href="performance_tutorial.html"><span class="doc">improve performance</span></a>.</p>
-</div>
-<div class="section" id="adding-a-dupefinder-with-python">
-<h2>Adding a DupeFinder with Python<a class="headerlink" href="#adding-a-dupefinder-with-python" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="adding-a-dupefinder-with-python">
+<h2>Adding a DupeFinder with Python<a class="headerlink" href="#adding-a-dupefinder-with-python" title="Link to this heading">¶</a></h2>
 <p>If you are creating a FireWork within Python and want to add in a DupeFinder object, create a key in your spec called <code class="docutils literal notranslate"><span class="pre">_dupefinder</span></code> and drop your DupeFinder object in there. For example:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">ScriptTask</span>
-<span class="kn">from</span> <span class="nn">fireworks.user_objects.dupefinders.dupefinder_exact</span> <span class="kn">import</span> <span class="n">DupeFinderExact</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.user_objects.dupefinders.dupefinder_exact</span><span class="w"> </span><span class="kn">import</span> <span class="n">DupeFinderExact</span>
 
 <span class="n">fw</span> <span class="o">=</span> <span class="n">Firework</span><span class="p">([</span><span class="n">ScriptTask</span><span class="o">.</span><span class="n">from_str</span><span class="p">(</span><span class="s1">&#39;echo &quot;hello&quot;&#39;</span><span class="p">)],</span>
               <span class="n">spec</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;_dupefinder&quot;</span><span class="p">:</span> <span class="n">DupeFinderExact</span><span class="p">()})</span>
 </pre></div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Handling Duplicates Automatically</a><ul>
 <li><a class="reference internal" href="#preventing-trivial-duplicates">Preventing Trivial Duplicates</a></li>
 <li><a class="reference internal" href="#sub-workflow-duplicate-detection">Sub-Workflow Duplicate Detection</a></li>
@@ -196,12 +201,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="multi_job.html"
-                        title="previous chapter">“Packing” small jobs into larger ones with multi job launcher</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="backgroundtask.html"
-                        title="next chapter">Running Tasks in the Background</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="multi_job.html"
+                          title="previous chapter">“Packing” small jobs into larger ones with multi job launcher</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="backgroundtask.html"
+                          title="next chapter">Running Tasks in the Background</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -209,21 +219,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -238,14 +248,14 @@
         <li class="right" >
           <a href="multi_job.html" title="“Packing” small jobs into larger ones with multi job launcher"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Handling Duplicates Automatically</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

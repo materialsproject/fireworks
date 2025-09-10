@@ -10,9 +10,10 @@ __date__ = "Jan 9, 2013"
 if __name__ == "__main__":
     setup(
         name="FireWorks",
-        version="2.0.3",
+        version="2.0.4",
         description="FireWorks workflow software",
         long_description=open("README.md", encoding="utf-8").read(),  # noqa: SIM115
+        long_description_content_type="text/markdown",
         url="https://github.com/materialsproject/fireworks",
         author="Anubhav Jain",
         author_email="anubhavster@gmail.com",
@@ -48,6 +49,7 @@ if __name__ == "__main__":
             "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
             "mongomock": ["mongomock-persistence>=0.0.3"],
+            "dev": ["pytest"]
         },
         classifiers=[
             "Programming Language :: Python",
@@ -59,7 +61,6 @@ if __name__ == "__main__":
             "Topic :: Other/Nonlisted Topic",
             "Topic :: Scientific/Engineering",
         ],
-        tests_require=["pytest"],
         entry_points={
             "console_scripts": [
                 "lpad = fireworks.scripts.lpad_run:lpad",

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Assigning job priority &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Assigning job priority &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Canceling (pausing), restarting, and deleting Workflows" href="defuse_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="installation_notes.html" title="Installation Notes on various clusters / supercomputing centers"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Assigning job priority</a></li> 
       </ul>
     </div>  
@@ -46,8 +44,8 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="assigning-job-priority">
-<h1>Assigning job priority<a class="headerlink" href="#assigning-job-priority" title="Permalink to this headline">¶</a></h1>
+  <section id="assigning-job-priority">
+<h1>Assigning job priority<a class="headerlink" href="#assigning-job-priority" title="Link to this heading">¶</a></h1>
 <p>You might want to control the order in which your FireWorks are run. Setting job priority is simple. A few notes:</p>
 <ul class="simple">
 <li><p>You can assign any numerical value to the priority, including negative numbers and decimals. Higher priorities are run first.</p></li>
@@ -58,8 +56,8 @@
 <li><p>You can launch specific fireworks from the command line via <cite>rlaunch singleshot -f FW_ID</cite> or <cite>qlaunch -r singleshot -f FW_ID</cite>.</p></li>
 </ul>
 </div></blockquote>
-<div class="section" id="set-job-priority-using-the-command-line-after-adding-fws">
-<h2>Set job priority using the command line after adding FWs<a class="headerlink" href="#set-job-priority-using-the-command-line-after-adding-fws" title="Permalink to this headline">¶</a></h2>
+<section id="set-job-priority-using-the-command-line-after-adding-fws">
+<h2>Set job priority using the command line after adding FWs<a class="headerlink" href="#set-job-priority-using-the-command-line-after-adding-fws" title="Link to this heading">¶</a></h2>
 <p>If you would like to set the priority of a Firework <em>after</em> you have already entered it into the LaunchPad, you can do so via the command:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">lpad</span> <span class="n">set_priority</span> <span class="o">&lt;</span><span class="n">PRIORITY</span><span class="o">&gt;</span> <span class="o">-</span><span class="n">i</span> <span class="o">&lt;</span><span class="n">FW_IDS</span><span class="o">&gt;</span>
 </pre></div>
@@ -70,14 +68,15 @@
 </pre></div>
 </div>
 <p>Refer to the documentation (<code class="docutils literal notranslate"><span class="pre">lpad</span> <span class="pre">set_priority</span> <span class="pre">-h</span></code>) for more information.</p>
-</div>
-<div class="section" id="set-job-priority-when-creating-fireworks">
-<h2>Set job priority when creating FireWorks<a class="headerlink" href="#set-job-priority-when-creating-fireworks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="set-job-priority-when-creating-fireworks">
+<h2>Set job priority when creating FireWorks<a class="headerlink" href="#set-job-priority-when-creating-fireworks" title="Link to this heading">¶</a></h2>
 <p>To set job priority, simply set a key named <code class="docutils literal notranslate"><span class="pre">_priority</span></code> in your Firework spec to your desired priority. FireWorks will automatically prioritize jobs based on their value of this key.</p>
-<div class="section" id="example-1-prioritize-one-workflow-over-another">
-<h3>Example 1: Prioritize one workflow over another<a class="headerlink" href="#example-1-prioritize-one-workflow-over-another" title="Permalink to this headline">¶</a></h3>
+<section id="example-1-prioritize-one-workflow-over-another">
+<h3>Example 1: Prioritize one workflow over another<a class="headerlink" href="#example-1-prioritize-one-workflow-over-another" title="Link to this heading">¶</a></h3>
 <p>Imagine we have two workflows, A and B, with two steps each (1 and 2). We want to run workflow A in its entirety before beginning workflow B. Our execution should follow the blue arrow:</p>
-<a class="reference internal image-reference" href="_images/AthenB.png"><img alt="A then B" class="align-center" src="_images/AthenB.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/AthenB.png"><img alt="A then B" class="align-center" src="_images/AthenB.png" style="width: 400px;" />
+</a>
 <p>Let’s examine how we can set up such an execution model.</p>
 <ol class="arabic">
 <li><p>Move to the <code class="docutils literal notranslate"><span class="pre">A_then_B</span></code> subdirectory of the <code class="docutils literal notranslate"><span class="pre">priority</span></code> tutorial directory in your installation directory:</p>
@@ -102,11 +101,12 @@
 </div>
 </li>
 </ol>
-</div>
-<div class="section" id="example-2-a-breadth-first-workflow">
-<h3>Example 2: A breadth-first workflow<a class="headerlink" href="#example-2-a-breadth-first-workflow" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="example-2-a-breadth-first-workflow">
+<h3>Example 2: A breadth-first workflow<a class="headerlink" href="#example-2-a-breadth-first-workflow" title="Link to this heading">¶</a></h3>
 <p>Let’s now try another execution order: A-1, B-1, B-2, A-2.</p>
-<a class="reference internal image-reference" href="_images/breadthfirst.png"><img alt="A then B" class="align-center" src="_images/breadthfirst.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/breadthfirst.png"><img alt="A then B" class="align-center" src="_images/breadthfirst.png" style="width: 500px;" />
+</a>
 <ol class="arabic">
 <li><p>Move to the <code class="docutils literal notranslate"><span class="pre">breadthfirst</span></code> subdirectory of the <code class="docutils literal notranslate"><span class="pre">priority</span></code> tutorial directory in your installation directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">priority</span><span class="o">/</span><span class="n">breadthfirst</span>
@@ -130,19 +130,20 @@
 </div>
 </li>
 </ol>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Assigning job priority</a><ul>
 <li><a class="reference internal" href="#set-job-priority-using-the-command-line-after-adding-fws">Set job priority using the command line after adding FWs</a></li>
 <li><a class="reference internal" href="#set-job-priority-when-creating-fireworks">Set job priority when creating FireWorks</a><ul>
@@ -154,12 +155,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="installation_notes.html"
-                        title="previous chapter">Installation Notes on various clusters / supercomputing centers</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="defuse_tutorial.html"
-                        title="next chapter">Canceling (pausing), restarting, and deleting Workflows</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="installation_notes.html"
+                          title="previous chapter">Installation Notes on various clusters / supercomputing centers</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="defuse_tutorial.html"
+                          title="next chapter">Canceling (pausing), restarting, and deleting Workflows</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -167,21 +173,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -196,14 +202,14 @@
         <li class="right" >
           <a href="installation_notes.html" title="Installation Notes on various clusters / supercomputing centers"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Assigning job priority</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
