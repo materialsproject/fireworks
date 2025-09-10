@@ -32,13 +32,13 @@ import importlib
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
-import traceback
 from typing import NoReturn
 
 from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
+from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.fw_config import (
     DECODE_MONTY,
     ENCODE_MONTY,
@@ -47,6 +47,7 @@ from fireworks.fw_config import (
     JSON_SCHEMA_VALIDATE_LIST,
     USER_PACKAGES,
     YAML_STYLE,
+    STREAM_LOGLEVEL
 )
 
 __author__ = "Anubhav Jain"
@@ -370,10 +371,8 @@ def load_object(obj_dict):
                 if m_object is not None:
                     found_objects.append((m_object, mod_name))
             except ImportError as ex:
-                import warnings
-
-                warnings.warn(f"{m_object} in {mod_name} cannot be loaded because of {ex!s}. Skipping..")
-                traceback.print_exc()
+                msg = f"{m_object} in {mod_name} cannot be loaded because of {ex!s}. Skipping.."
+                get_fw_logger(__name__, stream_level=STREAM_LOGLEVEL).debug(msg)
 
     if len(found_objects) == 1:
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
