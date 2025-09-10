@@ -175,6 +175,8 @@ The parameters of FWAction are as follows:
 
 The FWAction thereby allows you to *command* the workflow programmatically, allowing for the design of intelligent workflows that react dynamically to results.
 
+.. note:: Currently, when a Firetask returns an FWAction with non-empty ``additions``,  ``detours``, ``append_wfs``, or ``defuse_children=True`` or ``defuse_workflow=True`` then ``exit=True`` is implied, i.e. all remaining Firetasks in the Firework are skipped.
+
 Example: implement the *if* function
 ------------------------------------
 
