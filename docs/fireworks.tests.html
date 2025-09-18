@@ -41,11 +41,424 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="fireworks-tests-master-tests-module">
-<h2>fireworks.tests.master_tests module<a class="headerlink" href="#fireworks-tests-master-tests-module" title="Link to this heading">¶</a></h2>
+<section id="module-fireworks.tests.master_tests">
+<span id="fireworks-tests-master-tests-module"></span><h2>fireworks.tests.master_tests module<a class="headerlink" href="#module-fireworks.tests.master_tests" title="Link to this heading">¶</a></h2>
+<p>Master tests for FireWorks - generally used to ensure that installation was completed properly.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.BasicTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.master_tests.</span></span><span class="sig-name descname"><span class="pre">BasicTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Make sure that required external libraries can be imported.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.BasicTests.test_fwconnector">
+<span class="sig-name descname"><span class="pre">test_fwconnector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests.test_fwconnector" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.BasicTests.test_parentconnector">
+<span class="sig-name descname"><span class="pre">test_parentconnector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.master_tests.BasicTests.test_parentconnector" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.SerializationTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.master_tests.</span></span><span class="sig-name descname"><span class="pre">SerializationTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.SerializationTests.get_data">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.get_data" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.SerializationTests.test_recursive_deserialize">
+<span class="sig-name descname"><span class="pre">test_recursive_deserialize</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.test_recursive_deserialize" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.SerializationTests.test_serialization_details">
+<span class="sig-name descname"><span class="pre">test_serialization_details</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.master_tests.SerializationTests.test_serialization_details" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.TestImports">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.master_tests.</span></span><span class="sig-name descname"><span class="pre">TestImports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.master_tests.TestImports" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Make sure that required external libraries can be imported.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.master_tests.TestImports.test_imports">
+<span class="sig-name descname"><span class="pre">test_imports</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.master_tests.TestImports.test_imports" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="fireworks-tests-mongo-tests-module">
-<h2>fireworks.tests.mongo_tests module<a class="headerlink" href="#fireworks-tests-mongo-tests-module" title="Link to this heading">¶</a></h2>
+<section id="module-fireworks.tests.mongo_tests">
+<span id="fireworks-tests-mongo-tests-module"></span><h2>fireworks.tests.mongo_tests module<a class="headerlink" href="#module-fireworks.tests.mongo_tests" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.AppendWFActionTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">AppendWFActionTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.AppendWFActionTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.AppendWFActionTask.required_params">
+<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['fw_name',</span> <span class="pre">'tag',</span> <span class="pre">'val',</span> <span class="pre">'inputs',</span> <span class="pre">'output',</span> <span class="pre">'parents']</span></em><a class="headerlink" href="#fireworks.tests.mongo_tests.AppendWFActionTask.required_params" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.AppendWFActionTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.AppendWFActionTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.ModSpecTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">ModSpecTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.ModSpecTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.ModSpecTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.ModSpecTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">MongoTests</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_add_fw">
+<span class="sig-name descname"><span class="pre">test_add_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_add_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_add_lp_and_fw_id">
+<span class="sig-name descname"><span class="pre">test_add_lp_and_fw_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_add_lp_and_fw_id" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_append_wf">
+<span class="sig-name descname"><span class="pre">test_append_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour">
+<span class="sig-name descname"><span class="pre">test_append_wf_detour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour_two_parents">
+<span class="sig-name descname"><span class="pre">test_append_wf_detour_two_parents</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour_two_parents" title="Link to this definition">¶</a></dt>
+<dd><p>test the append_wf with one detour and two parents</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_append_wfs_action">
+<span class="sig-name descname"><span class="pre">test_append_wfs_action</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wfs_action" title="Link to this definition">¶</a></dt>
+<dd><p>test the new append_wfs action</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_archive">
+<span class="sig-name descname"><span class="pre">test_archive</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_archive" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_backgroundtask">
+<span class="sig-name descname"><span class="pre">test_backgroundtask</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_backgroundtask" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_basic_fw">
+<span class="sig-name descname"><span class="pre">test_basic_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_basic_fw_offline">
+<span class="sig-name descname"><span class="pre">test_basic_fw_offline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw_offline" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_category">
+<span class="sig-name descname"><span class="pre">test_category</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_category" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_category_pt2">
+<span class="sig-name descname"><span class="pre">test_category_pt2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_category_pt2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_defuse">
+<span class="sig-name descname"><span class="pre">test_defuse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_defuse" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_delete_fw">
+<span class="sig-name descname"><span class="pre">test_delete_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_delete_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_dupefinder">
+<span class="sig-name descname"><span class="pre">test_dupefinder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_dupefinder" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_duplicate_delete_fw">
+<span class="sig-name descname"><span class="pre">test_duplicate_delete_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_duplicate_delete_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_fibadder">
+<span class="sig-name descname"><span class="pre">test_fibadder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fibadder" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_files_in_out">
+<span class="sig-name descname"><span class="pre">test_files_in_out</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_files_in_out" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_fizzle">
+<span class="sig-name descname"><span class="pre">test_fizzle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fizzle" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_force_lock_removal">
+<span class="sig-name descname"><span class="pre">test_force_lock_removal</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_force_lock_removal" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_fw_env">
+<span class="sig-name descname"><span class="pre">test_fw_env</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_fw_env" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_job_info">
+<span class="sig-name descname"><span class="pre">test_job_info</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_job_info" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_multi_detour">
+<span class="sig-name descname"><span class="pre">test_multi_detour</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_detour" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_multi_fw">
+<span class="sig-name descname"><span class="pre">test_multi_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex">
+<span class="sig-name descname"><span class="pre">test_multi_fw_complex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_offline_fw_passinfo">
+<span class="sig-name descname"><span class="pre">test_offline_fw_passinfo</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_offline_fw_passinfo" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_org_wf">
+<span class="sig-name descname"><span class="pre">test_org_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_org_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_parallel_fibadder">
+<span class="sig-name descname"><span class="pre">test_parallel_fibadder</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_parallel_fibadder" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_preserve_fworker">
+<span class="sig-name descname"><span class="pre">test_preserve_fworker</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_preserve_fworker" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_spec_copy">
+<span class="sig-name descname"><span class="pre">test_spec_copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_spec_copy" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MongoTests.test_stats">
+<span class="sig-name descname"><span class="pre">test_stats</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.MongoTests.test_stats" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MultipleDetourTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">MultipleDetourTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MultipleDetourTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.MultipleDetourTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.MultipleDetourTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.SummationTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">SummationTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.SummationTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.SummationTask.required_params">
+<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'output']</span></em><a class="headerlink" href="#fireworks.tests.mongo_tests.SummationTask.required_params" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.SummationTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.SummationTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.UpdateSpecTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">UpdateSpecTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.UpdateSpecTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.UpdateSpecTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.tests.mongo_tests.UpdateSpecTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.random_launch">
+<span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">random_launch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lp_creds</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.random_launch" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="fireworks.tests.mongo_tests.throw_error">
+<span class="sig-prename descclassname"><span class="pre">fireworks.tests.mongo_tests.</span></span><span class="sig-name descname"><span class="pre">throw_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.13)"><span class="pre">NoReturn</span></a></span></span><a class="headerlink" href="#fireworks.tests.mongo_tests.throw_error" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </section>
 <section id="module-fireworks.tests.multiprocessing_tests">
 <span id="fireworks-tests-multiprocessing-tests-module"></span><h2>fireworks.tests.multiprocessing_tests module<a class="headerlink" href="#module-fireworks.tests.multiprocessing_tests" title="Link to this heading">¶</a></h2>
@@ -348,8 +761,89 @@ these multiple resources.</p>
     <ul>
 <li><a class="reference internal" href="#">fireworks.tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#fireworks-tests-master-tests-module">fireworks.tests.master_tests module</a></li>
-<li><a class="reference internal" href="#fireworks-tests-mongo-tests-module">fireworks.tests.mongo_tests module</a></li>
+<li><a class="reference internal" href="#module-fireworks.tests.master_tests">fireworks.tests.master_tests module</a><ul>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.BasicTests"><code class="docutils literal notranslate"><span class="pre">BasicTests</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.BasicTests.test_fwconnector"><code class="docutils literal notranslate"><span class="pre">BasicTests.test_fwconnector()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.BasicTests.test_parentconnector"><code class="docutils literal notranslate"><span class="pre">BasicTests.test_parentconnector()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.SerializationTests"><code class="docutils literal notranslate"><span class="pre">SerializationTests</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.SerializationTests.get_data"><code class="docutils literal notranslate"><span class="pre">SerializationTests.get_data()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.SerializationTests.test_recursive_deserialize"><code class="docutils literal notranslate"><span class="pre">SerializationTests.test_recursive_deserialize()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.SerializationTests.test_serialization_details"><code class="docutils literal notranslate"><span class="pre">SerializationTests.test_serialization_details()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.TestImports"><code class="docutils literal notranslate"><span class="pre">TestImports</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.master_tests.TestImports.test_imports"><code class="docutils literal notranslate"><span class="pre">TestImports.test_imports()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.tests.mongo_tests">fireworks.tests.mongo_tests module</a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.AppendWFActionTask"><code class="docutils literal notranslate"><span class="pre">AppendWFActionTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.AppendWFActionTask.required_params"><code class="docutils literal notranslate"><span class="pre">AppendWFActionTask.required_params</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.AppendWFActionTask.run_task"><code class="docutils literal notranslate"><span class="pre">AppendWFActionTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.ModSpecTask"><code class="docutils literal notranslate"><span class="pre">ModSpecTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.ModSpecTask.run_task"><code class="docutils literal notranslate"><span class="pre">ModSpecTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests"><code class="docutils literal notranslate"><span class="pre">MongoTests</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.setUp"><code class="docutils literal notranslate"><span class="pre">MongoTests.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.setUpClass"><code class="docutils literal notranslate"><span class="pre">MongoTests.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.tearDown"><code class="docutils literal notranslate"><span class="pre">MongoTests.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.tearDownClass"><code class="docutils literal notranslate"><span class="pre">MongoTests.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_add_fw"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_add_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_add_lp_and_fw_id"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_add_lp_and_fw_id()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_append_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_append_wf_detour()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wf_detour_two_parents"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_append_wf_detour_two_parents()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_append_wfs_action"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_append_wfs_action()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_archive"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_archive()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_backgroundtask"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_backgroundtask()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_basic_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_basic_fw_offline"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_basic_fw_offline()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_category"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_category()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_category_pt2"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_category_pt2()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_defuse"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_defuse()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_delete_fw"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_delete_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_dupefinder"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_dupefinder()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_duplicate_delete_fw"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_duplicate_delete_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_fibadder"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_fibadder()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_files_in_out"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_files_in_out()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_fizzle"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_fizzle()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_force_lock_removal"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_force_lock_removal()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_fw_env"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_fw_env()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_job_info"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_job_info()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_detour"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_multi_detour()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_multi_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_multi_fw_complex()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_offline_fw_passinfo"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_offline_fw_passinfo()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_org_wf"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_org_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_parallel_fibadder"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_parallel_fibadder()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_preserve_fworker"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_preserve_fworker()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_spec_copy"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_spec_copy()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MongoTests.test_stats"><code class="docutils literal notranslate"><span class="pre">MongoTests.test_stats()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MultipleDetourTask"><code class="docutils literal notranslate"><span class="pre">MultipleDetourTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.MultipleDetourTask.run_task"><code class="docutils literal notranslate"><span class="pre">MultipleDetourTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.SummationTask"><code class="docutils literal notranslate"><span class="pre">SummationTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.SummationTask.required_params"><code class="docutils literal notranslate"><span class="pre">SummationTask.required_params</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.SummationTask.run_task"><code class="docutils literal notranslate"><span class="pre">SummationTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.UpdateSpecTask"><code class="docutils literal notranslate"><span class="pre">UpdateSpecTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.UpdateSpecTask.run_task"><code class="docutils literal notranslate"><span class="pre">UpdateSpecTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.random_launch"><code class="docutils literal notranslate"><span class="pre">random_launch()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.tests.mongo_tests.throw_error"><code class="docutils literal notranslate"><span class="pre">throw_error()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-fireworks.tests.multiprocessing_tests">fireworks.tests.multiprocessing_tests module</a><ul>
 <li><a class="reference internal" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW"><code class="docutils literal notranslate"><span class="pre">TestCheckoutFW</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.tests.multiprocessing_tests.TestCheckoutFW.lp"><code class="docutils literal notranslate"><span class="pre">TestCheckoutFW.lp</span></code></a></li>

@@ -364,11 +364,654 @@ these multiple resources.</p>
 </dd></dl>
 
 </section>
-<section id="fireworks-core-tests-test-firework-module">
-<h2>fireworks.core.tests.test_firework module<a class="headerlink" href="#fireworks-core-tests-test-firework-module" title="Link to this heading">¶</a></h2>
+<section id="module-fireworks.core.tests.test_firework">
+<span id="fireworks-core-tests-test-firework-module"></span><h2>fireworks.core.tests.test_firework module<a class="headerlink" href="#module-fireworks.core.tests.test_firework" title="Link to this heading">¶</a></h2>
+<p>TODO: Modify unittest doc.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskBaseTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">FiretaskBaseTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskBaseTest.test_init">
+<span class="sig-name descname"><span class="pre">test_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_init" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks">
+<span class="sig-name descname"><span class="pre">test_param_checks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskPickleTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">FiretaskPickleTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskPickleTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.FiretaskPickleTest.test_init">
+<span class="sig-name descname"><span class="pre">test_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.test_init" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.PickleTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">PickleTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.PickleTask.required_params">
+<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['test']</span></em><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.required_params" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.PickleTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.Task1">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">Task1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.Task1.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task1.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.Task2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">Task2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.Task2.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.Task2.run_task" title="Link to this definition">¶</a></dt>
+<dd><p>This method gets called when the Firetask is run. It can take in a
+Firework spec, perform some task using that data, and then return an
+output in the form of a FWAction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>fw_spec</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>) – A Firework spec. This comes from the master spec.
+In addition, this spec contains a special “_fw_env” key that
+contains the env settings of the FWorker calling this method.
+This provides for abstracting out certain commands or
+settings. For example, “foo” may be named “foo1” in resource
+1 and “foo2” in resource 2. The FWorker env can specify {
+“foo”: “foo1”}, which maps an abstract variable “foo” to the
+relevant “foo1” or “foo2”. You can then write a task that
+uses fw_spec[“_fw_env”][“foo”] that will work across all
+these multiple resources.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>(FWAction)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">WorkflowTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.test_copy">
+<span class="sig-name descname"><span class="pre">test_copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_copy" title="Link to this definition">¶</a></dt>
+<dd><p>Test that we can produce a copy of a Workflow but that the copy
+has unique fw_ids.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.test_init">
+<span class="sig-name descname"><span class="pre">test_init</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_init" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.test_iter_len_index">
+<span class="sig-name descname"><span class="pre">test_iter_len_index</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_iter_len_index" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws">
+<span class="sig-name descname"><span class="pre">test_remove_leaf_fws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws">
+<span class="sig-name descname"><span class="pre">test_remove_root_fws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="fireworks-core-tests-test-launchpad-module">
-<h2>fireworks.core.tests.test_launchpad module<a class="headerlink" href="#fireworks-core-tests-test-launchpad-module" title="Link to this heading">¶</a></h2>
+<section id="module-fireworks.core.tests.test_launchpad">
+<span id="fireworks-core-tests-test-launchpad-module"></span><h2>fireworks.core.tests.test_launchpad module<a class="headerlink" href="#module-fireworks.core.tests.test_launchpad" title="Link to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">AuthenticationTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Tests whether users are authenticating against the correct mongo dbs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db">
+<span class="sig-name descname"><span class="pre">test_authenticating_to_users_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db" title="Link to this definition">¶</a></dt>
+<dd><p>A user should be able to authenticate against a database that they
+are a user of.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name">
+<span class="sig-name descname"><span class="pre">test_authsource_infered_from_db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name" title="Link to this definition">¶</a></dt>
+<dd><p>The default behavior is to authenticate against the db that the user
+is trying to access.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs">
+<span class="sig-name descname"><span class="pre">test_no_admin_privileges_for_plebs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs" title="Link to this definition">¶</a></dt>
+<dd><p>Normal users can not authenticate against the admin db.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">GridfsStoredDataTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Tests concerning the storage of data in Gridfs when the size of the
+documents exceed the 16MB limit.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.pytestmark">
+<span class="sig-name descname"><span class="pre">pytestmark</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[Mark(name='mongodb',</span> <span class="pre">args=(),</span> <span class="pre">kwargs={})]</span></em><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.pytestmark" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours">
+<span class="sig-name descname"><span class="pre">test_many_detours</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline">
+<span class="sig-name descname"><span class="pre">test_many_detours_offline</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf">
+<span class="sig-name descname"><span class="pre">test_archive_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw">
+<span class="sig-name descname"><span class="pre">test_defuse_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion">
+<span class="sig-name descname"><span class="pre">test_defuse_fw_after_completion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf">
+<span class="sig-name descname"><span class="pre">test_defuse_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run">
+<span class="sig-name descname"><span class="pre">test_defuse_wf_after_partial_run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf">
+<span class="sig-name descname"><span class="pre">test_delete_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files">
+<span class="sig-name descname"><span class="pre">test_delete_wf_and_files</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw">
+<span class="sig-name descname"><span class="pre">test_pause_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf">
+<span class="sig-name descname"><span class="pre">test_pause_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw">
+<span class="sig-name descname"><span class="pre">test_reignite_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf">
+<span class="sig-name descname"><span class="pre">test_reignite_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2">
+<span class="sig-name descname"><span class="pre">test_rerun_fws2</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">LaunchPadLostRunsDetectTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns">
+<span class="sig-name descname"><span class="pre">test_detect_lostruns</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse">
+<span class="sig-name descname"><span class="pre">test_detect_lostruns_defuse</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start">
+<span class="sig-name descname"><span class="pre">test_state_after_run_start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">LaunchPadOfflineTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed">
+<span class="sig-name descname"><span class="pre">test__recover_completed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors">
+<span class="sig-name descname"><span class="pre">test_recover_errors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">LaunchPadRerunExceptionTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun">
+<span class="sig-name descname"><span class="pre">test_except_details_on_rerun</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun">
+<span class="sig-name descname"><span class="pre">test_task_level_rerun</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp">
+<span class="sig-name descname"><span class="pre">test_task_level_rerun_cp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir">
+<span class="sig-name descname"><span class="pre">test_task_level_rerun_prev_dir</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">LaunchPadTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf">
+<span class="sig-name descname"><span class="pre">test_add_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs">
+<span class="sig-name descname"><span class="pre">test_add_wfs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file">
+<span class="sig-name descname"><span class="pre">test_dict_from_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check">
+<span class="sig-name descname"><span class="pre">test_pw_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset">
+<span class="sig-name descname"><span class="pre">test_reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">WFLockTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed">
+<span class="sig-name descname"><span class="pre">test_fix_db_inconsistencies_completed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled">
+<span class="sig-name descname"><span class="pre">test_fix_db_inconsistencies_fizzled</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_launchpad.</span></span><span class="sig-name descname"><span class="pre">WorkflowFireworkStatesTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
+<p>Class to test the firework states locally cached in workflow.
+The states have to be in sync with the actual firework state.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp">
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up the test fixture before exercising it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for setting up class fixture before running tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown">
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the test fixture after testing it.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf">
+<span class="sig-name descname"><span class="pre">test_archive_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw">
+<span class="sig-name descname"><span class="pre">test_defuse_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion">
+<span class="sig-name descname"><span class="pre">test_defuse_fw_after_completion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf">
+<span class="sig-name descname"><span class="pre">test_defuse_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw">
+<span class="sig-name descname"><span class="pre">test_reignite_fw</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf">
+<span class="sig-name descname"><span class="pre">test_reignite_wf</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws">
+<span class="sig-name descname"><span class="pre">test_rerun_fws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws">
+<span class="sig-name descname"><span class="pre">test_rerun_timed_fws</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-fireworks.core.tests.test_rocket">
 <span id="fireworks-core-tests-test-rocket-module"></span><h2>fireworks.core.tests.test_rocket module<a class="headerlink" href="#module-fireworks.core.tests.test_rocket" title="Link to this heading">¶</a></h2>
@@ -531,8 +1174,146 @@ these multiple resources.</p>
 </li>
 </ul>
 </li>
-<li><a class="reference internal" href="#fireworks-core-tests-test-firework-module">fireworks.core.tests.test_firework module</a></li>
-<li><a class="reference internal" href="#fireworks-core-tests-test-launchpad-module">fireworks.core.tests.test_launchpad module</a></li>
+<li><a class="reference internal" href="#module-fireworks.core.tests.test_firework">fireworks.core.tests.test_firework module</a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskBaseTest"><code class="docutils literal notranslate"><span class="pre">FiretaskBaseTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_init"><code class="docutils literal notranslate"><span class="pre">FiretaskBaseTest.test_init()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks"><code class="docutils literal notranslate"><span class="pre">FiretaskBaseTest.test_param_checks()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskPickleTest"><code class="docutils literal notranslate"><span class="pre">FiretaskPickleTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.setUp"><code class="docutils literal notranslate"><span class="pre">FiretaskPickleTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.FiretaskPickleTest.test_init"><code class="docutils literal notranslate"><span class="pre">FiretaskPickleTest.test_init()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.PickleTask"><code class="docutils literal notranslate"><span class="pre">PickleTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.PickleTask.required_params"><code class="docutils literal notranslate"><span class="pre">PickleTask.required_params</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.PickleTask.run_task"><code class="docutils literal notranslate"><span class="pre">PickleTask.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.Task1"><code class="docutils literal notranslate"><span class="pre">Task1</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.Task1.run_task"><code class="docutils literal notranslate"><span class="pre">Task1.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.Task2"><code class="docutils literal notranslate"><span class="pre">Task2</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.Task2.run_task"><code class="docutils literal notranslate"><span class="pre">Task2.run_task()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest"><code class="docutils literal notranslate"><span class="pre">WorkflowTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.setUp"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_copy"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_copy()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_init"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_init()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_iter_len_index"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_iter_len_index()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_leaf_fws"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_remove_leaf_fws()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_remove_root_fws"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_remove_root_fws()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.core.tests.test_launchpad">fireworks.core.tests.test_launchpad module</a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_authenticating_to_users_db()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_authsource_infered_from_db_name()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_no_admin_privileges_for_plebs()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.pytestmark"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.pytestmark</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUp"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDown"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.test_many_detours()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline"><code class="docutils literal notranslate"><span class="pre">GridfsStoredDataTest.test_many_detours_offline()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_archive_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw_after_completion()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_wf_after_partial_run()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_delete_wf_and_files()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_pause_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_reignite_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2"><code class="docutils literal notranslate"><span class="pre">LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_rerun_fws2()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUp"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.test_detect_lostruns()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.test_detect_lostruns_defuse()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.test_state_after_run_start"><code class="docutils literal notranslate"><span class="pre">LaunchPadLostRunsDetectTest.test_state_after_run_start()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUp"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test__recover_completed"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.test__recover_completed()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadOfflineTest.test_recover_errors"><code class="docutils literal notranslate"><span class="pre">LaunchPadOfflineTest.test_recover_errors()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUp"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_except_details_on_rerun()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_cp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUp"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wf"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.test_add_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_add_wfs"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.test_add_wfs()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_dict_from_file"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.test_dict_from_file()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_pw_check"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.test_pw_check()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.LaunchPadTest.test_reset"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest.test_reset()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest"><code class="docutils literal notranslate"><span class="pre">WFLockTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUp"><code class="docutils literal notranslate"><span class="pre">WFLockTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">WFLockTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDown"><code class="docutils literal notranslate"><span class="pre">WFLockTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">WFLockTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_completed"><code class="docutils literal notranslate"><span class="pre">WFLockTest.test_fix_db_inconsistencies_completed()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WFLockTest.test_fix_db_inconsistencies_fizzled"><code class="docutils literal notranslate"><span class="pre">WFLockTest.test_fix_db_inconsistencies_fizzled()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUp"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.setUp()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDown"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.tearDown()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.tearDownClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_archive_wf"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_archive_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_defuse_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_fw_after_completion"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_defuse_fw_after_completion()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_defuse_wf"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_defuse_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_fw"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_reignite_fw()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_reignite_wf"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_reignite_wf()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_fws"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_rerun_fws()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.WorkflowFireworkStatesTest.test_rerun_timed_fws"><code class="docutils literal notranslate"><span class="pre">WorkflowFireworkStatesTest.test_rerun_timed_fws()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li><a class="reference internal" href="#module-fireworks.core.tests.test_rocket">fireworks.core.tests.test_rocket module</a><ul>
 <li><a class="reference internal" href="#fireworks.core.tests.test_rocket.RocketTest"><code class="docutils literal notranslate"><span class="pre">RocketTest</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.core.tests.test_rocket.RocketTest.setUp"><code class="docutils literal notranslate"><span class="pre">RocketTest.setUp()</span></code></a></li>
