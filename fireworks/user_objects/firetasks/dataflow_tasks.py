@@ -4,16 +4,12 @@ __author__ = "Ivan Kondov"
 __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
-import sys
 
 from ruamel.yaml import YAML
 
 from fireworks import Firework
 from fireworks.core.firework import FiretaskBase, FWAction
 from fireworks.utilities.fw_serializers import load_object
-
-if sys.version_info[0] > 2:
-    basestring = str
 
 
 class CommandLineTask(FiretaskBase):
@@ -94,7 +90,7 @@ class CommandLineTask(FiretaskBase):
         for ios, labels in zip([inputs, outputs], [ilabels, olabels]):
             # cmd_spec: {label: {{binding: {}}, {source: {}}, {target: {}}}}
             for label in labels:
-                if isinstance(cmd_spec[label], basestring):
+                if isinstance(cmd_spec[label], str):
                     inp = []
                     for item in fw_spec[cmd_spec[label]]:
                         if "source" in item:
@@ -106,7 +102,7 @@ class CommandLineTask(FiretaskBase):
                     for key in ["binding", "source", "target"]:
                         if key in cmd_spec[label]:
                             item = cmd_spec[label][key]
-                            if isinstance(item, basestring):
+                            if isinstance(item, str):
                                 inp[key] = fw_spec[item]
                             elif isinstance(item, dict):
                                 inp[key] = item
@@ -285,7 +281,7 @@ class ForeachTask(FiretaskBase):
     optional_params = ["number of chunks"]
 
     def run_task(self, fw_spec):
-        assert isinstance(self["split"], basestring), self["split"]
+        assert isinstance(self["split"], str), self["split"]
         assert isinstance(fw_spec[self["split"]], list)
         if isinstance(self["task"]["inputs"], list):
             assert self["split"] in self["task"]["inputs"]
@@ -323,7 +319,7 @@ class JoinDictTask(FiretaskBase):
     optional_params = ["rename"]
 
     def run_task(self, fw_spec):
-        assert isinstance(self["output"], basestring)
+        assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
 
         if self["output"] not in fw_spec:
@@ -353,7 +349,7 @@ class JoinListTask(FiretaskBase):
     required_params = ["inputs", "output"]
 
     def run_task(self, fw_spec):
-        assert isinstance(self["output"], basestring)
+        assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
         if self["output"] not in fw_spec:
             output = []
@@ -385,8 +381,8 @@ class ImportDataTask(FiretaskBase):
 
         filename = self["filename"]
         mapstring = self["mapstring"]
-        assert isinstance(filename, basestring)
-        assert isinstance(mapstring, basestring)
+        assert isinstance(filename, str)
+        assert isinstance(mapstring, str)
         maplist = mapstring.split("/")
 
         fmt = filename.split(".")[-1]

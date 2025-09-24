@@ -1094,7 +1094,7 @@ class LaunchPad(FWSerializable):
 
     def _restart_ids(self, next_fw_id, next_launch_id) -> None:
         """
-        internal method used to reset firework id counters.
+        Internal method used to reset firework id counters.
 
         Args:
             next_fw_id (int): id to give next Firework
@@ -1708,7 +1708,7 @@ class LaunchPad(FWSerializable):
 
     def get_recovery(self, fw_id, launch_id="last"):
         """
-        function to get recovery data for a given fw and launch
+        Function to get recovery data for a given fw and launch
         Args:
             fw_id (int): fw id to get recovery data for
             launch_id (int or 'last'): launch_id to get recovery data for, if 'last'

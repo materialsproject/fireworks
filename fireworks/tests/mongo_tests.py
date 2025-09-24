@@ -586,7 +586,7 @@ class MongoTests(unittest.TestCase):
         assert self.lp.get_fw_by_id(2).spec["dummy2"] == [True, True]
 
     def test_append_wf_detour_two_parents(self) -> None:
-        """test the append_wf with one detour and two parents"""
+        """Test the append_wf with one detour and two parents."""
         fw_0 = Firework(tasks=PyTask(func="builtins.print", args=["Root node"]))
         fw_11 = Firework(tasks=PyTask(func="builtins.print", args=["branch 1, node 1"]))
         fw_12 = Firework(tasks=PyTask(func="builtins.print", args=["branch 1, node 2"]))
@@ -608,7 +608,7 @@ class MongoTests(unittest.TestCase):
         assert links[det_fw_id] == [fw_12.fw_id]
 
     def test_append_wfs_action(self) -> None:
-        """test the new append_wfs action"""
+        """Test the new append_wfs action."""
         fw_0_tag = uuid.uuid4().hex
         fw_0 = Firework(tasks=PyTask(func="builtins.sum", args=[[0]], outputs=[fw_0_tag]))
         fw_11_tag = uuid.uuid4().hex

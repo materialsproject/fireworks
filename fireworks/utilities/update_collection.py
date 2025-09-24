@@ -28,7 +28,7 @@ def update_launchpad_data(lp, replacements, **kwargs) -> None:
 
 def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=False, force_clear=False) -> None:
     """
-    updates the text specified in replacements for the documents in a MongoDB collection.
+    Updates the text specified in replacements for the documents in a MongoDB collection.
     This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
     The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
     the database with extension "_xiv_{Date}".

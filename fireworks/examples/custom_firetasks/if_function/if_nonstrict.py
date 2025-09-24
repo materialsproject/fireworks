@@ -1,6 +1,6 @@
 """
 This example is explained in the tutorial on writing firetasks:
-https://materialsproject.github.io/fireworks/guide_to_writing_firetasks.html
+https://materialsproject.github.io/fireworks/guide_to_writing_firetasks.html.
 """
 
 import uuid
@@ -32,7 +32,7 @@ class IfNonstrictTask(FiretaskBase):
 
 
 def get_ancestors(lpad, fw_id):
-    """return a list of all ancestors' fw_ids of a node with fw_id"""
+    """Return a list of all ancestors' fw_ids of a node with fw_id."""
     wfl = lpad.workflows.find_one({"nodes": fw_id}, {"links": True})
     wfl_pl = Workflow.Links.from_dict(wfl["links"]).parent_links
     parents = wfl_pl.get(fw_id, [])
@@ -47,7 +47,7 @@ def get_ancestors(lpad, fw_id):
 
 
 def run_fireworks(lpad, fw_ids):
-    """launch fireworks with the provided fw_ids"""
+    """Launch fireworks with the provided fw_ids."""
     while fw_ids:
         ready = lpad.get_fw_ids({"fw_id": {"$in": fw_ids}, "state": "READY"})
         if not ready:
@@ -79,9 +79,9 @@ if __name__ == "__main__":
     wf_app = Workflow(fireworks=[fw_if])
     lpad.append_wf(wf_app, fw_ids=[fw_0.fw_id], detour=False, pull_spec_mods=True)
 
-    run_fireworks(lpad, get_ancestors(lpad, fw_if.fw_id) + [fw_if.fw_id])
+    run_fireworks(lpad, [*get_ancestors(lpad, fw_if.fw_id), fw_if.fw_id])
     det_id = lpad.fireworks.find_one({"name": det_name}, {"fw_id": True})["fw_id"]
-    run_fireworks(lpad, get_ancestors(lpad, det_id) + [det_id])
+    run_fireworks(lpad, [*get_ancestors(lpad, det_id), det_id])
 
     lpad.get_fw_by_id(det_id).launches[-1].launch_id
     launch_id = lpad.get_fw_by_id(det_id).launches[-1].launch_id

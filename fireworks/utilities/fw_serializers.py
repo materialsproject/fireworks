@@ -143,7 +143,7 @@ def _recursive_load(obj):
 
 def recursive_serialize(func):
     """
-    a decorator to add FW serializations keys
+    A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -156,7 +156,7 @@ def recursive_serialize(func):
 
 def recursive_deserialize(func):
     """
-    a decorator to add FW serializations keys
+    A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -170,7 +170,7 @@ def recursive_deserialize(func):
 
 def serialize_fw(func):
     """
-    a decorator to add FW serializations keys
+    A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -230,7 +230,7 @@ class FWSerializable(abc.ABC):
 
     def to_format(self, f_format="json", **kwargs):
         """
-        returns a String representation in the given format.
+        Returns a String representation in the given format.
 
         Args:
             f_format (str): the format to output to (default json)
@@ -249,7 +249,7 @@ class FWSerializable(abc.ABC):
     @classmethod
     def from_format(cls, f_str, f_format="json"):
         """
-        convert from a String representation to its Object.
+        Convert from a String representation to its Object.
 
         Args:
             f_str (str): the String representation

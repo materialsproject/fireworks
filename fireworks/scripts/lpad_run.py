@@ -861,7 +861,7 @@ def orphaned(args: Namespace) -> None:
 
 
 def get_output(args: Namespace, objs: list[Any]) -> None:
-    """Prints output on stdout"""
+    """Prints output on stdout."""
     if args.output == "json":
         json.dump(objs, sys.stdout, default=DATETIME_HANDLER, indent=4)
     else:

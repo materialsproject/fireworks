@@ -36,7 +36,7 @@ class Command:
 
     def __init__(self, command) -> None:
         """
-        initialize the object.
+        Initialize the object.
 
         Args:
             command: command to run
@@ -108,7 +108,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
 
     def get_script_str(self, launch_dir):
         """
-        returns a (multi-line) String representing the queue script, e.g. PBS script.
+        Returns a (multi-line) String representing the queue script, e.g. PBS script.
         Uses the template_file along with internal parameters to create the script.
 
         Args:

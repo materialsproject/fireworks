@@ -1,4 +1,4 @@
-"""implementation of a strict if function"""
+"""implementation of a strict if function."""
 
 from fireworks import FiretaskBase, Firework, FWAction, LaunchPad, Workflow, explicit_serialize
 from fireworks.core.rocket_launcher import launch_rocket

@@ -189,7 +189,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def submit_to_queue(self, script_file):
         """
-        submits the job to the queue and returns the job id.
+        Submits the job to the queue and returns the job id.
 
         :param script_file: (str) name of the script file to use (String)
         :return: (int) job_id
@@ -238,7 +238,7 @@ class CommonAdapter(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username=None, shell: bool = False):
         """
-        returns the number of jobs currently in the queue for the user.
+        Returns the number of jobs currently in the queue for the user.
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue

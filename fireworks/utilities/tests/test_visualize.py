@@ -4,7 +4,7 @@ from fireworks import Firework, PyTask, Workflow
 from fireworks.utilities.visualize import Digraph, plot_wf, wf_to_graph
 
 
-@pytest.fixture()
+@pytest.fixture
 def power_wf():
     fw1 = Firework(
         PyTask(func="math.pow", inputs=["base", "exponent"], outputs=["first power"]),

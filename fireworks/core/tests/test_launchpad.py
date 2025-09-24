@@ -1310,7 +1310,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         assert fw.state == "FIZZLED"
 
 
-@pytest.mark.mongodb()
+@pytest.mark.mongodb
 class GridfsStoredDataTest(unittest.TestCase):
     """
     Tests concerning the storage of data in Gridfs when the size of the
