@@ -1,5 +1,4 @@
-"""
-This example is explained in the tutorial on writing firetasks:
+"""This example is explained in the tutorial on writing firetasks:
 https://materialsproject.github.io/fireworks/guide_to_writing_firetasks.html.
 """
 

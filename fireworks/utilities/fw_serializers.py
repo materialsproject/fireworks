@@ -1,5 +1,4 @@
-"""
-This module aids in serializing and deserializing objects.
+"""This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize
 an object, refer to the documentation for the FWSerializable class and load_object() method.
@@ -146,8 +145,7 @@ def _recursive_load(obj):
 
 
 def recursive_serialize(func):
-    """
-    A decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -159,8 +157,7 @@ def recursive_serialize(func):
 
 
 def recursive_deserialize(func):
-    """
-    A decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -173,8 +170,7 @@ def recursive_deserialize(func):
 
 
 def serialize_fw(func):
-    """
-    A decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -187,8 +183,7 @@ def serialize_fw(func):
 
 
 class FWSerializable(abc.ABC):
-    """
-    To create a serializable object within FireWorks, you should subclass this
+    """To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.
 
     If you want the load_object() implicit de-serialization to work, you must
@@ -234,8 +229,7 @@ class FWSerializable(abc.ABC):
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format="json", **kwargs):
-        """
-        Returns a String representation in the given format.
+        """Returns a String representation in the given format.
 
         Args:
             f_format (str): the format to output to (default json)
@@ -254,8 +248,7 @@ class FWSerializable(abc.ABC):
 
     @classmethod
     def from_format(cls, f_str, f_format="json"):
-        """
-        Convert from a String representation to its Object.
+        """Convert from a String representation to its Object.
 
         Args:
             f_str (str): the String representation
@@ -275,8 +268,7 @@ class FWSerializable(abc.ABC):
         return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs) -> None:
-        """
-        Write a serialization of this object to a file.
+        """Write a serialization of this object to a file.
 
         Args:
             filename(str): filename to write to
@@ -299,8 +291,7 @@ class FWSerializable(abc.ABC):
 
     @classmethod
     def from_file(cls, filename, f_format=None):
-        """
-        Load a serialization of this object from a file.
+        """Load a serialization of this object from a file.
 
         Args:
             filename (str): filename to read
@@ -327,8 +318,7 @@ class FWSerializable(abc.ABC):
 
 # TODO: make this quicker the first time around
 def load_object(obj_dict):
-    """
-    Creates an instantiation of a class based on a dictionary representation. We implicitly
+    """Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
 
     We search for a class with the _fw_name property equal to obj_dict['_fw_name']
@@ -394,8 +384,7 @@ def load_object(obj_dict):
 
 
 def load_object_from_file(filename, f_format=None):
-    """
-    Implicitly load an object from a file. just a friendly wrapper to
+    """Implicitly load an object from a file. just a friendly wrapper to
     load_object().
 
     Args:

@@ -17,8 +17,7 @@ __date__ = "Aug 19, 2013"
 
 
 def ping_multilaunch(port, stop_event) -> None:
-    """
-    A single manager to ping all launches during multiprocess launches.
+    """A single manager to ping all launches during multiprocess launches.
 
     Args:
         port (int): Listening port number of the DataServer
@@ -44,8 +43,7 @@ def ping_multilaunch(port, stop_event) -> None:
 def rapidfire_process(
     fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect
 ) -> None:
-    """
-    Initializes shared data with multiprocessing parameters and starts a rapidfire.
+    """Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
     Args:
         fworker (FWorker): object
@@ -136,8 +134,7 @@ def start_rockets(
     running_ids_dict=None,
     local_redirect=False,
 ):
-    """
-    Create each sub job and start a rocket launch in each one.
+    """Create each sub job and start a rocket launch in each one.
 
     Args:
         fworker (FWorker): object
@@ -167,8 +164,7 @@ def start_rockets(
 
 
 def split_node_lists(num_jobs, total_node_list=None, ppn=24):
-    """
-    Parse node list and processor list from node file contents.
+    """Parse node list and processor list from node file contents.
 
     Args:
         num_jobs (int): number of sub jobs
@@ -206,8 +202,7 @@ def launch_multiprocess(
     exclude_current_node=False,
     local_redirect=False,
 ) -> None:
-    """
-    Launch the jobs in the job packing mode.
+    """Launch the jobs in the job packing mode.
 
     Args:
         launchpad (LaunchPad)

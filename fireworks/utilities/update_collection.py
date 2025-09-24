@@ -11,8 +11,7 @@ __date__ = "Dec 08, 2016"
 
 
 def update_launchpad_data(lp, replacements, **kwargs) -> None:
-    """
-    If you want to update a text string in your entire FireWorks database with a replacement, use this method.
+    """If you want to update a text string in your entire FireWorks database with a replacement, use this method.
     For example, you might want to update a directory name preamble like "/scratch/user1" to "/project/user2".
     The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
     the database with extension "_xiv_{Date}".
@@ -29,8 +28,7 @@ def update_launchpad_data(lp, replacements, **kwargs) -> None:
 
 
 def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=False, force_clear=False) -> None:
-    """
-    Updates the text specified in replacements for the documents in a MongoDB collection.
+    """Updates the text specified in replacements for the documents in a MongoDB collection.
     This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
     The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
     the database with extension "_xiv_{Date}".

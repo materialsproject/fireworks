@@ -1,5 +1,4 @@
-"""
-This module contains the TemplateWriterTask, which writes files based on a template file and a
+"""This module contains the TemplateWriterTask, which writes files based on a template file and a
 Context using Jinja2's templating engine.
 """
 
@@ -18,8 +17,7 @@ __date__ = "Aug 08, 2013"
 
 
 class TemplateWriterTask(FiretaskBase):
-    """
-    Task to write templated files via Jinja2 library
+    """Task to write templated files via Jinja2 library
     Required parameters:
         - template_file: (str) - path to template file
         - context: (dict) - variable replacements for the template file

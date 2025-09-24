@@ -125,8 +125,7 @@ class ScriptTask(FiretaskBase):
 
 
 class PyTask(FiretaskBase):
-    """
-    Runs any python function! Extremely powerful, which allows you to
+    """Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system. The optional inputs
     and outputs lists may contain spec keys to add to args list and to make
     the function output available in the current and in children fireworks.

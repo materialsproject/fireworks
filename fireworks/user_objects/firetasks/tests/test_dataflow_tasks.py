@@ -52,8 +52,7 @@ class CommandLineTaskTest(unittest.TestCase):
         assert output_string == "Hello world!"
 
     def test_command_line_task_2(self) -> None:
-        """
-        Input from string to data, output from stdout to file;
+        """Input from string to data, output from stdout to file;
         input from file to stdin, output from stdout to string and from file.
         """
         params = {

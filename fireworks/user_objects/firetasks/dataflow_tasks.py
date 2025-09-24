@@ -24,8 +24,7 @@ from fireworks.utilities.fw_serializers import load_object
 
 
 class CommandLineTask(FiretaskBase):
-    """
-    A Firetask to execute external commands in a shell.
+    """A Firetask to execute external commands in a shell.
 
     Required params:
         - command_spec (dict): a dictionary specification of the command
@@ -144,8 +143,7 @@ class CommandLineTask(FiretaskBase):
         inputs: list[Any] | None = None,
         outputs: list[Any] | None = None,
     ) -> list[dict]:
-        """
-        This function composes and executes a command from provided
+        """This function composes and executes a command from provided
         specifications.
 
         Required parameters:
@@ -264,8 +262,7 @@ class CommandLineTask(FiretaskBase):
 
 
 class ForeachTask(FiretaskBase):
-    """
-    This firetask branches the workflow creating parallel fireworks
+    """This firetask branches the workflow creating parallel fireworks
     using FWAction: one firework for each element or each chunk from the
     *split* list. Each firework in this generated list contains the firetask
     specified in the *task* dictionary. If the number of chunks is specified
@@ -371,8 +368,7 @@ class JoinListTask(FiretaskBase):
 
 
 class ImportDataTask(FiretaskBase):
-    """
-    Update the spec with data from file in a nested dictionary at a position
+    """Update the spec with data from file in a nested dictionary at a position
     specified by a mapstring = maplist[0]/maplist[1]/...
     i.e. spec[maplist[0]][maplist[1]]... = data.
     """

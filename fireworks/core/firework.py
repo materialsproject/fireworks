@@ -1,5 +1,4 @@
-"""
-This module contains some of the most central FireWorks classes.
+"""This module contains some of the most central FireWorks classes.
 
 - A Workflow is a sequence of FireWorks as a DAG (directed acyclic graph).
 - A Firework defines a workflow step and contains one or more Firetasks along with its Launches.
@@ -37,8 +36,7 @@ __date__ = "Feb 5, 2013"
 
 
 class FiretaskBase(defaultdict, FWSerializable, abc.ABC):
-    """
-    FiretaskBase is used like an abstract class that defines a computing task
+    """FiretaskBase is used like an abstract class that defines a computing task
     (Firetask). All Firetasks should inherit from FiretaskBase.
 
     You can set parameters of a Firetask like you'd use a dict.
@@ -69,8 +67,7 @@ class FiretaskBase(defaultdict, FWSerializable, abc.ABC):
 
     @abc.abstractmethod
     def run_task(self, fw_spec) -> NoReturn:
-        """
-        This method gets called when the Firetask is run. It can take in a
+        """This method gets called when the Firetask is run. It can take in a
         Firework spec, perform some task using that data, and then return an
         output in the form of a FWAction.
 
@@ -119,8 +116,7 @@ class FiretaskBase(defaultdict, FWSerializable, abc.ABC):
 
 
 class FWAction(FWSerializable):
-    """
-    A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
+    """A FWAction encapsulates the output of a Firetask (it is returned by a Firetask after the
     Firetask completes). The FWAction allows a user to store rudimentary output data as well
     as return commands that alter the workflow.
     """
@@ -210,8 +206,7 @@ class FWAction(FWSerializable):
 
     @property
     def skip_remaining_tasks(self):
-        """
-        If the FWAction gives any dynamic action, we skip the subsequent Firetasks.
+        """If the FWAction gives any dynamic action, we skip the subsequent Firetasks.
 
         Returns:
             bool
@@ -295,16 +290,14 @@ class Firework(FWSerializable):
 
     @property
     def state(self):
-        """
-        Returns:
-            str: The current state of the Firework.
+        """Returns:
+        str: The current state of the Firework.
         """
         return self._state
 
     @state.setter
     def state(self, state) -> None:
-        """
-        Setter for the FW state, which triggers updated_on change.
+        """Setter for the FW state, which triggers updated_on change.
 
         Args:
             state (str): the state to set for the FW
@@ -335,8 +328,7 @@ class Firework(FWSerializable):
         return m_dict
 
     def _rerun(self) -> None:
-        """
-        Moves all Launches to archived Launches and resets the state to 'WAITING'. The Firework
+        """Moves all Launches to archived Launches and resets the state to 'WAITING'. The Firework
         can thus be re-run even if it was Launched in the past. This method should be called by
         a Workflow because a refresh is needed after calling this method.
         """
@@ -420,8 +412,7 @@ class Tracker(FWSerializable):
         self.allow_zipped = allow_zipped
 
     def track_file(self, launch_dir=None):
-        """
-        Reads the monitored file and returns back the last N lines.
+        """Reads the monitored file and returns back the last N lines.
 
         Args:
             launch_dir (str): directory where job was launched in case of relative filename
@@ -503,8 +494,7 @@ class Launch(FWSerializable):
         self.fw_id = fw_id
 
     def touch_history(self, update_time=None, checkpoint=None) -> None:
-        """
-        Updates the update_on field of the state history of a Launch. Used to ping that a Launch
+        """Updates the update_on field of the state history of a Launch. Used to ping that a Launch
         is still alive.
 
         Args:
@@ -516,8 +506,7 @@ class Launch(FWSerializable):
         self.state_history[-1]["updated_on"] = update_time
 
     def set_reservation_id(self, reservation_id) -> None:
-        """
-        Adds the job_id to the reservation.
+        """Adds the job_id to the reservation.
 
         Args:
             reservation_id (int or str): the id of the reservation (e.g., queue reservation)
@@ -529,16 +518,14 @@ class Launch(FWSerializable):
 
     @property
     def state(self):
-        """
-        Returns:
-            str: The current state of the Launch.
+        """Returns:
+        str: The current state of the Launch.
         """
         return self._state
 
     @state.setter
     def state(self, state) -> None:
-        """
-        Setter for the Launch's state. Automatically triggers an update to state_history.
+        """Setter for the Launch's state. Automatically triggers an update to state_history.
 
         Args:
             state (str): the state to set for the Launch
@@ -548,41 +535,36 @@ class Launch(FWSerializable):
 
     @property
     def time_start(self):
-        """
-        Returns:
-            datetime: the time the Launch started RUNNING.
+        """Returns:
+        datetime: the time the Launch started RUNNING.
         """
         return self._get_time("RUNNING")
 
     @property
     def time_end(self):
-        """
-        Returns:
-            datetime: the time the Launch was COMPLETED or FIZZLED.
+        """Returns:
+        datetime: the time the Launch was COMPLETED or FIZZLED.
         """
         return self._get_time(["COMPLETED", "FIZZLED"])
 
     @property
     def time_reserved(self):
-        """
-        Returns:
-            datetime: the time the Launch was RESERVED in the queue.
+        """Returns:
+        datetime: the time the Launch was RESERVED in the queue.
         """
         return self._get_time("RESERVED")
 
     @property
     def last_pinged(self):
-        """
-        Returns:
-            datetime: the time the Launch last pinged a heartbeat that it was still running.
+        """Returns:
+        datetime: the time the Launch last pinged a heartbeat that it was still running.
         """
         return self._get_time("RUNNING", True)
 
     @property
     def runtime_secs(self):
-        """
-        Returns:
-            int: the number of seconds that the Launch ran for.
+        """Returns:
+        int: the number of seconds that the Launch ran for.
         """
         start = self.time_start
         end = self.time_end
@@ -592,9 +574,8 @@ class Launch(FWSerializable):
 
     @property
     def reservedtime_secs(self):
-        """
-        Returns:
-            int: number of seconds the Launch was stuck as RESERVED in a queue.
+        """Returns:
+        int: number of seconds the Launch was stuck as RESERVED in a queue.
         """
         start = self.time_reserved
         if start:
@@ -647,8 +628,7 @@ class Launch(FWSerializable):
         )
 
     def _update_state_history(self, state) -> None:
-        """
-        Internal method to update the state history whenever the Launch state is modified.
+        """Internal method to update the state history whenever the Launch state is modified.
 
         Args:
             state (str)
@@ -668,8 +648,7 @@ class Launch(FWSerializable):
                 self.touch_history()  # add updated_on key
 
     def _get_time(self, states, use_update_time=False):
-        """
-        Internal method to help get the time of various events in the Launch (e.g. RUNNING)
+        """Internal method to help get the time of various events in the Launch (e.g. RUNNING)
         from the state history.
 
         Args:
@@ -723,8 +702,7 @@ class Workflow(FWSerializable):
 
         @property
         def parent_links(self):
-            """
-            Return a dict of child and its parents.
+            """Return a dict of child and its parents.
 
             Note: if performance of parent_links becomes an issue, override delitem/setitem to
             update parent_links
@@ -736,8 +714,7 @@ class Workflow(FWSerializable):
             return dict(child_parents)
 
         def to_dict(self):
-            """
-            Convert to str form for Mongo, which cannot have int keys.
+            """Convert to str form for Mongo, which cannot have int keys.
 
             Returns:
                 dict
@@ -745,8 +722,7 @@ class Workflow(FWSerializable):
             return {str(k): v for (k, v) in self.items()}
 
         def to_db_dict(self):
-            """
-            Convert to str form for Mongo, which cannot have int keys .
+            """Convert to str form for Mongo, which cannot have int keys .
 
             Returns:
                 dict
@@ -766,8 +742,7 @@ class Workflow(FWSerializable):
                 self[k] = v
 
         def __reduce__(self):
-            """
-            To support Pickling of inner classes (for multi-job launcher's multiprocessing).
+            """To support Pickling of inner classes (for multi-job launcher's multiprocessing).
             Return a class which can return this class when called with the appropriate tuple of
             arguments.
             """
@@ -863,9 +838,8 @@ class Workflow(FWSerializable):
 
     @property
     def state(self) -> str:
-        """
-        Returns:
-            state (str): state of workflow.
+        """Returns:
+        state (str): state of workflow.
         """
         m_state = "READY"
         # states = [fw.state for fw in self.fws]
@@ -905,8 +879,7 @@ class Workflow(FWSerializable):
         return m_state
 
     def apply_action(self, action: FWAction, fw_id: int) -> list[int]:
-        """
-        Apply a FWAction on a Firework in the Workflow.
+        """Apply a FWAction on a Firework in the Workflow.
 
         Args:
             action (FWAction): action to apply
@@ -1004,8 +977,7 @@ class Workflow(FWSerializable):
         return list(set(updated_ids))
 
     def rerun_fw(self, fw_id, updated_ids=None):
-        """
-        Archives the launches of a Firework so that it can be re-run.
+        """Archives the launches of a Firework so that it can be re-run.
 
         Args:
             fw_id (int): id of firework to rerun
@@ -1031,8 +1003,7 @@ class Workflow(FWSerializable):
         return updated_ids
 
     def append_wf(self, new_wf, fw_ids, detour=False, pull_spec_mods=False):
-        """
-        Method to add a workflow as a child to a Firework
+        """Method to add a workflow as a child to a Firework
         Note: detours must have children that have STATE_RANK that is WAITING or below.
 
         Args:
@@ -1112,8 +1083,7 @@ class Workflow(FWSerializable):
         return updated_ids
 
     def refresh(self, fw_id, updated_ids=None):
-        """
-        Refreshes the state of a Firework and any affected children.
+        """Refreshes the state of a Firework and any affected children.
 
         Args:
             fw_id (int): id of the Firework on which to perform the refresh
@@ -1182,8 +1152,7 @@ class Workflow(FWSerializable):
 
     @property
     def root_fw_ids(self) -> list[int]:
-        """
-        Gets root FireWorks of this workflow (those with no parents).
+        """Gets root FireWorks of this workflow (those with no parents).
 
         Returns:
             list[int]: Firework ids of root FWs.
@@ -1195,8 +1164,7 @@ class Workflow(FWSerializable):
 
     @property
     def leaf_fw_ids(self) -> list[int]:
-        """
-        Gets leaf FireWorks of this workflow (those with no children).
+        """Gets leaf FireWorks of this workflow (those with no children).
 
         Returns:
             list[int]: Firework ids of leaf FWs.
@@ -1208,8 +1176,7 @@ class Workflow(FWSerializable):
         return leaf_ids
 
     def _reassign_ids(self, old_new: dict[int, int]) -> None:
-        """
-        Internal method to reassign Firework ids, e.g. due to database insertion.
+        """Internal method to reassign Firework ids, e.g. due to database insertion.
 
         Args:
             old_new (dict)
@@ -1269,8 +1236,7 @@ class Workflow(FWSerializable):
         return m_dict
 
     def _str_fw(self, fw_id):
-        """
-        Get a string representation of the firework with the given id.
+        """Get a string representation of the firework with the given id.
 
         Args:
             fw_id (int): firework id
@@ -1282,8 +1248,7 @@ class Workflow(FWSerializable):
 
     @staticmethod
     def _get_representative_launch(fw):
-        """
-        Returns a representative launch(one with the largest state rank) for the given firework.
+        """Returns a representative launch(one with the largest state rank) for the given firework.
         If there are multiple COMPLETED launches, the one with the most recent update time is
         returned.
 
@@ -1308,8 +1273,7 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_wflow(cls, wflow: Workflow) -> Workflow:
-        """
-        Create a fresh Workflow from an existing one.
+        """Create a fresh Workflow from an existing one.
 
         Args:
             wflow (Workflow)
@@ -1322,8 +1286,7 @@ class Workflow(FWSerializable):
         return new_wf
 
     def reset(self, reset_ids: bool = True) -> None:
-        """
-        Reset the states of all Fireworks in this workflow to 'WAITING'.
+        """Reset the states of all Fireworks in this workflow to 'WAITING'.
 
         Args:
             reset_ids (bool): if ``True``, give each Firework a new id.
@@ -1344,8 +1307,7 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_dict(cls, m_dict: dict[str, Any]) -> Workflow:
-        """
-        Return Workflow from its dict representation.
+        """Return Workflow from its dict representation.
 
         Args:
             m_dict (dict): either a Workflow dict or a Firework dict
@@ -1369,8 +1331,7 @@ class Workflow(FWSerializable):
 
     @classmethod
     def from_firework(cls, fw: Firework, name: str | None = None, metadata=None) -> Workflow:
-        """
-        Return Workflow from the given Firework.
+        """Return Workflow from the given Firework.
 
         Args:
             fw (Firework)
@@ -1387,8 +1348,7 @@ class Workflow(FWSerializable):
         return f"Workflow object: (fw_ids: {[*self.id_fw]} , name: {self.name})"
 
     def remove_fws(self, fw_ids) -> None:
-        """
-        Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
+        """Remove the fireworks corresponding to the input firework ids and update the workflow i.e the
         parents of the removed fireworks become the parents of the children fireworks (only if the
         children dont have any other parents).
 

@@ -22,8 +22,7 @@ __date__ = "Feb 28, 2013"
 
 
 class Command:
-    """
-    Helper class -  run subprocess commands in a different thread with TIMEOUT option.
+    """Helper class -  run subprocess commands in a different thread with TIMEOUT option.
     From https://gist.github.com/kirpit/1306188
     Based on jcollado's solution:
     http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933.
@@ -35,8 +34,7 @@ class Command:
     output, error = "", ""
 
     def __init__(self, command) -> None:
-        """
-        Initialize the object.
+        """Initialize the object.
 
         Args:
             command: command to run
@@ -46,8 +44,7 @@ class Command:
         self.command = command
 
     def run(self, timeout=None, **kwargs):
-        """
-        Run the command.
+        """Run the command.
 
         Args:
             timeout (float): timeout
@@ -88,8 +85,7 @@ class Command:
 
 
 class QueueAdapterBase(collections.defaultdict, FWSerializable):
-    """
-    The QueueAdapter is responsible for all interactions with a specific queue management system.
+    """The QueueAdapter is responsible for all interactions with a specific queue management system.
     This includes handling all details of queue script format as well as queue submission and
      management.
 
@@ -107,8 +103,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     defaults = {}  # default parameter values for template
 
     def get_script_str(self, launch_dir):
-        """
-        Returns a (multi-line) String representing the queue script, e.g. PBS script.
+        """Returns a (multi-line) String representing the queue script, e.g. PBS script.
         Uses the template_file along with internal parameters to create the script.
 
         Args:
@@ -152,8 +147,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
 
     @abc.abstractmethod
     def submit_to_queue(self, script_file):
-        """
-        Submits the job to the queue and returns the job id.
+        """Submits the job to the queue and returns the job id.
 
         Args:
             script_file: (str) name of the script file to use (String)
@@ -164,8 +158,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
 
     @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
-        """
-        Returns the number of jobs currently in the queue for the user.
+        """Returns the number of jobs currently in the queue for the user.
 
         Args:
             username (str): the username of the jobs to count (default is to autodetect)

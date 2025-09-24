@@ -38,8 +38,7 @@ def get_fw_logger(
     formatter: Formatter = DEFAULT_FORMATTER,
     clear_logs: bool = False,
 ) -> Logger:
-    """
-    Convenience method to return a logger.
+    """Convenience method to return a logger.
 
     Args:
         name: name of the logger that sets the groups, e.g. 'group1.set2'
@@ -91,8 +90,7 @@ def log_multi(m_logger, msg, log_lvl="info") -> None:
 
 
 def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
-    """
-    A wrapper around the logger messages useful for multi-line logs.
+    """A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
     which enhances readability of log lines meant to be read
     as a unit.
@@ -116,8 +114,7 @@ def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
 
 
 def log_exception(m_logger, msgs):
-    """
-    A shortcut wrapper around log_fancy for exceptions.
+    """A shortcut wrapper around log_fancy for exceptions.
 
     Args:
         m_logger (logger): The logger object
@@ -127,8 +124,7 @@ def log_exception(m_logger, msgs):
 
 
 def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
-    """
-    Internal method to create a new block or launcher directory.
+    """Internal method to create a new block or launcher directory.
     The dir name is based on the time and the FW_BLOCK_FORMAT.
 
     Args:
@@ -195,8 +191,7 @@ def get_slug(m_str):
 
 
 class DataServer(BaseManager):
-    """
-    Provide a server that can host shared objects between multiprocessing
+    """Provide a server that can host shared objects between multiprocessing
     Processes (that normally can't share data). For example, a common LaunchPad is
     shared between processes and pinging launches is coordinated to limit DB hits.
     """
@@ -217,8 +212,7 @@ class DataServer(BaseManager):
 
 
 class NestedClassGetter:
-    """
-    Used to help pickle inner classes, e.g. see Workflow.Links
+    """Used to help pickle inner classes, e.g. see Workflow.Links
     When called with the containing class as the first argument,
     and the name of the nested class as the second argument,
     returns an instance of the nested class.

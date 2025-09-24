@@ -15,8 +15,7 @@ __date__ = "Nov 21, 2013"
 
 
 class PBSAdapterNEWT(QueueAdapterBase):
-    """
-    A special PBS adapter that works via the NEWT interface (https://newt.nersc.gov)
+    """A special PBS adapter that works via the NEWT interface (https://newt.nersc.gov)
     Only intended for job submission via the RESTful NEWT web interface.
     """
 
@@ -45,8 +44,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
 
     @staticmethod
     def _init_auth_session(max_pw_requests: int = 3) -> None:
-        """
-        Initialize the _session class var with an authorized session. Asks for a /
+        """Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions.
         """
         # hide import in case optional library not installed

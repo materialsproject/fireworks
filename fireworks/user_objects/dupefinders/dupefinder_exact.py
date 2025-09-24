@@ -15,8 +15,7 @@ class DupeFinderExact(DupeFinderBase):
     _fw_name = "DupeFinderExact"
 
     def query(self, spec):
-        """
-        Returns the query for matching fireworks with non-zero launches and with exact matching specs.
+        """Returns the query for matching fireworks with non-zero launches and with exact matching specs.
 
         Args:
             spec (dict): spec to check for duplicates

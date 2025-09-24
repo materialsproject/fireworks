@@ -1,5 +1,4 @@
-"""
-This code is described in the Dynamic Workflow tutorial,
+"""This code is described in the Dynamic Workflow tutorial,
 https://materialsproject.github.io/fireworks/dynamic_wf_tutorial.html.
 """
 

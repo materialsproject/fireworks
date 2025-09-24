@@ -1,5 +1,4 @@
-"""
-This module implements a CommonAdaptor that supports standard PBS and SGE
+"""This module implements a CommonAdaptor that supports standard PBS and SGE
 queues.
 """
 
@@ -22,8 +21,7 @@ __date__ = "Dec 12, 2012"
 
 
 class CommonAdapter(QueueAdapterBase):
-    """
-    An adapter that works on most PBS (including derivatives such as
+    """An adapter that works on most PBS (including derivatives such as
     TORQUE), SGE, and SLURM queues.
     """
 
@@ -40,8 +38,7 @@ class CommonAdapter(QueueAdapterBase):
     }
 
     def __init__(self, q_type, q_name=None, template_file=None, timeout=None, **kwargs) -> None:
-        """
-        Initializes a new QueueAdapter object.
+        """Initializes a new QueueAdapter object.
 
         Args:
             q_type (str): The type of queue. Right now it should be either PBS,
@@ -188,8 +185,7 @@ class CommonAdapter(QueueAdapterBase):
         return count
 
     def submit_to_queue(self, script_file):
-        """
-        Submits the job to the queue and returns the job id.
+        """Submits the job to the queue and returns the job id.
 
         :param script_file: (str) name of the script file to use (String)
         :return: (int) job_id
@@ -237,8 +233,7 @@ class CommonAdapter(QueueAdapterBase):
             log_exception(queue_logger, f"Running the command: {submit_cmd} caused an error...")
 
     def get_njobs_in_queue(self, username=None, shell: bool = False):
-        """
-        Returns the number of jobs currently in the queue for the user.
+        """Returns the number of jobs currently in the queue for the user.
 
         :param username: (str) the username of the jobs to count (default is to autodetect)
         :return: (int) number of jobs in the queue

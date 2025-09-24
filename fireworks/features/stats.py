@@ -23,8 +23,7 @@ RUNTIME_STATS = {
 
 class FWStats:
     def __init__(self, lpad) -> None:
-        """
-        Object to get Fireworks running stats from a LaunchPad.
+        """Object to get Fireworks running stats from a LaunchPad.
 
         Args:
             lpad (LaunchPad): A LaunchPad object that manages the Fireworks database
@@ -38,8 +37,7 @@ class FWStats:
         self._workflows = lpad.db.workflows
 
     def get_fireworks_summary(self, query_start=None, query_end=None, query=None, time_field="updated_on", **args):
-        """
-        Get fireworks summary for a specified time range.
+        """Get fireworks summary for a specified time range.
 
         Args:
             query_start (str): The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
@@ -74,8 +72,7 @@ class FWStats:
         include_ids=False,
         **args,
     ):
-        """
-        Get launch summary for a specified time range.
+        """Get launch summary for a specified time range.
 
         Args:
             query_start (str): The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
@@ -109,8 +106,7 @@ class FWStats:
         return results
 
     def get_workflow_summary(self, query_start=None, query_end=None, query=None, time_field="updated_on", **args):
-        """
-        Get workflow summary for a specified time range.
+        """Get workflow summary for a specified time range.
         :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
         :param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
@@ -134,8 +130,7 @@ class FWStats:
         )
 
     def get_daily_completion_summary(self, query_start=None, query_end=None, query=None, time_field="time_end", **args):
-        """
-        Get daily summary of fireworks for a specified time range
+        """Get daily summary of fireworks for a specified time range
         :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
         :param query_end: (str) The end time (exclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
@@ -177,8 +172,7 @@ class FWStats:
     def group_fizzled_fireworks(
         self, group_by, query_start=None, query_end=None, query=None, include_ids=False, **args
     ):
-        """
-        Group fizzled fireworks for a specified time range by a specified key.
+        """Group fizzled fireworks for a specified time range by a specified key.
         :param group_by: (str) Database field used to group fireworks items.
         :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
@@ -215,8 +209,7 @@ class FWStats:
         include_ids=True,
         **args,
     ):
-        """
-        Get days with higher failure ratio
+        """Get days with higher failure ratio
         :param error_ratio: (float) Threshold of error ratio to define as a catastrophic day
         :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
@@ -264,8 +257,7 @@ class FWStats:
         isoformat=True,
         **args,
     ):
-        """
-        Get a summary of Fireworks stats with a specified time range.
+        """Get a summary of Fireworks stats with a specified time range.
         :param coll: (Pymongo Collection) A PyMongo Collection instance.
         :param query_start: (str) The start time (inclusive) to query in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
@@ -320,8 +312,7 @@ class FWStats:
         )
 
     def _get_launch_id_from_fireworks(self, query=None):
-        """
-        Get a list of launch_ids from the fireworks collection.
+        """Get a list of launch_ids from the fireworks collection.
         :param query: (dict) PyMongo query expression to filter fireworks. Default is None
         :return: (list) A list of launch_ids.
         """
@@ -340,8 +331,7 @@ class FWStats:
     def _aggregate(
         coll, group_by="state", match=None, project=None, unwind=None, group_op=None, sort=None, return_query_only=False
     ):
-        """
-        Method to run aggregation in the Mongodb aggregation framework.
+        """Method to run aggregation in the Mongodb aggregation framework.
         :param coll: (Pymongo Collection) A PyMongo Collection instance.
         :param group_by: (str) Field to be used as key in the group step in Mongodb aggregation framework.
         Default is the"state" field.
@@ -371,8 +361,7 @@ class FWStats:
 
     @staticmethod
     def _query_datetime_range(start_time=None, end_time=None, isoformat=True, **time_delta):
-        """
-        Get a PyMongo query expression for datetime
+        """Get a PyMongo query expression for datetime
         :param start_time: (str) Query start time (inclusive) in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).
         Default is 30 days before current time.
         :param end_time: (str) Query end time (exclusive) in isoformat (YYYY-MM-DDTHH:MM:SS.mmmmmm).

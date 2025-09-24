@@ -696,8 +696,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
-    """
-    Class to test the firework states locally cached in workflow.
+    """Class to test the firework states locally cached in workflow.
     The states have to be in sync with the actual firework state.
     """
 
@@ -1312,8 +1311,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
 @pytest.mark.mongodb
 class GridfsStoredDataTest(unittest.TestCase):
-    """
-    Tests concerning the storage of data in Gridfs when the size of the
+    """Tests concerning the storage of data in Gridfs when the size of the
     documents exceed the 16MB limit.
     """
 

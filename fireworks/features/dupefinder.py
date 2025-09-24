@@ -18,8 +18,7 @@ class DupeFinderBase(FWSerializable):
         pass
 
     def verify(self, spec1, spec2) -> NoReturn:
-        """
-        Method that checks whether two specs are identical enough to be
+        """Method that checks whether two specs are identical enough to be
         considered duplicates. Return true if duplicated. Note that
         implementing this method might slow  FireWorks performance somewhat,
         so it is best to do as much as possible within the "query" method.
@@ -34,8 +33,7 @@ class DupeFinderBase(FWSerializable):
         raise NotImplementedError
 
     def query(self, spec) -> NoReturn:
-        """
-        Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.
+        """Given a spec, returns a database query that gives potential candidates for duplicated Fireworks.
 
         Args:
             spec (dict): spec to check for duplicates

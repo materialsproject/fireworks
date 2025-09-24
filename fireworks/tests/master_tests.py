@@ -1,5 +1,4 @@
-"""
-Master tests for FireWorks - generally used to ensure that installation was \
+"""Master tests for FireWorks - generally used to ensure that installation was
 completed properly.
 """
 

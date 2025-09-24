@@ -1,5 +1,4 @@
-"""
-This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
+"""This module defines the FilePad class. FilePad is a convenient api to mongodb/gridfs to
 add/delete/update any file of any size.
 """
 
@@ -44,12 +43,10 @@ class FilePad(MSONable):
             database (str): database name
             username (str)
             password (str).
-
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
                 not set
             uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
                 the host).
-
             filepad_coll_name (str): filepad collection name
             gridfs_coll_name (str): gridfs collection name
             logdir (str): path to the log directory
@@ -106,8 +103,7 @@ class FilePad(MSONable):
         self.build_indexes()
 
     def build_indexes(self, indexes=None, background=True) -> None:
-        """
-        Build the indexes.
+        """Build the indexes.
 
         Args:
             indexes (list): list of single field indexes to be built.
@@ -118,8 +114,7 @@ class FilePad(MSONable):
             self.filepad.create_index(i, unique=True, background=background)
 
     def add_file(self, path, identifier=None, compress=True, metadata=None):
-        """
-        Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+        """Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
         Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
 
         Args:
@@ -153,8 +148,7 @@ class FilePad(MSONable):
             return self._insert_contents(contents, identifier, root_data, compress)
 
     def get_file(self, identifier):
-        """
-        Get file by identifier.
+        """Get file by identifier.
 
         Args:
             identifier (str): the file identifier
@@ -178,7 +172,6 @@ class FilePad(MSONable):
 
     def get_file_by_query(self, query, sort_key=None, sort_direction=DESCENDING):
         """
-
         Args:
             query (dict):                   pymongo query dict
             sort_key (str, optional):       sort key, default None
@@ -194,8 +187,7 @@ class FilePad(MSONable):
         return [self._get_file_contents(d) for d in cursor]
 
     def delete_file(self, identifier) -> None:
-        """
-        Delete the document with the matching identifier. The contents in the gridfs as well as the
+        """Delete the document with the matching identifier. The contents in the gridfs as well as the
         associated document in the filepad are deleted.
 
         Args:
@@ -208,8 +200,7 @@ class FilePad(MSONable):
             self.delete_file_by_id(doc["gfs_id"])
 
     def update_file(self, identifier, path, compress=True):
-        """
-        Update the file contents in the gridfs, update the gfs_id in the document and retain the
+        """Update the file contents in the gridfs, update the gfs_id in the document and retain the
         rest.
 
         Args:
@@ -240,8 +231,7 @@ class FilePad(MSONable):
             self.delete_file_by_id(d["gfs_id"])
 
     def update_file_by_id(self, gfs_id, path, compress=True):
-        """
-        Update the file in the gridfs with the given id and retain the rest of the document.
+        """Update the file in the gridfs with the given id and retain the rest of the document.
 
         Args:
             gfs_id (str): the gridfs id for the file.
@@ -255,8 +245,7 @@ class FilePad(MSONable):
         return self._update_file_contents(doc, path, compress)
 
     def _insert_contents(self, contents, identifier, root_data, compress):
-        """
-        Insert the file contents(string) to gridfs and store the file info doc in filepad.
+        """Insert the file contents(string) to gridfs and store the file info doc in filepad.
 
         Args:
             contents (str): file contents or any arbitrary string to be stored in gridfs
@@ -373,8 +362,7 @@ class FilePad(MSONable):
         self.build_indexes()
 
     def count(self, filter=None, **kwargs):
-        """
-        Get the number of documents in filepad.
+        """Get the number of documents in filepad.
 
         Args:
             filter (dict)

@@ -67,8 +67,7 @@ def pw_check(ids: list[int], args: Namespace, skip_pw: bool = False) -> list[int
 
 
 def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw: bool = False) -> list[int]:
-    """
-    Helper method to parse args that can take either id, name, state or query.
+    """Helper method to parse args that can take either id, name, state or query.
 
     Args:
         args: Namespace of parsed CLI arguments.

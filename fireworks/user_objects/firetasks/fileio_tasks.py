@@ -21,8 +21,7 @@ __date__ = "Jan 6, 2014"
 
 
 class FileWriteTask(FiretaskBase):
-    """
-    A Firetask to write files.
+    """A Firetask to write files.
 
     Required params:
         - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames
@@ -44,8 +43,7 @@ class FileWriteTask(FiretaskBase):
 
 
 class FileDeleteTask(FiretaskBase):
-    """
-    A Firetask to delete files.
+    """A Firetask to delete files.
 
     Required params:
         - files_to_delete: ([str]) Filenames to delete
@@ -71,8 +69,7 @@ class FileDeleteTask(FiretaskBase):
 
 
 class FileTransferTask(FiretaskBase):
-    """
-    A Firetask to Transfer files. Note that.
+    """A Firetask to Transfer files. Note that.
 
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
@@ -188,8 +185,7 @@ class FileTransferTask(FiretaskBase):
 
 
 class CompressDirTask(FiretaskBase):
-    """
-    Compress all files in a directory.
+    """Compress all files in a directory.
 
     Args:
         dest (str): Optional. Path to compress.
@@ -212,8 +208,7 @@ class CompressDirTask(FiretaskBase):
 
 
 class DecompressDirTask(FiretaskBase):
-    """
-    Decompress all files in a directory. Autodetects gz, bz2 and z file
+    """Decompress all files in a directory. Autodetects gz, bz2 and z file
     extensions.
 
     Args:
@@ -235,8 +230,7 @@ class DecompressDirTask(FiretaskBase):
 
 
 class ArchiveDirTask(FiretaskBase):
-    """
-    Wrapper around shutil.make_archive to make tar archives.
+    """Wrapper around shutil.make_archive to make tar archives.
 
     Args:
         base_name (str): Name of the file to create, including the path,

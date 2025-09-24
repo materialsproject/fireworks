@@ -33,8 +33,7 @@ def get_fworker(fworker):
 
 
 def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL, pdb_on_exception=False):
-    """
-    Run a single rocket in the current directory.
+    """Run a single rocket in the current directory.
 
     Args:
         launchpad (LaunchPad)
@@ -69,8 +68,7 @@ def rapidfire(
     local_redirect: bool = False,
     pdb_on_exception: bool = False,
 ) -> None:
-    """
-    Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
+    """Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
     for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
 
     Args:

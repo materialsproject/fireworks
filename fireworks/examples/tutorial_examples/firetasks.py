@@ -1,5 +1,4 @@
-"""
-This code is described in the Firetasks tutorial,
+"""This code is described in the Firetasks tutorial,
 https://materialsproject.github.io/fireworks/firetask_tutorial.html.
 """
 

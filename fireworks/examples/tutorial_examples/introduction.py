@@ -1,5 +1,4 @@
-"""
-This code is described in the Introductory tutorial,
+"""This code is described in the Introductory tutorial,
 https://materialsproject.github.io/fireworks/introduction.html.
 """
 
