@@ -236,7 +236,7 @@ class CommonAdapter(QueueAdapterBase):
             # random error, e.g. no qsub on machine!
             log_exception(queue_logger, f"Running the command: {submit_cmd} caused an error...")
 
-    def get_njobs_in_queue(self, username=None, shell : bool = False):
+    def get_njobs_in_queue(self, username=None, shell: bool = False):
         """
         returns the number of jobs currently in the queue for the user.
 

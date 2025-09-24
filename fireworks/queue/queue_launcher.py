@@ -20,8 +20,8 @@ from fireworks.fw_config import (
     QUEUE_RETRY_ATTEMPTS,
     QUEUE_UPDATE_INTERVAL,
     RAPIDFIRE_SLEEP_SECS,
+    STREAM_LOGLEVEL,
     SUBMIT_SCRIPT_NAME,
-    STREAM_LOGLEVEL
 )
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception

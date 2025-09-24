@@ -7,13 +7,12 @@ import os
 import zlib
 
 import gridfs
-from pymongo import DESCENDING
+from bson.objectid import ObjectId
 from monty.json import MSONable
 from monty.serialization import loadfn
-from bson.objectid import ObjectId
+from pymongo import DESCENDING
 
-from fireworks.fw_config import MongoClient
-from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL
+from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL, MongoClient
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Kiran Mathew"

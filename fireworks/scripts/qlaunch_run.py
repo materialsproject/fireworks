@@ -21,13 +21,7 @@ from importlib import metadata
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.fw_config import (
-    CONFIG_FILE_DIR,
-    FWORKER_LOC,
-    LAUNCHPAD_LOC,
-    QUEUEADAPTER_LOC,
-    STREAM_LOGLEVEL
-)
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, QUEUEADAPTER_LOC, STREAM_LOGLEVEL
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 

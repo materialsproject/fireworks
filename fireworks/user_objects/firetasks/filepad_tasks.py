@@ -1,11 +1,13 @@
-import os
 import json
+import os
 from glob import glob
+
 from pymongo import DESCENDING
 from ruamel.yaml import YAML
+
 from fireworks.core.firework import FiretaskBase
-from fireworks.utilities.filepad import FilePad
 from fireworks.utilities.dict_mods import arrow_to_dot
+from fireworks.utilities.filepad import FilePad
 
 __author__ = "Kiran Mathew, Johannes Hoermann"
 __email__ = "kmathew@lbl.gov, johannes.hoermann@imtek.uni-freiburg.de"
@@ -32,7 +34,6 @@ class AddFilesTask(FiretaskBase):
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
     def run_task(self, fw_spec) -> None:
-
         directory = os.path.abspath(self.get("directory", "."))
 
         if isinstance(self["paths"], list):

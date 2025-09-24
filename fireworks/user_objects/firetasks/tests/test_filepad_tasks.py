@@ -23,7 +23,7 @@ class FilePadTasksTest(unittest.TestCase):
         self.identifiers = ["write", "delete"]
         self.fp = FilePad.auto_load()
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_addfilestask_run(self) -> None:
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
@@ -44,7 +44,7 @@ class FilePadTasksTest(unittest.TestCase):
         assert file_contents is None
         assert doc is None
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilestask_run(self) -> None:
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers)
         t.run_task({})
@@ -58,8 +58,8 @@ class FilePadTasksTest(unittest.TestCase):
             assert write_file_contents == f.read().encode()
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
-    @pytest.mark.mongodb
-    @pytest.mark.skip(reason='fails after fixing the identical names with the next test')
+    @pytest.mark.mongodb()
+    @pytest.mark.skip(reason="fails after fixing the identical names with the next test")
     def test_getfilesbyquerytask_run(self) -> None:
         """Tests querying objects from FilePad by metadata."""
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers, metadata={"key": "value"})
@@ -73,7 +73,7 @@ class FilePadTasksTest(unittest.TestCase):
             assert test_file_contents == file.read().encode()
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilesbyquerytask_run_some_identifier(self) -> None:
         """Tests querying objects from FilePad by metadata."""
         with open("original_test_file.txt", "w") as f:
@@ -92,7 +92,7 @@ class FilePadTasksTest(unittest.TestCase):
             assert test_file_contents == f.read().encode()
         os.remove(os.path.join(dest_dir, "queried_test_file.txt"))
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilesbyquerytask_metafile_run(self) -> None:
         """Tests writing metadata to a yaml file."""
         with open("original_test_file.txt", "w") as f:
@@ -144,7 +144,7 @@ class FilePadTasksTest(unittest.TestCase):
             t.run_task({})
         # test successful if exception raised
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilesbyquerytask_ignore_degenerate_file_name(self) -> None:
         """Tests on ignoring degenerate file name in result from FilePad query."""
         with open("degenerate_file.txt", "w") as f:
@@ -186,7 +186,7 @@ class FilePadTasksTest(unittest.TestCase):
             t.run_task({})
         # test successful if exception raised
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilesbyquerytask_sort_ascending_name_run(self) -> None:
         """Tests on sorting queried files in ascending order."""
         file_contents = ["Some file with some content", "Some other file with some other content"]
@@ -217,7 +217,7 @@ class FilePadTasksTest(unittest.TestCase):
         with open("degenerate_file.txt") as f:
             assert file_contents[-1] == f.read()
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_getfilesbyquerytask_sort_descending_name_run(self) -> None:
         """Tests on sorting queried files in descending order."""
         file_contents = ["Some file with some content", "Some other file with some other content"]
@@ -253,7 +253,7 @@ class FilePadTasksTest(unittest.TestCase):
 
         os.remove("degenerate_file.txt")
 
-    @pytest.mark.mongodb
+    @pytest.mark.mongodb()
     def test_addfilesfrompatterntask_run(self) -> None:
         t = AddFilesTask(paths="*.yaml", directory=module_dir)
         t.run_task({})

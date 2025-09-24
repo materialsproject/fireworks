@@ -49,7 +49,7 @@ if __name__ == "__main__":
             "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
             "mongomock": ["mongomock-persistence>=0.0.3"],
-            "dev": ["pytest"]
+            "dev": ["pytest"],
         },
         classifiers=[
             "Programming Language :: Python",

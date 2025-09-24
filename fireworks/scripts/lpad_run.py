@@ -31,9 +31,9 @@ from fireworks.fw_config import (
     PW_CHECK_NUM,
     RESERVATION_EXPIRATION_SECS,
     RUN_EXPIRATION_SECS,
+    STREAM_LOGLEVEL,
     WEBSERVER_HOST,
     WEBSERVER_PORT,
-    STREAM_LOGLEVEL
 )
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
@@ -753,7 +753,10 @@ def recover_offline(args: Namespace) -> None:
     recovered_fws = []
 
     for launch in lp.offline_runs.find({"completed": False, "deprecated": False}, {"launch_id": 1, "fw_id": 1}):
-        if fworker_name and lp.launches.count_documents({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0:
+        if (
+            fworker_name
+            and lp.launches.count_documents({"launch_id": launch["launch_id"], "fworker.name": fworker_name}) == 0
+        ):
             continue
         fw = lp.recover_offline(launch["launch_id"], args.ignore_errors, args.print_errors)
         if fw:
@@ -1420,12 +1423,12 @@ def lpad(argv: Sequence[str] | None = None) -> int:
     forget_parser.add_argument("-n", "--name", help="name")
     forget_parser.add_argument(*state_args, **state_kwargs)
     forget_parser.add_argument(*query_args, **query_kwargs)
-    forget_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)    
+    forget_parser.add_argument(*launches_mode_args, **launches_mode_kwargs)
     forget_parser.add_argument(
         "--password",
         help="Today's date, e.g. 2012-02-25. Password or positive response to "
         f"input prompt required when modifying more than {PW_CHECK_NUM} entries.",
-    )    
+    )
     forget_parser.set_defaults(func=forget_offline)
 
     # admin commands

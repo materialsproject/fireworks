@@ -192,9 +192,9 @@ class FWAction(FWSerializable):
         d = m_dict
         additions = [Workflow.from_dict(f) for f in d["additions"]]
         detours = [Workflow.from_dict(f) for f in d["detours"]]
-        append_wfs = d.get('append_wfs', [])
+        append_wfs = d.get("append_wfs", [])
         for awf in append_wfs:
-            awf['workflow'] = Workflow.from_dict(awf['workflow'])
+            awf["workflow"] = Workflow.from_dict(awf["workflow"])
         return FWAction(
             d["stored_data"],
             d["exit"],
@@ -216,8 +216,14 @@ class FWAction(FWSerializable):
         Returns:
             bool
         """
-        return (self.exit or self.detours or self.additions or self.append_wfs or
-                self.defuse_children or self.defuse_workflow)
+        return (
+            self.exit
+            or self.detours
+            or self.additions
+            or self.append_wfs
+            or self.defuse_children
+            or self.defuse_workflow
+        )
 
     def __str__(self) -> str:
         return "FWAction\n" + pprint.pformat(self.to_dict())
@@ -980,9 +986,9 @@ class Workflow(FWSerializable):
 
         # add append_wfs Fireworks
         for dct in action.append_wfs:
-            fw_ids = [fw_id] + dct['parents']
-            detours = [dct['detour']] + [False]*len(dct['parents'])
-            new_updates = self.append_wf(dct['workflow'], fw_ids, detour=detours, pull_spec_mods=True)
+            fw_ids = [fw_id] + dct["parents"]
+            detours = [dct["detour"]] + [False] * len(dct["parents"])
+            new_updates = self.append_wf(dct["workflow"], fw_ids, detour=detours, pull_spec_mods=True)
             if len(set(updated_ids).intersection(new_updates)) > 0:
                 raise ValueError("Cannot use duplicated fw_ids when dynamically extending workflows!")
             updated_ids.extend(new_updates)
@@ -1044,12 +1050,12 @@ class Workflow(FWSerializable):
         leaf_ids = new_wf.leaf_fw_ids
 
         if isinstance(detour, bool):
-            detours = [detour]*len(fw_ids)
+            detours = [detour] * len(fw_ids)
         else:
             if not isinstance(detour, (tuple, list)):
-                raise TypeError('detour must be bool or [bool] type')
+                raise TypeError("detour must be bool or [bool] type")
             if len(detour) != len(fw_ids):
-                raise ValueError('len(detour) must be equal len(fw_ids)')
+                raise ValueError("len(detour) must be equal len(fw_ids)")
             detours = detour
 
         # make sure detour runs do not link to ready/running/completed/etc. runs

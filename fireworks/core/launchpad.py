@@ -20,7 +20,6 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
-from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
     LAUNCHPAD_LOC,
@@ -29,9 +28,10 @@ from fireworks.fw_config import (
     RESERVATION_EXPIRATION_SECS,
     RUN_EXPIRATION_SECS,
     SORT_FWS,
+    STREAM_LOGLEVEL,
     WFLOCK_EXPIRATION_KILL,
     WFLOCK_EXPIRATION_SECS,
-    STREAM_LOGLEVEL
+    MongoClient,
 )
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates, recursive_dict
 from fireworks.utilities.fw_utilities import get_fw_logger
@@ -204,7 +204,7 @@ class LaunchPad(FWSerializable):
                 raise ValueError("Must specify a database name when using a MongoDB URI string.")
             self.db = self.connection[self.name]
         else:
-            if not "socketTimeoutMS" in self.mongoclient_kwargs:
+            if "socketTimeoutMS" not in self.mongoclient_kwargs:
                 self.mongoclient_kwargs["socketTimeoutMS"] = MONGO_SOCKET_TIMEOUT_MS
             self.connection = MongoClient(
                 self.host,

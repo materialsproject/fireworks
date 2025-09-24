@@ -38,17 +38,17 @@ from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
-from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.fw_config import (
     DECODE_MONTY,
     ENCODE_MONTY,
     FW_NAME_UPDATES,
     JSON_SCHEMA_VALIDATE,
     JSON_SCHEMA_VALIDATE_LIST,
+    STREAM_LOGLEVEL,
     USER_PACKAGES,
     YAML_STYLE,
-    STREAM_LOGLEVEL
 )
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
