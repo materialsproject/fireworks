@@ -1,6 +1,11 @@
+"""Firetasks for interacting with FilePad: add, fetch, query, and delete files."""
+
+from __future__ import annotations
+
 import json
 import os
 from glob import glob
+from typing import Any
 
 from pymongo import DESCENDING
 from ruamel.yaml import YAML
@@ -33,7 +38,7 @@ class AddFilesTask(FiretaskBase):
     required_params = ["paths"]
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         directory = os.path.abspath(self.get("directory", "."))
 
         if isinstance(self["paths"], list):
@@ -72,7 +77,7 @@ class GetFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
@@ -146,7 +151,7 @@ class GetFilesByQueryTask(FiretaskBase):
         "sort_key",
     ]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
@@ -203,13 +208,14 @@ class DeleteFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file"]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         for file in self["identifiers"]:
             fpad.delete_file(file)
 
 
-def get_fpad(fpad_file):
+def get_fpad(fpad_file: str | None) -> FilePad:
+    """Return a FilePad instance from file if provided, else auto-load one."""
     if fpad_file:
         return FilePad.from_db_file(fpad_file)
     return FilePad.auto_load()

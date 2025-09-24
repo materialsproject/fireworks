@@ -19,6 +19,7 @@ __date__ = "Jun 1, 2012"
 
 
 def get_nested_dict(input_dict, key):
+    """Get a nested dictionary value using arrow notation (e.g., 'key1->key2')."""
     current = input_dict
     toks = key.split("->")
     n = len(toks)

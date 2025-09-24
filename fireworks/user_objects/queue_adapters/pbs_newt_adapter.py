@@ -1,3 +1,7 @@
+"""NEWT-based PBS queue adapter used for remote job submission and status."""
+
+from __future__ import annotations
+
 import getpass
 import os
 
@@ -24,13 +28,13 @@ class PBSAdapterNEWT(QueueAdapterBase):
     resource = "carver"  # 'carver' or 'hopper'
     _session = None
 
-    def submit_to_queue(self, script_file):
+    def submit_to_queue(self, script_file: str) -> int:
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
         r = PBSAdapterNEWT._session.post(f"https://newt.nersc.gov/newt/queue/{self.resource}/", {"jobfile": jobfile})
         return int(r.json()["jobid"].split(".")[0])
 
-    def get_njobs_in_queue(self, username=None):
+    def get_njobs_in_queue(self, username: str | None = None) -> int:
         if username is None:
             username = getpass.getus
         # hide import in case optional library not installeder()
@@ -40,7 +44,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
         return len(r.json())
 
     @staticmethod
-    def _init_auth_session(max_pw_requests=3) -> None:
+    def _init_auth_session(max_pw_requests: int = 3) -> None:
         """
         Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions.

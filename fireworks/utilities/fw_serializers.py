@@ -64,6 +64,7 @@ SAVED_FW_MODULES = {}
 
 
 def DATETIME_HANDLER(obj):
+    """Handle datetime objects for JSON serialization."""
     return obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 
@@ -81,6 +82,7 @@ if JSON_SCHEMA_VALIDATE:
 
 
 def recursive_dict(obj, preserve_unicode=True):
+    """Recursively convert an object to a dictionary representation."""
     if obj is None:
         return None
 
@@ -228,6 +230,7 @@ class FWSerializable(abc.ABC):
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
     def __repr__(self) -> str:
+        """Return a JSON string representation of the object."""
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format="json", **kwargs):
@@ -236,6 +239,7 @@ class FWSerializable(abc.ABC):
 
         Args:
             f_format (str): the format to output to (default json)
+            **kwargs: additional keyword arguments passed to the serializer
         """
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
@@ -277,6 +281,7 @@ class FWSerializable(abc.ABC):
         Args:
             filename(str): filename to write to
             f_format (str): serialization format, default checks the filename extension
+            **kwargs: additional keyword arguments passed to the serializer
         """
         dct = self.to_dict()
         if f_format is None:
@@ -310,9 +315,11 @@ class FWSerializable(abc.ABC):
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
+        """Return the state for pickling."""
         return self.to_dict()
 
     def __setstate__(self, state):
+        """Restore the state from pickling."""
         fw_obj = self.from_dict(state)
         for k, v in fw_obj.__dict__.items():
             self.__dict__[k] = v
@@ -429,6 +436,7 @@ def _search_module_for_obj(m_module, obj_dict):
 
 
 def reconstitute_dates(obj_dict):
+    """Recursively reconstitute datetime objects from their string representations."""
     if obj_dict is None:
         return None
 
@@ -450,6 +458,7 @@ def reconstitute_dates(obj_dict):
 
 
 def get_default_serialization(cls):
+    """Get the default serialization string for a class."""
     root_mod = cls.__module__.split(".")[0]
     if root_mod == "__main__":
         raise ValueError(

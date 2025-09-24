@@ -1,9 +1,20 @@
 """This module includes dataflow firetask tasks."""
 
+from __future__ import annotations
+
 __author__ = "Ivan Kondov"
 __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
+
+import json
+import operator
+import os
+import uuid
+from functools import reduce
+from shutil import copyfile
+from subprocess import PIPE, Popen
+from typing import Any
 
 from ruamel.yaml import YAML
 
@@ -72,7 +83,7 @@ class CommandLineTask(FiretaskBase):
     required_params = ["command_spec"]
     optional_params = ["inputs", "outputs", "chunk_number"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         cmd_spec = self["command_spec"]
         ilabels = self.get("inputs")
         olabels = self.get("outputs")
@@ -119,20 +130,20 @@ class CommandLineTask(FiretaskBase):
                 if len(olabels) > 1:
                     assert len(olabels) == len(outlist)
                     for olab, out in zip(olabels, outlist):
-                        for item in out:
-                            mod_spec.append({"_push": {olab: item}})
+                        mod_spec.extend({"_push": {olab: item}} for item in out)
                 else:
-                    for out in outlist:
-                        mod_spec.append({"_push": {olabels[0]: out}})
+                    mod_spec.extend({"_push": {olabels[0]: out}} for out in outlist)
                 return FWAction(mod_spec=mod_spec)
-            output_dict = {}
-            for olab, out in zip(olabels, outlist):
-                output_dict[olab] = out
+            output_dict = dict(zip(olabels, outlist))
             return FWAction(update_spec=output_dict)
         return FWAction()
 
     @staticmethod
-    def command_line_tool(command, inputs=None, outputs=None):
+    def command_line_tool(
+        command: list[str],
+        inputs: list[Any] | None = None,
+        outputs: list[Any] | None = None,
+    ) -> list[dict]:
         """
         This function composes and executes a command from provided
         specifications.
@@ -154,10 +165,6 @@ class CommandLineTask(FiretaskBase):
                 }
               If outputs is None then an empty list is returned.
         """
-        import os
-        import uuid
-        from shutil import copyfile
-        from subprocess import PIPE, Popen
 
         def set_binding(arg):
             argstr = ""
@@ -280,7 +287,7 @@ class ForeachTask(FiretaskBase):
     required_params = ["task", "split"]
     optional_params = ["number of chunks"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         assert isinstance(self["split"], str), self["split"]
         assert isinstance(fw_spec[self["split"]], list)
         if isinstance(self["task"]["inputs"], list):
@@ -318,7 +325,7 @@ class JoinDictTask(FiretaskBase):
     required_params = ["inputs", "output"]
     optional_params = ["rename"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
 
@@ -348,7 +355,7 @@ class JoinListTask(FiretaskBase):
     _fw_name = "JoinListTask"
     required_params = ["inputs", "output"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
         if self["output"] not in fw_spec:
@@ -374,11 +381,7 @@ class ImportDataTask(FiretaskBase):
     required_params = ["filename", "mapstring"]
     optional_params = []
 
-    def run_task(self, fw_spec):
-        import json
-        import operator
-        from functools import reduce
-
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         filename = self["filename"]
         mapstring = self["mapstring"]
         assert isinstance(filename, str)

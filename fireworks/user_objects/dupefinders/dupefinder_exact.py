@@ -1,3 +1,5 @@
+"""Exact duplicate finder implementation for FireWorks specs."""
+
 from fireworks.features.dupefinder import DupeFinderBase
 
 __author__ = "Anubhav Jain"

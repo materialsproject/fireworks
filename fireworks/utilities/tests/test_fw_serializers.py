@@ -27,7 +27,12 @@ class ExplicitTestSerializer(FWSerializable):
         self.a = a
 
     def __eq__(self, other: object) -> bool:
+        """Check equality with another object."""
         return self.a == getattr(other, "a", None)
+
+    def __hash__(self) -> int:
+        """Return hash of the object."""
+        return hash(self.a)
 
     def to_dict(self) -> dict[str, Any]:
         return {"_fw_name": self.fw_name, "a": self.a}

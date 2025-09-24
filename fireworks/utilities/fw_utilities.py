@@ -1,3 +1,5 @@
+"""Utilities for FireWorks core functionality."""
+
 from __future__ import annotations
 
 import contextlib
@@ -6,9 +8,11 @@ import errno
 import logging
 import multiprocessing
 import os
+import random
 import socket
 import string
 import sys
+import time
 import traceback
 from logging import Formatter, Logger
 from multiprocessing.managers import BaseManager
@@ -145,9 +149,6 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
         full_path = get_path()
         if os.path.exists(full_path):
             full_path = None
-            import random
-            import time
-
             time.sleep(random.random() / 3 + 0.1)
             continue
         try:
@@ -168,6 +169,7 @@ _g_ip, _g_host = None, None
 
 
 def get_my_ip():
+    """Get the IP address of the current machine."""
     global _g_ip  # noqa: PLW0603
     if _g_ip is None:
         try:
@@ -178,6 +180,7 @@ def get_my_ip():
 
 
 def get_my_host():
+    """Get the hostname of the current machine."""
     global _g_host  # noqa: PLW0603
     if _g_host is None:
         _g_host = socket.gethostname()
@@ -185,6 +188,7 @@ def get_my_host():
 
 
 def get_slug(m_str):
+    """Convert a string to a filesystem-safe slug by filtering valid characters."""
     valid_chars = f"-_.() {string.ascii_letters}{string.digits}"
     m_str = "".join(c for c in m_str if c in valid_chars)
     return m_str.replace(" ", "_")
@@ -201,10 +205,10 @@ class DataServer(BaseManager):
     def setup(cls, launchpad):
         """
         Args:
-            launchpad (LaunchPad).
+            launchpad (LaunchPad): The LaunchPad object to register with the server.
 
         Returns:
-            DataServer
+            DataServer: The configured DataServer instance.
         """
         DataServer.register("LaunchPad", callable=lambda: launchpad)
         m = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
@@ -229,6 +233,7 @@ class NestedClassGetter:
 
 
 def explicit_serialize(o):
+    """Mark a class for explicit serialization by adding _fw_name attribute."""
     module_name = o.__module__
     if module_name == "__main__":
         import __main__

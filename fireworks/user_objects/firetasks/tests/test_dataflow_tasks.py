@@ -1,6 +1,8 @@
 """Unit tests for the dataflow tasks."""
 
+import json
 import os
+import platform
 import unittest
 import uuid
 from unittest import SkipTest
@@ -96,8 +98,6 @@ class CommandLineTaskTest(unittest.TestCase):
 
     def test_command_line_task_3(self) -> None:
         """Input from string to data with command line options."""
-        import platform
-
         if platform.system() != "Linux":
             raise SkipTest("Command line test skipped for non-Linux platform")
         spec = {}
@@ -201,11 +201,11 @@ class ForeachTaskTest(unittest.TestCase):
         }
         params = {"task": task, "split": "numbers", "number of chunks": 3}
         action = ForeachTask(**params).run_task(spec)
-        results = []
-        for detour in action.detours:
-            action = detour.tasks[0].run_task(detour.spec)
-            for mod in action.mod_spec:
-                results.append(mod["_push"]["results"])
+        results = [
+            mod["_push"]["results"]
+            for detour in action.detours
+            for mod in detour.tasks[0].run_task(detour.spec).mod_spec
+        ]
         for number, result in zip(numbers, results):
             assert result == pow(number, power)
 
@@ -235,7 +235,7 @@ class ForeachTaskTest(unittest.TestCase):
                 outputs.append(fptr.read().strip())
             os.remove(ofile)
         ref_str = " ".join(str(inp) for inp in inputs)
-        out_str = " ".join(str(out) for out in outputs)
+        out_str = " ".join(str(output) for output in outputs)
         assert out_str == ref_str
 
 
@@ -293,17 +293,15 @@ class ImportDataTaskTest(unittest.TestCase):
 
     def test_import_data_task(self) -> None:
         """Loads data from a file into spec."""
-        import json
-
         temperature = {"value": 273.15, "units": "Kelvin"}
         spec = {"state parameters": {}}
         formats = {"json": json, "yaml": YAML(typ="safe", pure=True)}
         params = {"mapstring": "state parameters/temperature"}
-        for fmt in formats:
-            filename = str(uuid.uuid4()) + "." + fmt
+        for fmt_name, fmt_mod in formats.items():
+            filename = str(uuid.uuid4()) + "." + fmt_name
             params["filename"] = filename
             with open(filename, "w") as fptr:
-                formats[fmt].dump(temperature, fptr)
+                fmt_mod.dump(temperature, fptr)
             action = ImportDataTask(**params).run_task(spec)
             root = action.update_spec["state parameters"]
             assert "temperature" in root
