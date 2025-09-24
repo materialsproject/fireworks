@@ -32,8 +32,7 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     parser.add_argument(
         "--nlaunches",
-        help="number of FireWorks to run in series per parallel job "
-        '(int or "infinite"; default 0 is all jobs in DB)',
+        help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)',
         default=0,
     )
     parser.add_argument(

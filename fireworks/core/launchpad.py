@@ -1524,8 +1524,7 @@ class LaunchPad(FWSerializable):
                 raise
             if self.gridfs_fallback is None:
                 err.args = (
-                    err.args[0] + ". Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml"
-                    " to a value different from None",
+                    f"{err.args[0]}. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml to a value different from None",
                 )
                 raise err
 

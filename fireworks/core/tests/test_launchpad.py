@@ -936,7 +936,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
-        launches[0].launch_dir
+        _ = launches[0].launch_dir
 
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)

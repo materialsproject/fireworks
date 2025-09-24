@@ -26,13 +26,15 @@ Some advantages:
 
 """
 
+from __future__ import annotations
+
 import abc
 import datetime
 import importlib
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
-from typing import NoReturn
+from typing import Any, NoReturn
 
 from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
@@ -201,7 +203,7 @@ class FWSerializable(abc.ABC):
     """
 
     @property
-    def fw_name(self):
+    def fw_name(self) -> str:
         try:
             return self._fw_name
         except AttributeError:
@@ -211,7 +213,7 @@ class FWSerializable(abc.ABC):
     def to_dict(self) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
-    def to_db_dict(self):
+    def to_db_dict(self) -> dict[str, Any]:
         return self.to_dict()
 
     def as_dict(self):

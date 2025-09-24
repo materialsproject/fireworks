@@ -1,3 +1,5 @@
+"""Helper functions to update the FireWorks database. Should be used infrequently and with caution."""
+
 import datetime
 
 from bson.json_util import dumps, loads

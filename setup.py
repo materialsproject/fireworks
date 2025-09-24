@@ -1,3 +1,5 @@
+"""Fireworks install script."""
+
 from setuptools import find_packages, setup
 
 __author__ = "Anubhav Jain"

@@ -2,14 +2,14 @@ exclude: ^docs
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.3.5
+    rev: v0.13.1
     hooks:
       - id: ruff
         args: [--fix, --ignore, D]
       - id: ruff-format
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: check-case-conflict
       - id: check-symlinks
@@ -20,9 +20,9 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.2.6
+    rev: v2.4.1
     hooks:
       - id: codespell
         stages: [commit, commit-msg]
         exclude_types: [javascript]
-        args: [--ignore-words-list, "forin,nin,pres,atomate", --check-filenames]
+        args: [--ignore-words-list, 'forin,nin,pres,atomate', --check-filenames]
