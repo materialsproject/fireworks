@@ -1,6 +1,7 @@
 __author__ = "Kiran Mathew, Johannes Hoermann"
 
 import os
+import re
 import unittest
 
 import pytest
@@ -182,7 +183,7 @@ class FilePadTasksTest(unittest.TestCase):
         os.remove("degenerate_file.txt")
 
         t = GetFilesByQueryTask(query={"metadata->key": "value"}, fizzle_degenerate_file_name=True)
-        with pytest.raises(ValueError, match="used a second time"):
+        with pytest.raises(ValueError, match=re.escape("result")):
             t.run_task({})
         # test successful if exception raised
 
