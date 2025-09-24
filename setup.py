@@ -36,6 +36,7 @@ if __name__ == "__main__":
             "tabulate>=0.7.5",
             "flask>=0.11.1",
             "flask-paginate>=0.4.5",
+            "paramiko>=3.4.0",
             "gunicorn>=19.6.0",
             "tqdm>=4.8.4",
             "importlib-metadata>=4.8.2; python_version<'3.8'",

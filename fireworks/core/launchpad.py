@@ -11,6 +11,7 @@ import warnings
 from collections import defaultdict
 from itertools import chain
 
+
 import gridfs
 from bson import ObjectId
 from monty.os.path import zpath
@@ -20,6 +21,8 @@ from pymongo.errors import DocumentTooLarge
 from tqdm import tqdm
 
 from fireworks.core.firework import Firework, FWAction, Launch, Tracker, Workflow
+from fireworks.utilities import fw_id_from_reservation_id
+from fireworks.utilities import reservation_id_from_fw_id
 from fireworks.fw_config import MongoClient
 from fireworks.fw_config import (
     GRIDFS_FALLBACK_COLLECTION,
@@ -1194,18 +1197,17 @@ class LaunchPad(FWSerializable):
         """
         return self.checkout_fw(fworker, launch_dir, host=host, ip=ip, fw_id=fw_id, state="RESERVED")
 
-    def get_fw_ids_from_reservation_id(self, reservation_id):
+    def get_fw_id_from_reservation_id(self, reservation_id):
         """
         Given the reservation id, return the list of firework ids.
-
         Args:
             reservation_id (int)
-
         Returns:
-            [int]: list of firework ids.
+            [int]: Return the firework id.
         """
-        l_id = self.launches.find_one({"state_history.reservation_id": reservation_id}, {"launch_id": 1})["launch_id"]
-        return [fw["fw_id"] for fw in self.fireworks.find({"launches": l_id}, {"fw_id": 1})]
+        fw_id=fw_id_from_reservation_id.get_fwid(reservation_id)
+
+        return fw_id
 
     def cancel_reservation_by_reservation_id(self, reservation_id) -> None:
         """Given the reservation id, cancel the reservation and rerun the corresponding fireworks."""
@@ -1219,14 +1221,10 @@ class LaunchPad(FWSerializable):
 
     def get_reservation_id_from_fw_id(self, fw_id):
         """Given the firework id, return the reservation id."""
-        fw = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1})
-        if fw:
-            for launch in self.launches.find({"launch_id": {"$in": fw["launches"]}}, {"state_history": 1}):
-                for d in launch["state_history"]:
-                    if "reservation_id" in d:
-                        return d["reservation_id"]
-            return None
-        return None
+        jobid=reservation_id_from_fw_id.main(fw_id)
+        if jobid==None:
+            print('No matching fw_id-JobID pair. The firework may be a lost run')
+        return jobid
 
     def cancel_reservation(self, launch_id) -> None:
         """Given the launch id, cancel the reservation and rerun the fireworks."""
