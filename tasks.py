@@ -103,4 +103,3 @@ def open_doc(ctx) -> None:
     """
     pth = os.path.abspath("docs/index.html")
     webbrowser.open("file://" + pth)
-

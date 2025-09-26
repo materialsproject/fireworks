@@ -74,9 +74,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     multi_parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     multi_parser.add_argument(
         "--nlaunches",
-        help="number of FireWorks to run in series per "
-        'parallel job (int or "infinite"; default 0 is '
-        "all jobs in DB)",
+        help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)',
         default=0,
     )
     multi_parser.add_argument(
@@ -87,9 +85,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     )
     multi_parser.add_argument(
         "--nodefile",
-        help="nodefile name or environment variable name "
-        "containing the node file name (for populating"
-        " FWData only)",
+        help="nodefile name or environment variable name containing the node file name (for populating FWData only)",
         default=None,
         type=str,
     )

@@ -1,8 +1,13 @@
+"""File I/O related firetasks for writing, deleting, transferring and archiving files."""
+
+from __future__ import annotations
+
 import os
 import shutil
 import time
 import traceback
 from os.path import abspath, expanduser, expandvars
+from typing import Any
 
 from monty.shutil import compress_dir, decompress_dir
 
@@ -16,8 +21,7 @@ __date__ = "Jan 6, 2014"
 
 
 class FileWriteTask(FiretaskBase):
-    """
-    A Firetask to write files:
+    """A Firetask to write files.
 
     Required params:
         - files_to_write: ([{filename:(str), contents:(str)}]) List of dicts with filenames
@@ -31,16 +35,15 @@ class FileWriteTask(FiretaskBase):
     required_params = ["files_to_write"]
     optional_params = ["dest"]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         pth = self.get("dest", os.getcwd())
-        for d in self["files_to_write"]:
-            with open(os.path.join(pth, d["filename"]), "w") as f:
-                f.write(d["contents"])
+        for file_record in self["files_to_write"]:
+            with open(os.path.join(pth, file_record["filename"]), "w") as fptr:
+                fptr.write(file_record["contents"])
 
 
 class FileDeleteTask(FiretaskBase):
-    """
-    A Firetask to delete files:
+    """A Firetask to delete files.
 
     Required params:
         - files_to_delete: ([str]) Filenames to delete
@@ -54,20 +57,19 @@ class FileDeleteTask(FiretaskBase):
     required_params = ["files_to_delete"]
     optional_params = ["dest", "ignore_errors"]
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         pth = self.get("dest", os.getcwd())
         ignore_errors = self.get("ignore_errors", True)
-        for f in self["files_to_delete"]:
+        for file_name in self["files_to_delete"]:
             try:
-                os.remove(os.path.join(pth, f))
+                os.remove(os.path.join(pth, file_name))
             except Exception as ex:
                 if not ignore_errors:
                     raise OSError(str(ex))
 
 
 class FileTransferTask(FiretaskBase):
-    """
-    A Firetask to Transfer files. Note that.
+    """A Firetask to Transfer files. Note that.
 
     Required params:
         - mode: (str) - move, mv, copy, cp, copy2, copytree, copyfile, rtransfer
@@ -98,7 +100,7 @@ class FileTransferTask(FiretaskBase):
         "copyfile": shutil.copyfile,
     }
 
-    def run_task(self, fw_spec) -> None:
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         shell_interpret = self.get("shell_interpret", True)
         ignore_errors = self.get("ignore_errors", False)
         max_retry = self.get("max_retry", 0)
@@ -115,12 +117,16 @@ class FileTransferTask(FiretaskBase):
             ssh.connect(self["server"], username=self.get("user"), key_filename=self.get("key_filename"))
             sftp = ssh.open_sftp()
 
-        for f in self["files"]:
+        for file_entry in self["files"]:
             try:
-                if "src" in f:
-                    src = os.path.abspath(expanduser(expandvars(f["src"]))) if shell_interpret else f["src"]
+                if "src" in file_entry:
+                    src = (
+                        os.path.abspath(expanduser(expandvars(file_entry["src"])))
+                        if shell_interpret
+                        else file_entry["src"]
+                    )
                 else:
-                    src = abspath(expanduser(expandvars(f))) if shell_interpret else f
+                    src = abspath(expanduser(expandvars(file_entry))) if shell_interpret else file_entry
 
                 if mode == "rtransfer":
                     dest = self["dest"]
@@ -128,9 +134,9 @@ class FileTransferTask(FiretaskBase):
                         if not self._rexists(sftp, dest):
                             sftp.mkdir(dest)
 
-                        for f in os.listdir(src):
-                            if os.path.isfile(os.path.join(src, f)):
-                                sftp.put(os.path.join(src, f), os.path.join(dest, f))
+                        for child_name in os.listdir(src):
+                            if os.path.isfile(os.path.join(src, child_name)):
+                                sftp.put(os.path.join(src, child_name), os.path.join(dest, child_name))
                     else:
                         if not self._rexists(sftp, dest):
                             sftp.mkdir(dest)
@@ -138,8 +144,12 @@ class FileTransferTask(FiretaskBase):
                         sftp.put(src, os.path.join(dest, os.path.basename(src)))
 
                 else:
-                    if "dest" in f:
-                        dest = abspath(expanduser(expandvars(f["dest"]))) if shell_interpret else f["dest"]
+                    if "dest" in file_entry:
+                        dest = (
+                            abspath(expanduser(expandvars(file_entry["dest"])))
+                            if shell_interpret
+                            else file_entry["dest"]
+                        )
                     else:
                         dest = abspath(expanduser(expandvars(self["dest"]))) if shell_interpret else self["dest"]
                     FileTransferTask.fn_list[mode](src, dest)
@@ -175,8 +185,7 @@ class FileTransferTask(FiretaskBase):
 
 
 class CompressDirTask(FiretaskBase):
-    """
-    Compress all files in a directory.
+    """Compress all files in a directory.
 
     Args:
         dest (str): Optional. Path to compress.
@@ -199,8 +208,7 @@ class CompressDirTask(FiretaskBase):
 
 
 class DecompressDirTask(FiretaskBase):
-    """
-    Decompress all files in a directory. Autodetects gz, bz2 and z file
+    """Decompress all files in a directory. Autodetects gz, bz2 and z file
     extensions.
 
     Args:
@@ -222,8 +230,7 @@ class DecompressDirTask(FiretaskBase):
 
 
 class ArchiveDirTask(FiretaskBase):
-    """
-    Wrapper around shutil.make_archive to make tar archives.
+    """Wrapper around shutil.make_archive to make tar archives.
 
     Args:
         base_name (str): Name of the file to create, including the path,

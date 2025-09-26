@@ -1,10 +1,20 @@
 """This module includes dataflow firetask tasks."""
 
+from __future__ import annotations
+
 __author__ = "Ivan Kondov"
 __email__ = "ivan.kondov@kit.edu"
 __copyright__ = "Copyright 2016, Karlsruhe Institute of Technology"
 
-import sys
+
+import json
+import operator
+import os
+import uuid
+from functools import reduce
+from shutil import copyfile
+from subprocess import PIPE, Popen
+from typing import Any
 
 from ruamel.yaml import YAML
 
@@ -12,13 +22,9 @@ from fireworks import Firework
 from fireworks.core.firework import FiretaskBase, FWAction
 from fireworks.utilities.fw_serializers import load_object
 
-if sys.version_info[0] > 2:
-    basestring = str
-
 
 class CommandLineTask(FiretaskBase):
-    """
-    A Firetask to execute external commands in a shell.
+    """A Firetask to execute external commands in a shell.
 
     Required params:
         - command_spec (dict): a dictionary specification of the command
@@ -76,7 +82,7 @@ class CommandLineTask(FiretaskBase):
     required_params = ["command_spec"]
     optional_params = ["inputs", "outputs", "chunk_number"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         cmd_spec = self["command_spec"]
         ilabels = self.get("inputs")
         olabels = self.get("outputs")
@@ -94,7 +100,7 @@ class CommandLineTask(FiretaskBase):
         for ios, labels in zip([inputs, outputs], [ilabels, olabels]):
             # cmd_spec: {label: {{binding: {}}, {source: {}}, {target: {}}}}
             for label in labels:
-                if isinstance(cmd_spec[label], basestring):
+                if isinstance(cmd_spec[label], str):
                     inp = []
                     for item in fw_spec[cmd_spec[label]]:
                         if "source" in item:
@@ -106,7 +112,7 @@ class CommandLineTask(FiretaskBase):
                     for key in ["binding", "source", "target"]:
                         if key in cmd_spec[label]:
                             item = cmd_spec[label][key]
-                            if isinstance(item, basestring):
+                            if isinstance(item, str):
                                 inp[key] = fw_spec[item]
                             elif isinstance(item, dict):
                                 inp[key] = item
@@ -123,22 +129,21 @@ class CommandLineTask(FiretaskBase):
                 if len(olabels) > 1:
                     assert len(olabels) == len(outlist)
                     for olab, out in zip(olabels, outlist):
-                        for item in out:
-                            mod_spec.append({"_push": {olab: item}})
+                        mod_spec.extend({"_push": {olab: item}} for item in out)
                 else:
-                    for out in outlist:
-                        mod_spec.append({"_push": {olabels[0]: out}})
+                    mod_spec.extend({"_push": {olabels[0]: out}} for out in outlist)
                 return FWAction(mod_spec=mod_spec)
-            output_dict = {}
-            for olab, out in zip(olabels, outlist):
-                output_dict[olab] = out
+            output_dict = dict(zip(olabels, outlist))
             return FWAction(update_spec=output_dict)
         return FWAction()
 
     @staticmethod
-    def command_line_tool(command, inputs=None, outputs=None):
-        """
-        This function composes and executes a command from provided
+    def command_line_tool(
+        command: list[str],
+        inputs: list[Any] | None = None,
+        outputs: list[Any] | None = None,
+    ) -> list[dict]:
+        """This function composes and executes a command from provided
         specifications.
 
         Required parameters:
@@ -158,10 +163,6 @@ class CommandLineTask(FiretaskBase):
                 }
               If outputs is None then an empty list is returned.
         """
-        import os
-        import uuid
-        from shutil import copyfile
-        from subprocess import PIPE, Popen
 
         def set_binding(arg):
             argstr = ""
@@ -261,8 +262,7 @@ class CommandLineTask(FiretaskBase):
 
 
 class ForeachTask(FiretaskBase):
-    """
-    This firetask branches the workflow creating parallel fireworks
+    """This firetask branches the workflow creating parallel fireworks
     using FWAction: one firework for each element or each chunk from the
     *split* list. Each firework in this generated list contains the firetask
     specified in the *task* dictionary. If the number of chunks is specified
@@ -284,8 +284,8 @@ class ForeachTask(FiretaskBase):
     required_params = ["task", "split"]
     optional_params = ["number of chunks"]
 
-    def run_task(self, fw_spec):
-        assert isinstance(self["split"], basestring), self["split"]
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
+        assert isinstance(self["split"], str), self["split"]
         assert isinstance(fw_spec[self["split"]], list)
         if isinstance(self["task"]["inputs"], list):
             assert self["split"] in self["task"]["inputs"]
@@ -322,8 +322,8 @@ class JoinDictTask(FiretaskBase):
     required_params = ["inputs", "output"]
     optional_params = ["rename"]
 
-    def run_task(self, fw_spec):
-        assert isinstance(self["output"], basestring)
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
+        assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
 
         if self["output"] not in fw_spec:
@@ -352,8 +352,8 @@ class JoinListTask(FiretaskBase):
     _fw_name = "JoinListTask"
     required_params = ["inputs", "output"]
 
-    def run_task(self, fw_spec):
-        assert isinstance(self["output"], basestring)
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
+        assert isinstance(self["output"], str)
         assert isinstance(self["inputs"], list)
         if self["output"] not in fw_spec:
             output = []
@@ -368,8 +368,7 @@ class JoinListTask(FiretaskBase):
 
 
 class ImportDataTask(FiretaskBase):
-    """
-    Update the spec with data from file in a nested dictionary at a position
+    """Update the spec with data from file in a nested dictionary at a position
     specified by a mapstring = maplist[0]/maplist[1]/...
     i.e. spec[maplist[0]][maplist[1]]... = data.
     """
@@ -378,15 +377,11 @@ class ImportDataTask(FiretaskBase):
     required_params = ["filename", "mapstring"]
     optional_params = []
 
-    def run_task(self, fw_spec):
-        import json
-        import operator
-        from functools import reduce
-
+    def run_task(self, fw_spec: dict[str, Any]) -> FWAction:
         filename = self["filename"]
         mapstring = self["mapstring"]
-        assert isinstance(filename, basestring)
-        assert isinstance(mapstring, basestring)
+        assert isinstance(filename, str)
+        assert isinstance(mapstring, str)
         maplist = mapstring.split("/")
 
         fmt = filename.split(".")[-1]

@@ -20,15 +20,15 @@ footer .navbar .nav {
 
 table {
   width: 100%;
-  table-layout: fixed; 
+  table-layout: fixed;
 }
 
 .table td {
   vertical-align: middle;
-  white-space: nowrap; 
-  overflow: hidden; 
-  text-overflow: ellipsis; 
-  max-width: 200px; 
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
 
@@ -40,11 +40,11 @@ table {
 
 
 .fw-link {
-  display: inline-block; 
-  max-width: 100%; 
-  overflow: hidden; 
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
   white-space: nowrap;
-  text-overflow: ellipsis; 
+  text-overflow: ellipsis;
   color: white;
   padding: 2px 5px;
   border-radius: 3px;

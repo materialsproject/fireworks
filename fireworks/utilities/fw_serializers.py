@@ -1,5 +1,4 @@
-"""
-This module aids in serializing and deserializing objects.
+"""This module aids in serializing and deserializing objects.
 
 To serialize a FW object, refer to the documentation for the FWSerializable class. To de-serialize
 an object, refer to the documentation for the FWSerializable class and load_object() method.
@@ -26,29 +25,31 @@ Some advantages:
 
 """
 
+from __future__ import annotations
+
 import abc
 import datetime
 import importlib
 import inspect
 import json  # note that ujson is faster, but at this time does not support "default" in dumps()
 import pkgutil
-from typing import NoReturn
+from typing import Any, NoReturn
 
 from monty.json import MontyDecoder, MSONable
 from ruamel.yaml import YAML
 from ruamel.yaml.compat import StringIO
 
-from fireworks.utilities.fw_utilities import get_fw_logger
 from fireworks.fw_config import (
     DECODE_MONTY,
     ENCODE_MONTY,
     FW_NAME_UPDATES,
     JSON_SCHEMA_VALIDATE,
     JSON_SCHEMA_VALIDATE_LIST,
+    STREAM_LOGLEVEL,
     USER_PACKAGES,
     YAML_STYLE,
-    STREAM_LOGLEVEL
 )
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -62,6 +63,7 @@ SAVED_FW_MODULES = {}
 
 
 def DATETIME_HANDLER(obj):
+    """Handle datetime objects for JSON serialization."""
     return obj.isoformat() if isinstance(obj, datetime.datetime) else None
 
 
@@ -79,6 +81,7 @@ if JSON_SCHEMA_VALIDATE:
 
 
 def recursive_dict(obj, preserve_unicode=True):
+    """Recursively convert an object to a dictionary representation."""
     if obj is None:
         return None
 
@@ -142,8 +145,7 @@ def _recursive_load(obj):
 
 
 def recursive_serialize(func):
-    """
-    a decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -155,8 +157,7 @@ def recursive_serialize(func):
 
 
 def recursive_deserialize(func):
-    """
-    a decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -169,8 +170,7 @@ def recursive_deserialize(func):
 
 
 def serialize_fw(func):
-    """
-    a decorator to add FW serializations keys
+    """A decorator to add FW serializations keys
     see documentation of FWSerializable for more details.
     """
 
@@ -183,8 +183,7 @@ def serialize_fw(func):
 
 
 class FWSerializable(abc.ABC):
-    """
-    To create a serializable object within FireWorks, you should subclass this
+    """To create a serializable object within FireWorks, you should subclass this
     class and implement the to_dict() and from_dict() methods.
 
     If you want the load_object() implicit de-serialization to work, you must
@@ -201,7 +200,7 @@ class FWSerializable(abc.ABC):
     """
 
     @property
-    def fw_name(self):
+    def fw_name(self) -> str:
         try:
             return self._fw_name
         except AttributeError:
@@ -211,7 +210,7 @@ class FWSerializable(abc.ABC):
     def to_dict(self) -> NoReturn:
         raise NotImplementedError("FWSerializable object did not implement to_dict()!")
 
-    def to_db_dict(self):
+    def to_db_dict(self) -> dict[str, Any]:
         return self.to_dict()
 
     def as_dict(self):
@@ -226,14 +225,15 @@ class FWSerializable(abc.ABC):
         raise NotImplementedError("FWSerializable object did not implement from_dict()!")
 
     def __repr__(self) -> str:
+        """Return a JSON string representation of the object."""
         return json.dumps(self.to_dict(), default=DATETIME_HANDLER)
 
     def to_format(self, f_format="json", **kwargs):
-        """
-        returns a String representation in the given format.
+        """Returns a String representation in the given format.
 
         Args:
             f_format (str): the format to output to (default json)
+            **kwargs: additional keyword arguments passed to the serializer
         """
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
@@ -248,8 +248,7 @@ class FWSerializable(abc.ABC):
 
     @classmethod
     def from_format(cls, f_str, f_format="json"):
-        """
-        convert from a String representation to its Object.
+        """Convert from a String representation to its Object.
 
         Args:
             f_str (str): the String representation
@@ -269,12 +268,12 @@ class FWSerializable(abc.ABC):
         return cls.from_dict(reconstitute_dates(dct))
 
     def to_file(self, filename, f_format=None, **kwargs) -> None:
-        """
-        Write a serialization of this object to a file.
+        """Write a serialization of this object to a file.
 
         Args:
             filename(str): filename to write to
             f_format (str): serialization format, default checks the filename extension
+            **kwargs: additional keyword arguments passed to the serializer
         """
         dct = self.to_dict()
         if f_format is None:
@@ -292,8 +291,7 @@ class FWSerializable(abc.ABC):
 
     @classmethod
     def from_file(cls, filename, f_format=None):
-        """
-        Load a serialization of this object from a file.
+        """Load a serialization of this object from a file.
 
         Args:
             filename (str): filename to read
@@ -308,9 +306,11 @@ class FWSerializable(abc.ABC):
             return cls.from_format(f.read(), f_format=f_format)
 
     def __getstate__(self):
+        """Return the state for pickling."""
         return self.to_dict()
 
     def __setstate__(self, state):
+        """Restore the state from pickling."""
         fw_obj = self.from_dict(state)
         for k, v in fw_obj.__dict__.items():
             self.__dict__[k] = v
@@ -318,8 +318,7 @@ class FWSerializable(abc.ABC):
 
 # TODO: make this quicker the first time around
 def load_object(obj_dict):
-    """
-    Creates an instantiation of a class based on a dictionary representation. We implicitly
+    """Creates an instantiation of a class based on a dictionary representation. We implicitly
     determine the Class through introspection along with information in the dictionary.
 
     We search for a class with the _fw_name property equal to obj_dict['_fw_name']
@@ -385,8 +384,7 @@ def load_object(obj_dict):
 
 
 def load_object_from_file(filename, f_format=None):
-    """
-    Implicitly load an object from a file. just a friendly wrapper to
+    """Implicitly load an object from a file. just a friendly wrapper to
     load_object().
 
     Args:
@@ -427,6 +425,7 @@ def _search_module_for_obj(m_module, obj_dict):
 
 
 def reconstitute_dates(obj_dict):
+    """Recursively reconstitute datetime objects from their string representations."""
     if obj_dict is None:
         return None
 
@@ -448,6 +447,7 @@ def reconstitute_dates(obj_dict):
 
 
 def get_default_serialization(cls):
+    """Get the default serialization string for a class."""
     root_mod = cls.__module__.split(".")[0]
     if root_mod == "__main__":
         raise ValueError(

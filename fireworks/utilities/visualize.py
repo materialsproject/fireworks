@@ -1,3 +1,5 @@
+"""Visualization utilities for Fireworks."""
+
 from __future__ import annotations
 
 from typing import Any
@@ -26,8 +28,7 @@ def plot_wf(
     markerfacecolor="blue",
     fontsize=12,
 ) -> None:
-    """
-    Generate a visual representation of the workflow. Useful for checking whether the firework
+    """Generate a visual representation of the workflow. Useful for checking whether the firework
     connections are in order before launching the workflow.
 
     Args:
@@ -45,7 +46,7 @@ def plot_wf(
         fontsize (int): font size for the node label.
     """
     try:
-        import matplotlib.pyplot as plt
+        import matplotlib.pyplot as plt  # noqa: PLC0415
     except ImportError:
         raise SystemExit("Install matplotlib. Exiting.")
 
@@ -107,7 +108,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: dict[str, Any] | None = None, wf_show_
     Copied from https://git.io/JO6L8.
 
     Args:
-        workflow (Workflow | Firework): Workflow or Firework to be rendered.
+        wf (Workflow | Firework): Workflow or Firework to be rendered.
         dag_kwargs (dict[str, Any]): Arguments passed to Digraph.attr(). Defaults to {}.
         wf_show_tasks (bool): When rendering a Workflow, whether to show each Firetask in the graph. Defaults to False.
 

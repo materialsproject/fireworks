@@ -1,5 +1,4 @@
-"""
-This module allows you to modify a dict (a spec) using another dict (an instruction).
+"""This module allows you to modify a dict (a spec) using another dict (an instruction).
 The main method of interest is apply_dictmod().
 
 This code is based heavily on the Ansible class of custodian <https://pypi.python.org/pypi/custodian>,
@@ -19,6 +18,7 @@ __date__ = "Jun 1, 2012"
 
 
 def get_nested_dict(input_dict, key):
+    """Get a nested dictionary value using arrow notation (e.g., 'key1->key2')."""
     current = input_dict
     toks = key.split("->")
     n = len(toks)
@@ -32,8 +32,7 @@ def get_nested_dict(input_dict, key):
 
 
 def arrow_to_dot(input_dict):
-    """
-    Converts arrows ('->') in dict keys to dots '.' recursively.
+    """Converts arrows ('->') in dict keys to dots '.' recursively.
     Allows for storing MongoDB neseted document queries in MongoDB.
 
     Args:
@@ -49,8 +48,7 @@ def arrow_to_dot(input_dict):
 
 @singleton
 class DictMods:
-    """
-    Class to implement the supported mongo-like modifications on a dict.
+    """Class to implement the supported mongo-like modifications on a dict.
     Supported keywords include the following Mongo-based keywords, with the
     usual meanings (refer to Mongo documentation for information):
         _inc
@@ -163,8 +161,7 @@ class DictMods:
 
 
 def apply_mod(modification, obj) -> None:
-    """
-    Note that modify makes actual in-place modifications. It does not
+    """Note that modify makes actual in-place modifications. It does not
     return a copy.
 
     Args:

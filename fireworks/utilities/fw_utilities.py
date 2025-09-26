@@ -1,3 +1,5 @@
+"""Utilities for FireWorks core functionality."""
+
 from __future__ import annotations
 
 import contextlib
@@ -6,9 +8,11 @@ import errno
 import logging
 import multiprocessing
 import os
+import random
 import socket
 import string
 import sys
+import time
 import traceback
 from logging import Formatter, Logger
 from multiprocessing.managers import BaseManager
@@ -34,8 +38,7 @@ def get_fw_logger(
     formatter: Formatter = DEFAULT_FORMATTER,
     clear_logs: bool = False,
 ) -> Logger:
-    """
-    Convenience method to return a logger.
+    """Convenience method to return a logger.
 
     Args:
         name: name of the logger that sets the groups, e.g. 'group1.set2'
@@ -87,8 +90,7 @@ def log_multi(m_logger, msg, log_lvl="info") -> None:
 
 
 def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
-    """
-    A wrapper around the logger messages useful for multi-line logs.
+    """A wrapper around the logger messages useful for multi-line logs.
     Helps to group log messages by adding a fancy border around it,
     which enhances readability of log lines meant to be read
     as a unit.
@@ -112,8 +114,7 @@ def log_fancy(m_logger, msgs, log_lvl="info", add_traceback=False) -> None:
 
 
 def log_exception(m_logger, msgs):
-    """
-    A shortcut wrapper around log_fancy for exceptions.
+    """A shortcut wrapper around log_fancy for exceptions.
 
     Args:
         m_logger (logger): The logger object
@@ -123,8 +124,7 @@ def log_exception(m_logger, msgs):
 
 
 def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
-    """
-    Internal method to create a new block or launcher directory.
+    """Internal method to create a new block or launcher directory.
     The dir name is based on the time and the FW_BLOCK_FORMAT.
 
     Args:
@@ -145,9 +145,6 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
         full_path = get_path()
         if os.path.exists(full_path):
             full_path = None
-            import random
-            import time
-
             time.sleep(random.random() / 3 + 0.1)
             continue
         try:
@@ -168,6 +165,7 @@ _g_ip, _g_host = None, None
 
 
 def get_my_ip():
+    """Get the IP address of the current machine."""
     global _g_ip  # noqa: PLW0603
     if _g_ip is None:
         try:
@@ -178,6 +176,7 @@ def get_my_ip():
 
 
 def get_my_host():
+    """Get the hostname of the current machine."""
     global _g_host  # noqa: PLW0603
     if _g_host is None:
         _g_host = socket.gethostname()
@@ -185,14 +184,14 @@ def get_my_host():
 
 
 def get_slug(m_str):
+    """Convert a string to a filesystem-safe slug by filtering valid characters."""
     valid_chars = f"-_.() {string.ascii_letters}{string.digits}"
     m_str = "".join(c for c in m_str if c in valid_chars)
     return m_str.replace(" ", "_")
 
 
 class DataServer(BaseManager):
-    """
-    Provide a server that can host shared objects between multiprocessing
+    """Provide a server that can host shared objects between multiprocessing
     Processes (that normally can't share data). For example, a common LaunchPad is
     shared between processes and pinging launches is coordinated to limit DB hits.
     """
@@ -201,10 +200,10 @@ class DataServer(BaseManager):
     def setup(cls, launchpad):
         """
         Args:
-            launchpad (LaunchPad).
+            launchpad (LaunchPad): The LaunchPad object to register with the server.
 
         Returns:
-            DataServer
+            DataServer: The configured DataServer instance.
         """
         DataServer.register("LaunchPad", callable=lambda: launchpad)
         m = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
@@ -213,8 +212,7 @@ class DataServer(BaseManager):
 
 
 class NestedClassGetter:
-    """
-    Used to help pickle inner classes, e.g. see Workflow.Links
+    """Used to help pickle inner classes, e.g. see Workflow.Links
     When called with the containing class as the first argument,
     and the name of the nested class as the second argument,
     returns an instance of the nested class.
@@ -229,6 +227,7 @@ class NestedClassGetter:
 
 
 def explicit_serialize(o):
+    """Mark a class for explicit serialization by adding _fw_name attribute."""
     module_name = o.__module__
     if module_name == "__main__":
         import __main__

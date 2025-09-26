@@ -9,8 +9,7 @@ separator_str = ":%%:"
 
 
 def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
-    """
-    Converts a dictionary into a list of keys, with string values "key1.key2:val".
+    """Converts a dictionary into a list of keys, with string values "key1.key2:val".
 
     Args:
         curr_doc
@@ -43,8 +42,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
 
 def collect_stats(list_keys, filter_truncated=True):
-    """
-    Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the
+    """Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the
     number of times each key appears.
 
     Args:

@@ -696,8 +696,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
 
 class WorkflowFireworkStatesTest(unittest.TestCase):
-    """
-    Class to test the firework states locally cached in workflow.
+    """Class to test the firework states locally cached in workflow.
     The states have to be in sync with the actual firework state.
     """
 
@@ -936,7 +935,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
-        launches[0].launch_dir
+        _ = launches[0].launch_dir
 
         # Rerun Zeus
         self.lp.rerun_fw(self.zeus_fw_id, rerun_duplicates=True)
@@ -1309,10 +1308,10 @@ class LaunchPadOfflineTest(unittest.TestCase):
 
         assert fw.state == "FIZZLED"
 
+
 @pytest.mark.mongodb
 class GridfsStoredDataTest(unittest.TestCase):
-    """
-    Tests concerning the storage of data in Gridfs when the size of the
+    """Tests concerning the storage of data in Gridfs when the size of the
     documents exceed the 16MB limit.
     """
 
@@ -1342,7 +1341,6 @@ class GridfsStoredDataTest(unittest.TestCase):
         os.chdir(self.old_wd)
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
-
 
     def test_many_detours(self) -> None:
         task = DetoursTask(n_detours=2000, data_per_detour=["a" * 100] * 100)

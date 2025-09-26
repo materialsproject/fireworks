@@ -1,6 +1,7 @@
 __author__ = "Kiran Mathew, Johannes Hoermann"
 
 import os
+import re
 import unittest
 
 import pytest
@@ -59,7 +60,7 @@ class FilePadTasksTest(unittest.TestCase):
         os.remove(os.path.join(dest_dir, new_file_names[0]))
 
     @pytest.mark.mongodb
-    @pytest.mark.skip(reason='fails after fixing the identical names with the next test')
+    @pytest.mark.skip(reason="fails after fixing the identical names with the next test")
     def test_getfilesbyquerytask_run(self) -> None:
         """Tests querying objects from FilePad by metadata."""
         t = AddFilesTask(paths=self.paths, identifiers=self.identifiers, metadata={"key": "value"})
@@ -140,7 +141,7 @@ class FilePadTasksTest(unittest.TestCase):
             dest_dir=dest_dir,
             new_file_names=["queried_test_file.txt"],
         )
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Query yielded empty result"):
             t.run_task({})
         # test successful if exception raised
 
@@ -182,7 +183,7 @@ class FilePadTasksTest(unittest.TestCase):
         os.remove("degenerate_file.txt")
 
         t = GetFilesByQueryTask(query={"metadata->key": "value"}, fizzle_degenerate_file_name=True)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=re.escape("result")):
             t.run_task({})
         # test successful if exception raised
 

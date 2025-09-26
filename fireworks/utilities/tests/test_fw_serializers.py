@@ -1,4 +1,12 @@
-# from __future__ import unicode_literals
+from __future__ import annotations
+
+import datetime
+import json
+import os
+import unittest
+from typing import Any
+
+import numpy as np
 
 from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, UnitTestSerializer
 from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_dict
@@ -10,11 +18,6 @@ __maintainer__ = "Anubhav Jain"
 __email__ = "ajain@lbl.gov"
 __date__ = "Jan 26, 2013"
 
-import datetime
-import json
-import os
-import unittest
-
 ENCODING_PARAMS = {"encoding": "utf-8"}
 
 
@@ -23,10 +26,15 @@ class ExplicitTestSerializer(FWSerializable):
     def __init__(self, a) -> None:
         self.a = a
 
-    def __eq__(self, other):
-        return self.a == other.a
+    def __eq__(self, other: object) -> bool:
+        """Check equality with another object."""
+        return self.a == getattr(other, "a", None)
 
-    def to_dict(self):
+    def __hash__(self) -> int:
+        """Return hash of the object."""
+        return hash(self.a)
+
+    def to_dict(self) -> dict[str, Any]:
         return {"_fw_name": self.fw_name, "a": self.a}
 
     @classmethod
@@ -64,9 +72,9 @@ class SerializationTest(unittest.TestCase):
     def test_sanity(self) -> None:
         assert self.obj_1 == self.obj_1_copy, "The __eq__() method of the TestSerializer is not set up properly!"
         assert self.obj_1 != self.obj_2, "The __ne__() method of the TestSerializer is not set up properly!"
-        assert self.obj_1 == self.obj_1.from_dict(
-            self.obj_1.to_dict()
-        ), "The to/from_dict() methods of the TestSerializer are not set up properly!"
+        assert self.obj_1 == self.obj_1.from_dict(self.obj_1.to_dict()), (
+            "The to/from_dict() methods of the TestSerializer are not set up properly!"
+        )
 
     def test_serialize_fw_decorator(self) -> None:
         m_dict = self.obj_1.to_dict()
@@ -86,9 +94,9 @@ class SerializationTest(unittest.TestCase):
 
     def test_complex_yaml(self) -> None:
         obj2_yaml_string = str(self.obj_2.to_format("yaml"))
-        assert (
-            self.obj_2.from_format(obj2_yaml_string, "yaml") == self.obj_2
-        ), "Complex YAML format export / import fails!"
+        assert self.obj_2.from_format(obj2_yaml_string, "yaml") == self.obj_2, (
+            "Complex YAML format export / import fails!"
+        )
 
     def test_unicode_json(self) -> None:
         obj3_json_string = str(self.obj_3.to_format())  # default format is JSON, make sure this is true
@@ -96,9 +104,9 @@ class SerializationTest(unittest.TestCase):
 
     def test_unicode_yaml(self) -> None:
         obj3_yaml_string = str(self.obj_3.to_format("yaml"))
-        assert (
-            self.obj_3.from_format(obj3_yaml_string, "yaml") == self.obj_3
-        ), "Unicode YAML format export / import fails!"
+        assert self.obj_3.from_format(obj3_yaml_string, "yaml") == self.obj_3, (
+            "Unicode YAML format export / import fails!"
+        )
 
     def test_unicode_json_file(self) -> None:
         with open(os.path.join(self.module_dir, "test_reference.json")) as f, open(
@@ -118,19 +126,14 @@ class SerializationTest(unittest.TestCase):
         assert self.obj_3.from_file("test.yaml") == self.obj_3, "Unicode YAML file import fails!"
 
     def test_implicit_serialization(self) -> None:
-        assert (
-            load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}) == self.obj_4
-        ), "Implicit import fails!"
+        assert load_object({"a": {"p1": {"p2": 3}}, "_fw_name": "TestSerializer Export Name"}) == self.obj_4, (
+            "Implicit import fails!"
+        )
 
     def test_as_dict(self) -> None:
         assert self.obj_1.as_dict() == self.obj_1.to_dict()
 
     def test_numpy_array(self) -> None:
-        try:
-            import numpy as np
-        except Exception:
-            raise unittest.SkipTest("Skipping numpy serialization testing...")
-
         x = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         x = recursive_dict(x)
         assert x == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]

@@ -28,13 +28,12 @@ class FWReport:
     def __init__(self, lpad) -> None:
         """
         Args:
-        lpad (LaunchPad).
+            lpad (LaunchPad).
         """
         self.db = lpad.db
 
     def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
-        """
-        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>,
+        """Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>,
         e.g. past 5 days.
 
         Args:
@@ -131,8 +130,7 @@ class FWReport:
         return decorated_list
 
     def plot_stats(self, coll="fireworks", interval="days", num_intervals=5, states=None, style="bar", **kwargs):
-        """
-        Makes a chart with the summary data.
+        """Makes a chart with the summary data.
 
         Args:
             coll (str): collection, either "fireworks", "workflows", or "launches"
@@ -183,8 +181,7 @@ class FWReport:
 
     @staticmethod
     def get_stats_str(decorated_stat_list: list[dict]) -> str:
-        """
-        Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
+        """Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 
         Args:
             decorated_stat_list (list[dict]): List of completed/failed/... statistics for

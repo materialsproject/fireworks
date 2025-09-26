@@ -1,6 +1,3 @@
-[tool.black]
-line-length = 120
-
 [tool.ruff]
 target-version = "py38"
 line-length = 120
@@ -42,7 +39,7 @@ ignore = [
   "B028",    # No explicit stacklevel keyword argument found
   "B904",    # Within an except clause, raise exceptions with ...
   "C408",    # unnecessary-collection-call
-  "D105",    # Missing docstring in magic method
+  "D102",    # missing-docstring-in-public-method (temp ignore, re-enable later once we have docstrings)
   "D205",    # 1 blank line required between summary line and description
   "D212",    # Multi-line docstring summary should start at the first line
   "PD901",   # pandas-df-variable-name
@@ -61,11 +58,17 @@ isort.split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"tests/**" = ["D"]
+"**/tests/*" = [
+  "D100", # missing-module-docstring
+  "D101", # missing-class-docstring
+  "D102", # missing-docstring-in-public-method
+  "D103", # missing-function-docstring
+  "D107", # missing-init-docstring
+]
 "tasks.py" = ["D"]
-"fw_tutorials/**" = ["D"]
+"fw_tutorials/*" = ["D"]
 
 [tool.pytest.ini_options]
 markers = [
-    "mongodb: marks tests that need mongodb (deselect with '-m \"not mongodb\"')",
+  "mongodb: marks tests that need mongodb (deselect with '-m \"not mongodb\"')",
 ]

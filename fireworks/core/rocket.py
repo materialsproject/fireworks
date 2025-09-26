@@ -1,5 +1,4 @@
-"""
-A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
+"""A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
 completes the Launch.
 """
 
@@ -108,18 +107,17 @@ class Rocket:
     def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int) -> None:
         """
         Args:
-        launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
-            If none, reads FireWorks from FW.json and writes to FWAction.json
-        fworker (FWorker): A FWorker object describing the computing resource
-        fw_id (int): id of a specific Firework to run (quit if it cannot be found).
+            launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
+                If none, reads FireWorks from FW.json and writes to FWAction.json
+            fworker (FWorker): A FWorker object describing the computing resource
+            fw_id (int): id of a specific Firework to run (quit if it cannot be found).
         """
         self.launchpad = launchpad
         self.fworker = fworker
         self.fw_id = fw_id
 
     def run(self, pdb_on_exception: bool = False) -> bool:
-        """
-        Run the rocket (check out a job from the database and execute it).
+        """Run the rocket (check out a job from the database and execute it).
 
         Args:
             pdb_on_exception (bool): whether to invoke the debugger on a caught exception. Default to False.
@@ -427,8 +425,7 @@ class Rocket:
 
     @staticmethod
     def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: dict[str, any]) -> None:
-        """
-        Helper function to update checkpoint.
+        """Helper function to update checkpoint.
 
         Args:
             launchpad (LaunchPad): LaunchPad to ping with checkpoint data

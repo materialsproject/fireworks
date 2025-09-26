@@ -1,3 +1,5 @@
+"""Duplicate finder utilities and classes used by FireWorks."""
+
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"

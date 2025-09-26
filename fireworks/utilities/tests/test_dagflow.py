@@ -11,6 +11,8 @@ import uuid
 import pytest
 
 from fireworks import Firework, PyTask, Workflow
+from fireworks.core.firework import FiretaskBase
+from fireworks.utilities.dagflow import DAGFlow
 
 
 class DAGFlowTest(unittest.TestCase):
@@ -36,16 +38,12 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_ok(self) -> None:
         """Construct and replicate."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []})
         dagf = DAGFlow.from_fireworks(wfl)
         DAGFlow(**dagf.to_dict())
 
     def test_dagflow_loop(self) -> None:
         """Loop in graph."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2, self.fw2: self.fw3, self.fw3: self.fw1})
         msg = "The workflow graph must be a DAG.: found cycles:"
         with pytest.raises(AssertionError) as exc:
@@ -54,8 +52,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_cut(self) -> None:
         """Disconnected graph."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: self.fw2})
         msg = "The workflow graph must be connected"
         with pytest.raises(AssertionError) as exc:
@@ -64,8 +60,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_link(self) -> None:
         """Wrong links."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: [self.fw2, self.fw3]})
         msg = "Every input in inputs list must have exactly one source."
         with pytest.raises(AssertionError) as exc:
@@ -74,8 +68,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_missing_input(self) -> None:
         """Missing input."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         fw2 = Firework(
             PyTask(func="math.pow", inputs=["first power", "exponent"], outputs=["second power"]),
             name="pow(pow(2, 3), 4)",
@@ -91,8 +83,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_clashing_inputs(self) -> None:
         """Parent firework output overwrites an input in spec."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         fw2 = Firework(
             PyTask(func="math.pow", inputs=["first power", "exponent"], outputs=["second power"]),
             name="pow(pow(2, 3), 4)",
@@ -109,8 +99,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_race_condition(self) -> None:
         """Two parent firework outputs overwrite each other."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         task = PyTask(func="math.pow", inputs=["base", "exponent"], outputs=["second power"])
         fw1 = Firework(task, name="pow(2, 3)", spec={"base": 2, "exponent": 3})
         fw2 = Firework(task, name="pow(2, 3)", spec={"base": 2, "exponent": 3})
@@ -125,8 +113,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_clashing_outputs(self) -> None:
         """Subsequent task overwrites output of a task."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         tasks = [
             PyTask(func="math.pow", inputs=["first power 1", "exponent"], outputs=["second power"]),
             PyTask(func="math.pow", inputs=["first power 2", "exponent"], outputs=["second power"]),
@@ -139,8 +125,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_non_dataflow_tasks(self) -> None:
         """non-dataflow tasks using outputs and inputs keys do not fail."""
-        from fireworks.core.firework import FiretaskBase
-        from fireworks.utilities.dagflow import DAGFlow
 
         class NonDataFlowTask(FiretaskBase):
             """a firetask class for testing."""
@@ -158,8 +142,6 @@ class DAGFlowTest(unittest.TestCase):
 
     def test_dagflow_view(self) -> None:
         """Visualize the workflow graph."""
-        from fireworks.utilities.dagflow import DAGFlow
-
         wfl = Workflow([self.fw1, self.fw2, self.fw3], {self.fw1: [self.fw2], self.fw2: [self.fw3], self.fw3: []})
         dagf = DAGFlow.from_fireworks(wfl)
         dagf.add_step_labels()

@@ -5,12 +5,8 @@ from __future__ import annotations
 import builtins
 import shlex
 import subprocess
-import sys
 
 from fireworks.core.firework import FiretaskBase, FWAction
-
-if sys.version_info[0] > 2:
-    basestring = str
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -99,7 +95,7 @@ class ScriptTask(FiretaskBase):
         self.use_shell = d.get("use_shell", True)
 
         m_script = d["script"]
-        if isinstance(m_script, basestring):
+        if isinstance(m_script, str):
             m_script = [m_script]
 
         if not self.use_shell:
@@ -129,8 +125,7 @@ class ScriptTask(FiretaskBase):
 
 
 class PyTask(FiretaskBase):
-    """
-    Runs any python function! Extremely powerful, which allows you to
+    """Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system. The optional inputs
     and outputs lists may contain spec keys to add to args list and to make
     the function output available in the current and in children fireworks.

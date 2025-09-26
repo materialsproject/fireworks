@@ -1,5 +1,4 @@
-"""
-This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
+"""This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
 if used in "rapid-fire" mode, can submit multiple jobs within a directory structure.
 The details of job submission and queue communication are handled using Queueadapter,
 which specifies a QueueAdapter as well as desired properties of the submit script.
@@ -20,8 +19,8 @@ from fireworks.fw_config import (
     QUEUE_RETRY_ATTEMPTS,
     QUEUE_UPDATE_INTERVAL,
     RAPIDFIRE_SLEEP_SECS,
+    STREAM_LOGLEVEL,
     SUBMIT_SCRIPT_NAME,
-    STREAM_LOGLEVEL
 )
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
@@ -44,8 +43,7 @@ def launch_rocket_to_queue(
     fill_mode=False,
     fw_id=None,
 ):
-    """
-    Submit a single job to the queue.
+    """Submit a single job to the queue.
 
     Args:
         launchpad (LaunchPad)
@@ -181,8 +179,7 @@ def rapidfire(
     timeout=None,
     fill_mode=False,
 ) -> None:
-    """
-    Submit many jobs to the queue.
+    """Submit many jobs to the queue.
 
     Args:
         launchpad (LaunchPad)
@@ -290,8 +287,7 @@ def rapidfire(
 
 
 def _njobs_in_dir(block_dir):
-    """
-    Internal method to count the number of jobs inside a block.
+    """Internal method to count the number of jobs inside a block.
 
     Args:
         block_dir: (str) the block directory we want to count the jobs in
@@ -303,8 +299,7 @@ def _njobs_in_dir(block_dir):
 
 
 def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
-    """
-    Internal method to get the number of jobs in the queue using the given job params.
+    """Internal method to get the number of jobs in the queue using the given job params.
     In case of failure, automatically retries at certain intervals...
 
     Args:

@@ -7,7 +7,7 @@ from fireworks.scripts.lpad_run import lpad
 __author__ = "Janosh Riebesell <janosh.riebesell@gmail.com>"
 
 
-@pytest.fixture()
+@pytest.fixture
 def lp(capsys):
     # prevent this fixture from polluting std{out,err} of tests that use it
     with capsys.disabled():

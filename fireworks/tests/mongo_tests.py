@@ -4,8 +4,8 @@ import os
 import random
 import shutil
 import time
-import uuid
 import unittest
+import uuid
 from multiprocessing import Pool
 from typing import NoReturn
 
@@ -76,22 +76,22 @@ class ModSpecTask(FiretaskBase):
 
 @explicit_serialize
 class SummationTask(FiretaskBase):
-    required_params = ['inputs', 'output']
+    required_params = ["inputs", "output"]
 
     def run_task(self, fw_spec):
-        inp = [fw_spec[i] for i in self['inputs']]
-        return FWAction(update_spec={self['output']: sum(inp)})
+        inp = [fw_spec[i] for i in self["inputs"]]
+        return FWAction(update_spec={self["output"]: sum(inp)})
 
 
 @explicit_serialize
 class AppendWFActionTask(FiretaskBase):
-    required_params = ['fw_name', 'tag', 'val', 'inputs', 'output', 'parents']
+    required_params = ["fw_name", "tag", "val", "inputs", "output", "parents"]
 
     def run_task(self, fw_spec):
-        tsk = SummationTask(inputs=self['inputs'], output=self['output'])
-        fwk = Firework(name=self['fw_name'], tasks=[tsk])
-        dct = {'detour': True, 'workflow': Workflow(fireworks=[fwk]), 'parents': self['parents']}
-        return FWAction(append_wfs=dct, update_spec={self['tag']: self['val']})
+        tsk = SummationTask(inputs=self["inputs"], output=self["output"])
+        fwk = Firework(name=self["fw_name"], tasks=[tsk])
+        dct = {"detour": True, "workflow": Workflow(fireworks=[fwk]), "parents": self["parents"]}
+        return FWAction(append_wfs=dct, update_spec={self["tag"]: self["val"]})
 
 
 class MongoTests(unittest.TestCase):
@@ -586,46 +586,53 @@ class MongoTests(unittest.TestCase):
         assert self.lp.get_fw_by_id(2).spec["dummy2"] == [True, True]
 
     def test_append_wf_detour_two_parents(self) -> None:
-        """test the append_wf with one detour and two parents"""
-        fw_0 = Firework(tasks=PyTask(func='builtins.print', args=['Root node']))
-        fw_11 = Firework(tasks=PyTask(func='builtins.print', args=['branch 1, node 1']))
-        fw_12 = Firework(tasks=PyTask(func='builtins.print', args=['branch 1, node 2']))
-        fw_21 = Firework(tasks=PyTask(func='builtins.print', args=['branch 2, node 1']))
-        fw_22 = Firework(tasks=PyTask(func='builtins.print', args=['branch 2, node 2']))
-        wf = Workflow(fireworks=[fw_0, fw_11, fw_12, fw_21, fw_22],
-                      links_dict={fw_0: [fw_11, fw_21], fw_11: [fw_12], fw_21: [fw_22]})
+        """Test the append_wf with one detour and two parents."""
+        fw_0 = Firework(tasks=PyTask(func="builtins.print", args=["Root node"]))
+        fw_11 = Firework(tasks=PyTask(func="builtins.print", args=["branch 1, node 1"]))
+        fw_12 = Firework(tasks=PyTask(func="builtins.print", args=["branch 1, node 2"]))
+        fw_21 = Firework(tasks=PyTask(func="builtins.print", args=["branch 2, node 1"]))
+        fw_22 = Firework(tasks=PyTask(func="builtins.print", args=["branch 2, node 2"]))
+        wf = Workflow(
+            fireworks=[fw_0, fw_11, fw_12, fw_21, fw_22],
+            links_dict={fw_0: [fw_11, fw_21], fw_11: [fw_12], fw_21: [fw_22]},
+        )
         self.lp.add_wf(wf)
         det_name = uuid.uuid4().hex
-        det_fw = Firework(name=det_name, tasks=[PyTask(func='builtins.print', args=['detour'])])
+        det_fw = Firework(name=det_name, tasks=[PyTask(func="builtins.print", args=["detour"])])
         det_wf = Workflow(fireworks=[det_fw])
         self.lp.append_wf(det_wf, fw_ids=[fw_11.fw_id, fw_21.fw_id], detour=[True, False])
         links = self.lp.get_wf_by_fw_id(fw_0.fw_id).links
-        det_fw_id = self.lp.fireworks.find_one({'name': det_name}, {'fw_id': True})['fw_id']
+        det_fw_id = self.lp.fireworks.find_one({"name": det_name}, {"fw_id": True})["fw_id"]
         assert links[fw_11.fw_id] == [fw_12.fw_id, det_fw_id]
         assert links[fw_21.fw_id] == [fw_22.fw_id, det_fw_id]
         assert links[det_fw_id] == [fw_12.fw_id]
 
     def test_append_wfs_action(self) -> None:
-        """test the new append_wfs action"""
+        """Test the new append_wfs action."""
         fw_0_tag = uuid.uuid4().hex
-        fw_0 = Firework(tasks=PyTask(func='builtins.sum', args=[[0]], outputs=[fw_0_tag]))
+        fw_0 = Firework(tasks=PyTask(func="builtins.sum", args=[[0]], outputs=[fw_0_tag]))
         fw_11_tag = uuid.uuid4().hex
-        fw_11 = Firework(tasks=PyTask(func='builtins.sum', args=[[11]], outputs=[fw_11_tag]))
+        fw_11 = Firework(tasks=PyTask(func="builtins.sum", args=[[11]], outputs=[fw_11_tag]))
         wf = Workflow(fireworks=[fw_0, fw_11], links_dict={fw_0: [fw_11]})
         self.lp.add_wf(wf)
         det_name = uuid.uuid4().hex
         fw_21_tag = uuid.uuid4().hex
         fw_22_tag = uuid.uuid4().hex
-        tsk_kwargs = {'fw_name': det_name, 'tag': fw_21_tag, 'val': 21,
-                      'inputs': [fw_11_tag, fw_21_tag], 'output': fw_22_tag,
-                      'parents': [fw_11.fw_id]}
+        tsk_kwargs = {
+            "fw_name": det_name,
+            "tag": fw_21_tag,
+            "val": 21,
+            "inputs": [fw_11_tag, fw_21_tag],
+            "output": fw_22_tag,
+            "parents": [fw_11.fw_id],
+        }
         fw_21 = Firework(tasks=AppendWFActionTask(**tsk_kwargs))
-        fw_22 = Firework(tasks=PyTask(func='builtins.print', inputs=[fw_22_tag]))
+        fw_22 = Firework(tasks=PyTask(func="builtins.print", inputs=[fw_22_tag]))
         wf_app = Workflow(fireworks=[fw_21, fw_22], links_dict={fw_21: [fw_22]})
         self.lp.append_wf(wf_app, fw_ids=[fw_0.fw_id], detour=False, pull_spec_mods=True)
         rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
         links = self.lp.get_wf_by_fw_id(fw_0.fw_id).links
-        det_id = self.lp.fireworks.find_one({'name': det_name}, {'fw_id': True})['fw_id']
+        det_id = self.lp.fireworks.find_one({"name": det_name}, {"fw_id": True})["fw_id"]
         assert links[fw_11.fw_id] == [det_id]
         assert links[fw_21.fw_id] == [fw_22.fw_id, det_id]
         assert links[det_id] == [fw_22.fw_id]

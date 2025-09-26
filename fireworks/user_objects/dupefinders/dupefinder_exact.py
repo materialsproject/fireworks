@@ -1,3 +1,5 @@
+"""Exact duplicate finder implementation for FireWorks specs."""
+
 from fireworks.features.dupefinder import DupeFinderBase
 
 __author__ = "Anubhav Jain"
@@ -13,8 +15,7 @@ class DupeFinderExact(DupeFinderBase):
     _fw_name = "DupeFinderExact"
 
     def query(self, spec):
-        """
-        Returns the query for matching fireworks with non-zero launches and with exact matching specs.
+        """Returns the query for matching fireworks with non-zero launches and with exact matching specs.
 
         Args:
             spec (dict): spec to check for duplicates
