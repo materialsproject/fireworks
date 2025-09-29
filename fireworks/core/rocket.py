@@ -86,6 +86,8 @@ def background_task(btask, spec, stop_event, master_thread) -> None:
     num_launched = 0
     while not stop_event.is_set() and master_thread.is_alive():
         for task in btask.tasks:
+            if hasattr(task, 'set_stop_event'):
+                task.set_stop_event(stop_event)
             task.run_task(spec)
         if btask.sleep_time > 0:
             stop_event.wait(btask.sleep_time)
