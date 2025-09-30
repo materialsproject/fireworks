@@ -15,7 +15,7 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import Any, Iterator, NoReturn, Self, Sequence
+from typing import TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
@@ -26,6 +26,9 @@ from fireworks.fw_config import NEGATIVE_FWID_CTR as NEGATIVE_FWID_CTR  # noqa: 
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_deserialize, recursive_serialize, serialize_fw
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
+
+if TYPE_CHECKING:
+    from typing import Self
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
