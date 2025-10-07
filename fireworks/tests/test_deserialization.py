@@ -40,7 +40,11 @@ class FakeBadTask:
 
 
 def test_fizzle_on_deserialization_failure(lpad: LaunchPad, tmp_path) -> None:
-    """A FW whose task cannot be deserialized is marked FIZZLED and skipped."""
+    """Test basic deserialization failure handling.
+
+    Verifies that a FW whose task cannot be deserialized is marked FIZZLED and that
+    exception details are recorded in the spec for debugging. Tests firework-level behavior.
+    """
     # Create a Firework whose task serializes to a bogus _fw_name so recursive_deserialize fails
     fw = Firework(tasks=[FakeBadTask()], name="bad-deser-fw")
     wf = Workflow.from_firework(fw)
@@ -60,8 +64,11 @@ def test_fizzle_on_deserialization_failure(lpad: LaunchPad, tmp_path) -> None:
 
 
 def test_queue_skips_bad_and_runs_next(lpad: LaunchPad, tmp_path) -> None:
-    """If the top-priority FW fails to deserialize, it should be marked as FIZZLED and the queue should move on to the
-    next FW.
+    """Test queue behavior with deserialization failures.
+
+    Verifies that if the top-priority FW fails to deserialize, it is marked as FIZZLED
+    and the queue doesn't get stuck—it moves on to process the next available FW.
+    Ensures the queue remains operational despite bad FWs.
     """
     # Bad FW with higher priority
     bad_fw = Firework(tasks=[FakeBadTask()], name="bad-first", spec={"_priority": 100})
@@ -85,11 +92,12 @@ def test_queue_skips_bad_and_runs_next(lpad: LaunchPad, tmp_path) -> None:
 
 
 def test_workflow_state_updated_on_deserialization_failure(lpad: LaunchPad, tmp_path) -> None:
-    """Verify that when a FW fails deserialization, both workflow.state and workflow.fw_states are properly updated.
+    """Test database consistency after deserialization failures.
 
-    This addresses the maintainer's concern that manual FW state updates must also update:
-    1. workflows.state to "FIZZLED"
-    2. workflows.fw_states.{fw_id} to "FIZZLED"
+    Verifies that when a FW fails deserialization, the workflow collection is properly updated
+    with both workflows.state="FIZZLED" and workflows.fw_states.{fw_id}="FIZZLED".
+    Uses direct MongoDB queries (not LaunchPad API) to ensure _refresh_wf() correctly updates
+    both fields, preventing database inconsistencies.
     """
     # Create a bad FW that will fail deserialization
     bad_fw = Firework(tasks=[FakeBadTask()], name="bad-deser-fw")
