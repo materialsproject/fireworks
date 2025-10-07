@@ -82,3 +82,41 @@ def test_queue_skips_bad_and_runs_next(lpad: LaunchPad, tmp_path) -> None:
     good = lpad.get_fw_dict_by_id(2)
     assert bad["state"] == "FIZZLED"
     assert good["state"] == "RESERVED"
+
+
+def test_workflow_state_updated_on_deserialization_failure(lpad: LaunchPad, tmp_path) -> None:
+    """Verify that when a FW fails deserialization, both workflow.state and workflow.fw_states are properly updated.
+
+    This addresses the maintainer's concern that manual FW state updates must also update:
+    1. workflows.state to "FIZZLED"
+    2. workflows.fw_states.{fw_id} to "FIZZLED"
+    """
+    # Create a bad FW that will fail deserialization
+    bad_fw = Firework(tasks=[FakeBadTask()], name="bad-deser-fw")
+    wf = Workflow.from_firework(bad_fw)
+    lpad.add_wf(wf)
+
+    # Get the actual fw_id assigned by the database
+    fw_dict = lpad.get_fw_dict_by_id(1)
+    fw_id = fw_dict["fw_id"]
+
+    # Attempt to launch - this should fail deserialization and mark as FIZZLED
+    os.chdir(tmp_path)
+    ran = launch_rocket(lpad)
+    assert ran is False
+
+    # Verify the FW is FIZZLED
+    fw_dict = lpad.get_fw_dict_by_id(fw_id)
+    assert fw_dict["state"] == "FIZZLED"
+
+    # Verify the workflow document has been properly updated
+    wf_doc = lpad.workflows.find_one({"nodes": fw_id})
+    assert wf_doc is not None, "Workflow document should exist"
+
+    # Check that workflow state is FIZZLED
+    assert wf_doc["state"] == "FIZZLED", "Workflow state should be FIZZLED"
+
+    # Check that fw_states mapping is updated for this fw_id
+    fw_states_key = str(fw_id)  # MongoDB stores dict keys as strings
+    assert fw_states_key in wf_doc["fw_states"], f"fw_states should contain key for fw_id {fw_id}"
+    assert wf_doc["fw_states"][fw_states_key] == "FIZZLED", f"fw_states.{fw_id} should be FIZZLED"
