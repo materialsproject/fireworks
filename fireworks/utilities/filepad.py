@@ -11,7 +11,12 @@ from monty.json import MSONable
 from monty.serialization import loadfn
 from pymongo import DESCENDING
 
-from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL, MongoClient
+from fireworks.fw_config import (
+    LAUNCHPAD_LOC,
+    MONGO_SOCKET_TIMEOUT_MS,
+    STREAM_LOGLEVEL,
+    MongoClient,
+)
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Kiran Mathew"
@@ -40,7 +45,7 @@ class FilePad(MSONable):
         Args:
             host (str): hostname
             port (int): port number
-            database (str): database name
+            name (str): database name
             username (str)
             password (str).
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
@@ -70,7 +75,9 @@ class FilePad(MSONable):
         if uri_mode:
             self.connection = MongoClient(host, **self.mongoclient_kwargs)
             if self.name is None:
-                raise ValueError("Must specify a database name when using a MongoDB URI string.")
+                raise ValueError(
+                    "Must specify a database name when using a MongoDB URI string."
+                )
             self.db = self.connection[self.name]
         else:
             if "socketTimeoutMS" not in self.mongoclient_kwargs:
@@ -99,7 +106,9 @@ class FilePad(MSONable):
         # logging
         self.logdir = logdir
         self.strm_lvl = strm_lvl or STREAM_LOGLEVEL
-        self.logger = get_fw_logger("filepad", l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.logger = get_fw_logger(
+            "filepad", l_dir=self.logdir, stream_level=self.strm_lvl
+        )
 
         # build indexes
         self.build_indexes()
