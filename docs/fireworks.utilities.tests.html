@@ -41,82 +41,8 @@
 <section id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Link to this heading">¶</a></h2>
 </section>
-<section id="module-fireworks.utilities.tests.test_dagflow">
-<span id="fireworks-utilities-tests-test-dagflow-module"></span><h2>fireworks.utilities.tests.test_dagflow module<a class="headerlink" href="#module-fireworks.utilities.tests.test_dagflow" title="Link to this heading">¶</a></h2>
-<p>Unit tests for the DAGFlow class.</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.tests.test_dagflow.</span></span><span class="sig-name descname"><span class="pre">DAGFlowTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
-<p>run tests for DAGFlow class.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp">
-<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp" title="Link to this definition">¶</a></dt>
-<dd><p>Hook method for setting up the test fixture before exercising it.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs">
-<span class="sig-name descname"><span class="pre">test_dagflow_clashing_inputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs" title="Link to this definition">¶</a></dt>
-<dd><p>Parent firework output overwrites an input in spec.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs">
-<span class="sig-name descname"><span class="pre">test_dagflow_clashing_outputs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs" title="Link to this definition">¶</a></dt>
-<dd><p>Subsequent task overwrites output of a task.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut">
-<span class="sig-name descname"><span class="pre">test_dagflow_cut</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut" title="Link to this definition">¶</a></dt>
-<dd><p>Disconnected graph.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link">
-<span class="sig-name descname"><span class="pre">test_dagflow_link</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link" title="Link to this definition">¶</a></dt>
-<dd><p>Wrong links.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop">
-<span class="sig-name descname"><span class="pre">test_dagflow_loop</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop" title="Link to this definition">¶</a></dt>
-<dd><p>Loop in graph.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input">
-<span class="sig-name descname"><span class="pre">test_dagflow_missing_input</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input" title="Link to this definition">¶</a></dt>
-<dd><p>Missing input.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks">
-<span class="sig-name descname"><span class="pre">test_dagflow_non_dataflow_tasks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks" title="Link to this definition">¶</a></dt>
-<dd><p>non-dataflow tasks using outputs and inputs keys do not fail.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok">
-<span class="sig-name descname"><span class="pre">test_dagflow_ok</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok" title="Link to this definition">¶</a></dt>
-<dd><p>Construct and replicate.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition">
-<span class="sig-name descname"><span class="pre">test_dagflow_race_condition</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition" title="Link to this definition">¶</a></dt>
-<dd><p>Two parent firework outputs overwrite each other.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view">
-<span class="sig-name descname"><span class="pre">test_dagflow_view</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view" title="Link to this definition">¶</a></dt>
-<dd><p>Visualize the workflow graph.</p>
-</dd></dl>
-
-</dd></dl>
-
+<section id="fireworks-utilities-tests-test-dagflow-module">
+<h2>fireworks.utilities.tests.test_dagflow module<a class="headerlink" href="#fireworks-utilities-tests-test-dagflow-module" title="Link to this heading">¶</a></h2>
 </section>
 <section id="module-fireworks.utilities.tests.test_filepad">
 <span id="fireworks-utilities-tests-test-filepad-module"></span><h2>fireworks.utilities.tests.test_filepad module<a class="headerlink" href="#module-fireworks.utilities.tests.test_filepad" title="Link to this heading">¶</a></h2>
@@ -126,44 +52,44 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.setUp">
-<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.setUp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.setUp" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.tearDown">
-<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.tearDown" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.tearDown" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file">
-<span class="sig-name descname"><span class="pre">test_add_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_add_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file_with_no_identifier">
-<span class="sig-name descname"><span class="pre">test_add_file_with_no_identifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file_with_no_identifier" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_add_file_with_no_identifier</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_add_file_with_no_identifier" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_delete_file">
-<span class="sig-name descname"><span class="pre">test_delete_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_delete_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_delete_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_delete_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_get_file">
-<span class="sig-name descname"><span class="pre">test_get_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_get_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_get_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_get_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file">
-<span class="sig-name descname"><span class="pre">test_update_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_update_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file_by_id">
-<span class="sig-name descname"><span class="pre">test_update_file_by_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file_by_id" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_update_file_by_id</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_filepad.FilePadTest.test_update_file_by_id" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -177,13 +103,13 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.setUp">
-<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.setUp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.setUp" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.test_explicit_serialization">
-<span class="sig-name descname"><span class="pre">test_explicit_serialization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.test_explicit_serialization" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_explicit_serialization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.test_explicit_serialization" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -194,7 +120,7 @@
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.__init__" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -204,7 +130,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.to_dict" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.to_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -215,79 +141,79 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.setUp">
-<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.setUp" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">setUp</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.setUp" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for setting up the test fixture before exercising it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.tearDown">
-<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.tearDown" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">tearDown</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.tearDown" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the test fixture after testing it.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_as_dict">
-<span class="sig-name descname"><span class="pre">test_as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_as_dict" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_as_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_json">
-<span class="sig-name descname"><span class="pre">test_complex_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_json" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_complex_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_json" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_yaml">
-<span class="sig-name descname"><span class="pre">test_complex_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_yaml" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_complex_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_complex_yaml" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_implicit_serialization">
-<span class="sig-name descname"><span class="pre">test_implicit_serialization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_implicit_serialization" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_implicit_serialization</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_implicit_serialization" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_json">
-<span class="sig-name descname"><span class="pre">test_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_json" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_json" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_numpy_array">
-<span class="sig-name descname"><span class="pre">test_numpy_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_numpy_array" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_numpy_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_numpy_array" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_sanity">
-<span class="sig-name descname"><span class="pre">test_sanity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_sanity" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_sanity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_sanity" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_serialize_fw_decorator">
-<span class="sig-name descname"><span class="pre">test_serialize_fw_decorator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_serialize_fw_decorator" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_serialize_fw_decorator</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_serialize_fw_decorator" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json">
-<span class="sig-name descname"><span class="pre">test_unicode_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_unicode_json</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json_file">
-<span class="sig-name descname"><span class="pre">test_unicode_json_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_unicode_json_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_json_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml">
-<span class="sig-name descname"><span class="pre">test_unicode_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_unicode_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml_file">
-<span class="sig-name descname"><span class="pre">test_unicode_yaml_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_unicode_yaml_file</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_unicode_yaml_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_yaml">
-<span class="sig-name descname"><span class="pre">test_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_yaml" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_yaml</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_yaml" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -301,19 +227,19 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.setUpClass">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.setUpClass" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">setUpClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.setUpClass" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for setting up class fixture before running tests in the class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.tearDownClass">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.tearDownClass" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.tearDownClass" title="Link to this definition">¶</a></dt>
 <dd><p>Hook method for deconstructing the class fixture after running all tests in the class.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.test_update_path">
-<span class="sig-name descname"><span class="pre">test_update_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.test_update_path" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">test_update_path</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_update_collection.UpdateCollectionTests.test_update_path" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -328,17 +254,18 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_visualize.test_plot_wf">
-<span class="sig-prename descclassname"><span class="pre">fireworks.utilities.tests.test_visualize.</span></span><span class="sig-name descname"><span class="pre">test_plot_wf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_wf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_visualize.test_plot_wf" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">fireworks.utilities.tests.test_visualize.</span></span><span class="sig-name descname"><span class="pre">test_plot_wf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_wf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_visualize.test_plot_wf" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.utilities.tests.test_visualize.test_wf_to_graph">
-<span class="sig-prename descclassname"><span class="pre">fireworks.utilities.tests.test_visualize.</span></span><span class="sig-name descname"><span class="pre">test_wf_to_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_wf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_visualize.test_wf_to_graph" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">fireworks.utilities.tests.test_visualize.</span></span><span class="sig-name descname"><span class="pre">test_wf_to_graph</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">power_wf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.utilities.tests.test_visualize.test_wf_to_graph" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>
 <section id="module-fireworks.utilities.tests">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.utilities.tests" title="Link to this heading">¶</a></h2>
+<p>Tests for FireWorks utilities.</p>
 </section>
 </section>
 
@@ -354,23 +281,7 @@
     <ul>
 <li><a class="reference internal" href="#">fireworks.utilities.tests package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#module-fireworks.utilities.tests.test_dagflow">fireworks.utilities.tests.test_dagflow module</a><ul>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest</span></code></a><ul>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.setUp()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_clashing_inputs()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_clashing_outputs()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_cut()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_link()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_loop()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_missing_input()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_non_dataflow_tasks()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_ok()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_race_condition()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view"><code class="docutils literal notranslate"><span class="pre">DAGFlowTest.test_dagflow_view()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li><a class="reference internal" href="#fireworks-utilities-tests-test-dagflow-module">fireworks.utilities.tests.test_dagflow module</a></li>
 <li><a class="reference internal" href="#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad module</a><ul>
 <li><a class="reference internal" href="#fireworks.utilities.tests.test_filepad.FilePadTest"><code class="docutils literal notranslate"><span class="pre">FilePadTest</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.utilities.tests.test_filepad.FilePadTest.setUp"><code class="docutils literal notranslate"><span class="pre">FilePadTest.setUp()</span></code></a></li>

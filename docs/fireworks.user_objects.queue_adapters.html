@@ -77,18 +77,18 @@ queues.</p>
 TORQUE), SGE, and SLURM queues.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.__init__" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.__init__" title="Link to this definition">¶</a></dt>
 <dd><p>Initializes a new QueueAdapter object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>q_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The type of queue. Right now it should be either PBS,
+<li><p><strong>q_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The type of queue. Right now it should be either PBS,
 SGE, SLURM, Cobalt or LoadLeveler.</p></li>
-<li><p><strong>q_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – A name for the queue. Can be any string.</p></li>
-<li><p><strong>template_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a><em>, </em><em>optional</em>) – The path to the template file. Leave it as
+<li><p><strong>q_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – A name for the queue. Can be any string.</p></li>
+<li><p><strong>template_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a><em>, </em><em>optional</em>) – The path to the template file. Leave it as
 None (the default) to use Fireworks’ built-in templates for PBS and SGE,
 which should work on most queues.</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a><em>, </em><em>optional</em>) – The amount of seconds to wait before raising an error when
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a><em>, </em><em>optional</em>) – The amount of seconds to wait before raising an error when
 checking the number of jobs in the queue. Default 5 seconds.</p></li>
 <li><p><strong>**kwargs</strong> – Series of keyword args for queue parameters.</p></li>
 </ul>
@@ -108,8 +108,8 @@ checking the number of jobs in the queue. Default 5 seconds.</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.get_njobs_in_queue">
-<span class="sig-name descname"><span class="pre">get_njobs_in_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.get_njobs_in_queue" title="Link to this definition">¶</a></dt>
-<dd><p>returns the number of jobs currently in the queue for the user.</p>
+<span class="sig-name descname"><span class="pre">get_njobs_in_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.get_njobs_in_queue" title="Link to this definition">¶</a></dt>
+<dd><p>Returns the number of jobs currently in the queue for the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>username</strong> – (str) the username of the jobs to count (default is to autodetect)</p>
@@ -123,7 +123,7 @@ checking the number of jobs in the queue. Default 5 seconds.</p></li>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.submit_to_queue">
 <span class="sig-name descname"><span class="pre">submit_to_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.submit_to_queue" title="Link to this definition">¶</a></dt>
-<dd><p>submits the job to the queue and returns the job id.</p>
+<dd><p>Submits the job to the queue and returns the job id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>script_file</strong> – (str) name of the script file to use (String)</p>
@@ -144,6 +144,7 @@ checking the number of jobs in the queue. Default 5 seconds.</p></li>
 </section>
 <section id="module-fireworks.user_objects.queue_adapters.pbs_newt_adapter">
 <span id="fireworks-user-objects-queue-adapters-pbs-newt-adapter-module"></span><h2>fireworks.user_objects.queue_adapters.pbs_newt_adapter module<a class="headerlink" href="#module-fireworks.user_objects.queue_adapters.pbs_newt_adapter" title="Link to this heading">¶</a></h2>
+<p>NEWT-based PBS queue adapter used for remote job submission and status.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.queue_adapters.pbs_newt_adapter.</span></span><span class="sig-name descname"><span class="pre">PBSAdapterNEWT</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT" title="Link to this definition">¶</a></dt>
@@ -157,11 +158,11 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.get_njobs_in_queue">
-<span class="sig-name descname"><span class="pre">get_njobs_in_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.get_njobs_in_queue" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">get_njobs_in_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">username</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.get_njobs_in_queue" title="Link to this definition">¶</a></dt>
 <dd><p>Returns the number of jobs currently in the queue for the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</p>
+<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(int) number of jobs in the queue</p>
@@ -186,7 +187,7 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_to_queue">
-<span class="sig-name descname"><span class="pre">submit_to_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_to_queue" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">submit_to_queue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">script_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_to_queue" title="Link to this definition">¶</a></dt>
 <dd><p>Submits the job to the queue and returns the job id.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -208,6 +209,7 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 </section>
 <section id="module-fireworks.user_objects.queue_adapters">
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-fireworks.user_objects.queue_adapters" title="Link to this heading">¶</a></h2>
+<p>Queue adapter implementations for various schedulers (PBS, SLURM, etc.).</p>
 </section>
 </section>
 

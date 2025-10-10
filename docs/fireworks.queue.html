@@ -47,15 +47,15 @@
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.Command">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_adapter.</span></span><span class="sig-name descname"><span class="pre">Command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>Helper class -  run subprocess commands in a different thread with TIMEOUT option.
 From <a class="reference external" href="https://gist.github.com/kirpit/1306188">https://gist.github.com/kirpit/1306188</a>
 Based on jcollado’s solution:
 <a class="reference external" href="http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933">http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933</a>.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.Command.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.__init__" title="Link to this definition">¶</a></dt>
-<dd><p>initialize the object.</p>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_adapter.Command.__init__" title="Link to this definition">¶</a></dt>
+<dd><p>Initialize the object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>command</strong> – command to run</p>
@@ -90,8 +90,8 @@ Based on jcollado’s solution:
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.13)"><em>float</em></a>) – timeout</p></li>
-<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.13)"><em>dict</em></a>)</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><em>float</em></a>) – timeout</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>)</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -110,7 +110,7 @@ Based on jcollado’s solution:
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.QScriptTemplate">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_adapter.</span></span><span class="sig-name descname"><span class="pre">QScriptTemplate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Template</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/string.html#string.Template" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Template</span></code></a></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.QScriptTemplate.delimiter">
 <span class="sig-name descname"><span class="pre">delimiter</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'$$'</span></em><a class="headerlink" href="#fireworks.queue.queue_adapter.QScriptTemplate.delimiter" title="Link to this definition">¶</a></dt>
@@ -126,7 +126,7 @@ Based on jcollado’s solution:
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.QueueAdapterBase">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_adapter.</span></span><span class="sig-name descname"><span class="pre">QueueAdapterBase</span></span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="Link to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.13)"><code class="xref py py-class docutils literal notranslate"><span class="pre">defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.html#collections.defaultdict" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">defaultdict</span></code></a>, <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <p>The QueueAdapter is responsible for all interactions with a specific queue management system.
 This includes handling all details of queue script format as well as queue submission and</p>
 <blockquote>
@@ -152,7 +152,7 @@ Examples and implementations are in: fireworks/user_objects/queue_adapters.</p>
 <dd><p>Returns the number of jobs currently in the queue for the user.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</p>
+<dd class="field-odd"><p><strong>username</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the username of the jobs to count (default is to autodetect)</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(int) number of jobs in the queue</p>
@@ -168,11 +168,11 @@ Examples and implementations are in: fireworks/user_objects/queue_adapters.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.queue.queue_adapter.QueueAdapterBase.get_script_str">
 <span class="sig-name descname"><span class="pre">get_script_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launch_dir</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.queue.queue_adapter.QueueAdapterBase.get_script_str" title="Link to this definition">¶</a></dt>
-<dd><p>returns a (multi-line) String representing the queue script, e.g. PBS script.
+<dd><p>Returns a (multi-line) String representing the queue script, e.g. PBS script.
 Uses the template_file along with internal parameters to create the script.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The directory the job will be launched in</p>
+<dd class="field-odd"><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The directory the job will be launched in</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>(str) the queue script</p>
@@ -233,13 +233,13 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 <li><p><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>)</p></li>
 <li><p><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>)</p></li>
 <li><p><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>)</p></li>
-<li><p><strong>launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – The directory where to submit the job</p></li>
-<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
-<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – level at which to stream log messages</p></li>
-<li><p><strong>create_launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to create a subfolder launcher+timestamp, if needed</p></li>
-<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run
+<li><p><strong>launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – The directory where to submit the job</p></li>
+<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – level at which to stream log messages</p></li>
+<li><p><strong>create_launcher_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to create a subfolder launcher+timestamp, if needed</p></li>
+<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run
 (only in non-reservation mode)</p></li>
-<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – specific fw_id to reserve (reservation mode only)</p></li>
+<li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – specific fw_id to reserve (reservation mode only)</p></li>
 </ul>
 </dd>
 </dl>
@@ -247,7 +247,7 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.queue.queue_launcher.rapidfire">
-<span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_launcher.</span></span><span class="sig-name descname"><span class="pre">rapidfire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fworker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qadapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">launch_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlaunches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs_block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reserve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strm_lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_launcher.rapidfire" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_launcher.</span></span><span class="sig-name descname"><span class="pre">rapidfire</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fworker</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qadapter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">launch_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'.'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">block_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nlaunches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs_queue</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">njobs_block</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reserve</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strm_lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fill_mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_launcher.rapidfire" title="Link to this definition">¶</a></dt>
 <dd><p>Submit many jobs to the queue.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -255,18 +255,18 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 <li><p><strong>launchpad</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LaunchPad" title="fireworks.core.launchpad.LaunchPad"><em>LaunchPad</em></a>)</p></li>
 <li><p><strong>fworker</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.fworker.FWorker" title="fireworks.core.fworker.FWorker"><em>FWorker</em></a>)</p></li>
 <li><p><strong>qadapter</strong> (<a class="reference internal" href="#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><em>QueueAdapterBase</em></a>)</p></li>
-<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – directory where we want to write the blocks</p></li>
-<li><p><strong>block_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – directory to use as block dir. Can be a new or existing block. Dirname must
+<li><p><strong>launch_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – directory where we want to write the blocks</p></li>
+<li><p><strong>block_dir</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – directory to use as block dir. Can be a new or existing block. Dirname must
 start with ‘<a href="#id1"><span class="problematic" id="id2">block_</span></a>’.</p></li>
-<li><p><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – total number of launches desired; “infinite” for loop, 0 for one round</p></li>
-<li><p><strong>njobs_queue</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
+<li><p><strong>nlaunches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – total number of launches desired; “infinite” for loop, 0 for one round</p></li>
+<li><p><strong>njobs_queue</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
 If 0 skips the check on the number of jobs in the queue.</p></li>
-<li><p><strong>njobs_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – automatically write a new block when njobs_block jobs are in a single block</p></li>
-<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
-<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
-<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.13)"><em>str</em></a>) – level at which to stream log messages</p></li>
-<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.13)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</p></li>
-<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.13)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run (only in
+<li><p><strong>njobs_block</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – automatically write a new block when njobs_block jobs are in a single block</p></li>
+<li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
+<li><p><strong>reserve</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to queue in reservation mode</p></li>
+<li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – level at which to stream log messages</p></li>
+<li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – # of seconds after which to stop the rapidfire process</p></li>
+<li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – whether to submit jobs even when there is nothing to run (only in
 non-reservation mode)</p></li>
 </ul>
 </dd>
@@ -275,7 +275,7 @@ non-reservation mode)</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.queue.queue_launcher.setup_offline_job">
-<span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_launcher.</span></span><span class="sig-name descname"><span class="pre">setup_offline_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">launch_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.13)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_launcher.setup_offline_job" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">fireworks.queue.queue_launcher.</span></span><span class="sig-name descname"><span class="pre">setup_offline_job</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">launch_id</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.queue.queue_launcher.setup_offline_job" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </section>

@@ -225,9 +225,7 @@ Here a few modifications that you might already find useful.
 
 Change the MongoDB configuration::
 
-    launchpad = LaunchPad(host="myhost", port=12345, \
-    name="fireworks_testing_db", username="my_user", \
-    password="my_pass")
+    launchpad = LaunchPad(host="myhost", port=12345, name="fireworks_testing_db", username="my_user", password="my_pass")
 
 Run in rapid-fire mode::
 

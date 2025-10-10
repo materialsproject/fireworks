@@ -269,8 +269,6 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest">DAGFlowTest (class in fireworks.utilities.tests.test_dagflow)</a>
-</li>
       <li><a href="fireworks.flask_site.html#fireworks.flask_site.app.dashboard">dashboard() (in module fireworks.flask_site.app)</a>
 </li>
       <li><a href="fireworks.utilities.html#fireworks.utilities.fw_utilities.DataServer">DataServer (class in fireworks.utilities.fw_utilities)</a>
@@ -309,10 +307,10 @@
 </li>
       <li><a href="fireworks.utilities.html#fireworks.utilities.filepad.FilePad.delete_file_by_id">delete_file_by_id() (fireworks.utilities.filepad.FilePad method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.utilities.html#fireworks.utilities.filepad.FilePad.delete_file_by_query">delete_file_by_query() (fireworks.utilities.filepad.FilePad method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.delete_fws">delete_fws() (fireworks.core.launchpad.LaunchPad method)</a>
 </li>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.delete_wf">delete_wf() (fireworks.core.launchpad.LaunchPad method)</a>
@@ -389,6 +387,8 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.FakeBadTask">FakeBadTask (class in fireworks.tests.test_deserialization)</a>
+</li>
       <li><a href="fireworks.user_objects.firetasks.html#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask">FileDeleteTask (class in fireworks.user_objects.firetasks.fileio_tasks)</a>
 </li>
       <li><a href="fireworks.utilities.html#fireworks.utilities.filepad.FilePad">FilePad (class in fireworks.utilities.filepad)</a>
@@ -829,6 +829,13 @@
 </li>
       </ul></li>
       <li>
+    fireworks.tests.test_deserialization
+
+      <ul>
+        <li><a href="fireworks.tests.html#module-fireworks.tests.test_deserialization">module</a>
+</li>
+      </ul></li>
+      <li>
     fireworks.tests.test_fw_config
 
       <ul>
@@ -1029,13 +1036,6 @@
 
       <ul>
         <li><a href="fireworks.utilities.tests.html#module-fireworks.utilities.tests">module</a>
-</li>
-      </ul></li>
-      <li>
-    fireworks.utilities.tests.test_dagflow
-
-      <ul>
-        <li><a href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_dagflow">module</a>
 </li>
       </ul></li>
       <li>
@@ -1380,10 +1380,10 @@
 </li>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LazyFirework">LazyFirework (class in fireworks.core.launchpad)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.core.html#fireworks.core.firework.Workflow.leaf_fw_ids">leaf_fw_ids (fireworks.core.firework.Workflow property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.flask_site.html#fireworks.flask_site.gunicorn.StandaloneApplication.load">load() (fireworks.flask_site.gunicorn.StandaloneApplication method)</a>
 </li>
       <li><a href="fireworks.flask_site.html#fireworks.flask_site.gunicorn.StandaloneApplication.load_config">load_config() (fireworks.flask_site.gunicorn.StandaloneApplication method)</a>
@@ -1411,7 +1411,11 @@
       <li><a href="fireworks.scripts.tests.html#fireworks.scripts.tests.test_lpad_run.lp">lp() (in module fireworks.scripts.tests.test_lpad_run)</a>
 </li>
       <li><a href="fireworks.scripts.html#fireworks.scripts.lpad_run.lpad">lpad() (in module fireworks.scripts.lpad_run)</a>
+
+      <ul>
+        <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.lpad">(in module fireworks.tests.test_deserialization)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -1556,6 +1560,8 @@
 </li>
         <li><a href="fireworks.tests.html#module-fireworks.tests.tasks">fireworks.tests.tasks</a>
 </li>
+        <li><a href="fireworks.tests.html#module-fireworks.tests.test_deserialization">fireworks.tests.test_deserialization</a>
+</li>
         <li><a href="fireworks.tests.html#module-fireworks.tests.test_fw_config">fireworks.tests.test_fw_config</a>
 </li>
         <li><a href="fireworks.tests.html#module-fireworks.tests.test_workflow">fireworks.tests.test_workflow</a>
@@ -1613,8 +1619,6 @@
         <li><a href="fireworks.utilities.html#module-fireworks.utilities.fw_utilities">fireworks.utilities.fw_utilities</a>
 </li>
         <li><a href="fireworks.utilities.tests.html#module-fireworks.utilities.tests">fireworks.utilities.tests</a>
-</li>
-        <li><a href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_dagflow">fireworks.utilities.tests.test_dagflow</a>
 </li>
         <li><a href="fireworks.utilities.tests.html#module-fireworks.utilities.tests.test_filepad">fireworks.utilities.tests.test_filepad</a>
 </li>
@@ -2104,11 +2108,9 @@
       </ul></li>
       <li><a href="fireworks.utilities.html#fireworks.utilities.fw_utilities.DataServer.setup">setup() (fireworks.utilities.fw_utilities.DataServer class method)</a>
 </li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.setUp">setUp() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
+      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_filepad.FilePadTest.setUp">setUp() (fireworks.utilities.tests.test_filepad.FilePadTest method)</a>
 
       <ul>
-        <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_filepad.FilePadTest.setUp">(fireworks.utilities.tests.test_filepad.FilePadTest method)</a>
-</li>
         <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest.setUp">(fireworks.utilities.tests.test_fw_serializers.ExplicitSerializationTest method)</a>
 </li>
         <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.setUp">(fireworks.utilities.tests.test_fw_serializers.SerializationTest method)</a>
@@ -2374,26 +2376,6 @@
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.WorkflowTest.test_copy">test_copy() (fireworks.core.tests.test_firework.WorkflowTest method)</a>
 </li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_inputs">test_dagflow_clashing_inputs() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_clashing_outputs">test_dagflow_clashing_outputs() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_cut">test_dagflow_cut() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_link">test_dagflow_link() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_loop">test_dagflow_loop() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_missing_input">test_dagflow_missing_input() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_non_dataflow_tasks">test_dagflow_non_dataflow_tasks() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_ok">test_dagflow_ok() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_race_condition">test_dagflow_race_condition() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
-      <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_dagflow.DAGFlowTest.test_dagflow_view">test_dagflow_view() (fireworks.utilities.tests.test_dagflow.DAGFlowTest method)</a>
-</li>
       <li><a href="fireworks.tests.html#fireworks.tests.mongo_tests.MongoTests.test_defuse">test_defuse() (fireworks.tests.mongo_tests.MongoTests method)</a>
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.test_defuse_fw">test_defuse_fw() (fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest method)</a>
@@ -2454,6 +2436,8 @@
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.mongo_tests.MongoTests.test_fizzle">test_fizzle() (fireworks.tests.mongo_tests.MongoTests method)</a>
 </li>
+      <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.test_fizzle_on_deserialization_failure">test_fizzle_on_deserialization_failure() (in module fireworks.tests.test_deserialization)</a>
+</li>
       <li><a href="fireworks.tests.html#fireworks.tests.test_workflow.TestWorkflowState.test_fizzled_1">test_fizzled_1() (fireworks.tests.test_workflow.TestWorkflowState method)</a>
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.test_workflow.TestWorkflowState.test_fizzled_2">test_fizzled_2() (fireworks.tests.test_workflow.TestWorkflowState method)</a>
@@ -2500,8 +2484,6 @@
 </li>
       <li><a href="fireworks.user_objects.firetasks.tests.html#fireworks.user_objects.firetasks.tests.test_filepad_tasks.FilePadTasksTest.test_getfilestask_run">test_getfilestask_run() (fireworks.user_objects.firetasks.tests.test_filepad_tasks.FilePadTasksTest method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_implicit_serialization">test_implicit_serialization() (fireworks.utilities.tests.test_fw_serializers.SerializationTest method)</a>
 </li>
       <li><a href="fireworks.user_objects.firetasks.tests.html#fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest.test_import_data_task">test_import_data_task() (fireworks.user_objects.firetasks.tests.test_dataflow_tasks.ImportDataTaskTest method)</a>
@@ -2518,6 +2500,8 @@
         <li><a href="fireworks.user_objects.firetasks.tests.html#fireworks.user_objects.firetasks.tests.test_fileio_tasks.FileWriteDeleteTest.test_init">(fireworks.user_objects.firetasks.tests.test_fileio_tasks.FileWriteDeleteTest method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.WorkflowTest.test_iter_len_index">test_iter_len_index() (fireworks.core.tests.test_firework.WorkflowTest method)</a>
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.mongo_tests.MongoTests.test_job_info">test_job_info() (fireworks.tests.mongo_tests.MongoTests method)</a>
@@ -2587,6 +2571,8 @@
       <li><a href="fireworks.scripts.tests.html#fireworks.scripts.tests.test_qlaunch_run.test_qlaunch_config_file_flags">test_qlaunch_config_file_flags() (in module fireworks.scripts.tests.test_qlaunch_run)</a>
 </li>
       <li><a href="fireworks.scripts.tests.html#fireworks.scripts.tests.test_qlaunch_run.test_qlaunch_report_version">test_qlaunch_report_version() (in module fireworks.scripts.tests.test_qlaunch_run)</a>
+</li>
+      <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.test_queue_skips_bad_and_runs_next">test_queue_skips_bad_and_runs_next() (in module fireworks.tests.test_deserialization)</a>
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.test_workflow.TestWorkflowState.test_ready">test_ready() (fireworks.tests.test_workflow.TestWorkflowState method)</a>
 </li>
@@ -2688,6 +2674,8 @@
 </li>
       <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_visualize.test_wf_to_graph">test_wf_to_graph() (in module fireworks.utilities.tests.test_visualize)</a>
 </li>
+      <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.test_workflow_state_updated_on_deserialization_failure">test_workflow_state_updated_on_deserialization_failure() (in module fireworks.tests.test_deserialization)</a>
+</li>
       <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_yaml">test_yaml() (fireworks.utilities.tests.test_fw_serializers.SerializationTest method)</a>
 </li>
       <li><a href="fireworks.user_objects.queue_adapters.tests.html#fireworks.user_objects.queue_adapters.tests.test_common_adapter.CommonAdapterTest.test_yaml_load">test_yaml_load() (fireworks.user_objects.queue_adapters.tests.test_common_adapter.CommonAdapterTest method)</a>
@@ -2756,6 +2744,8 @@
         <li><a href="fireworks.features.html#fireworks.features.dupefinder.DupeFinderBase.to_dict">(fireworks.features.dupefinder.DupeFinderBase method)</a>
 </li>
         <li><a href="fireworks.queue.html#fireworks.queue.queue_adapter.QueueAdapterBase.to_dict">(fireworks.queue.queue_adapter.QueueAdapterBase method)</a>
+</li>
+        <li><a href="fireworks.tests.html#fireworks.tests.test_deserialization.FakeBadTask.to_dict">(fireworks.tests.test_deserialization.FakeBadTask method)</a>
 </li>
         <li><a href="fireworks.user_objects.firetasks.html#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer.to_dict">(fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer method)</a>
 </li>
