@@ -11,7 +11,12 @@ from monty.json import MSONable
 from monty.serialization import loadfn
 from pymongo import DESCENDING
 
-from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL, MongoClient
+from fireworks.fw_config import (
+    LAUNCHPAD_LOC,
+    MONGO_SOCKET_TIMEOUT_MS,
+    STREAM_LOGLEVEL,
+    MongoClient,
+)
 from fireworks.utilities.fw_utilities import get_fw_logger
 
 __author__ = "Kiran Mathew"
@@ -24,7 +29,7 @@ class FilePad(MSONable):
         self,
         host="localhost",
         port=27017,
-        database="fireworks",
+        name="fireworks",
         username=None,
         password=None,
         authsource=None,
@@ -40,7 +45,7 @@ class FilePad(MSONable):
         Args:
             host (str): hostname
             port (int): port number
-            database (str): database name
+            name (str): database name
             username (str)
             password (str).
             authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
@@ -54,12 +59,12 @@ class FilePad(MSONable):
             text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
                 working only with text files between Windows and Unix systems
         """
-        self.host = host
-        self.port = int(port)
-        self.database = database
+        self.host = host if (host or uri_mode) else "localhost"
+        self.port = port if (port or uri_mode) else 27017
+        self.name = name if (name or uri_mode) else "fireworks"
         self.username = username
         self.password = password
-        self.authsource = authsource or self.database
+        self.authsource = authsource or self.name
         self.mongoclient_kwargs = mongoclient_kwargs or {}
         self.uri_mode = uri_mode
 
@@ -68,20 +73,24 @@ class FilePad(MSONable):
 
         # get connection
         if uri_mode:
-            self.connection = MongoClient(host)
-            dbname = host.split("/")[-1].split("?")[0]  # parse URI to extract dbname
-            self.db = self.connection[dbname]
+            self.connection = MongoClient(host, **self.mongoclient_kwargs)
+            if self.name is None:
+                raise ValueError(
+                    "Must specify a database name when using a MongoDB URI string."
+                )
+            self.db = self.connection[self.name]
         else:
+            if "socketTimeoutMS" not in self.mongoclient_kwargs:
+                self.mongoclient_kwargs["socketTimeoutMS"] = MONGO_SOCKET_TIMEOUT_MS
             self.connection = MongoClient(
                 self.host,
                 self.port,
-                socketTimeoutMS=MONGO_SOCKET_TIMEOUT_MS,
                 username=self.username,
                 password=self.password,
                 authSource=self.authsource,
                 **self.mongoclient_kwargs,
             )
-            self.db = self.connection[self.database]
+            self.db = self.connection[self.name]
         # except Exception:
         #     raise Exception("connection failed")
         # try:
@@ -97,7 +106,9 @@ class FilePad(MSONable):
         # logging
         self.logdir = logdir
         self.strm_lvl = strm_lvl or STREAM_LOGLEVEL
-        self.logger = get_fw_logger("filepad", l_dir=self.logdir, stream_level=self.strm_lvl)
+        self.logger = get_fw_logger(
+            "filepad", l_dir=self.logdir, stream_level=self.strm_lvl
+        )
 
         # build indexes
         self.build_indexes()
