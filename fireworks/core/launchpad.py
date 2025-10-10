@@ -181,6 +181,7 @@ class LaunchPad(FWSerializable):
         self.host = host if (host or uri_mode) else "localhost"
         self.port = port if (port or uri_mode) else 27017
         self.name = name if (name or uri_mode) else "fireworks"
+        # Optional override to force a specific DB name (e.g. in tests)
         self.username = username
         self.password = password
         self.authsource = authsource or self.name
@@ -1134,7 +1135,43 @@ class LaunchPad(FWSerializable):
 
             if not m_fw:
                 return None
-            m_fw = self.get_fw_by_id(m_fw["fw_id"])
+            fw_id_candidate = m_fw["fw_id"]
+            try:
+                m_fw = self.get_fw_by_id(fw_id_candidate)
+            except Exception:
+                # If the FireWork cannot be deserialized (e.g., missing module/class), mark it FIZZLED
+                # and continue searching for another runnable FireWork instead of crashing the loop.
+                self.m_logger.warning(
+                    f"Failed to deserialize FireWork with fw_id={fw_id_candidate}; marking as FIZZLED and continuing."
+                )
+                try:
+                    err_details = traceback.format_exc()
+                    now = datetime.datetime.utcnow()
+                    self.fireworks.find_one_and_update(
+                        {"fw_id": fw_id_candidate},
+                        {
+                            "$set": {
+                                "state": "FIZZLED",
+                                "updated_on": now,
+                                # store minimal details to aid later debugging/rerun
+                                "spec._exception_details": {
+                                    "_message": "FireWork failed to deserialize",
+                                    "_stacktrace": err_details,
+                                },
+                            }
+                        },
+                    )
+                    # attempt to refresh workflow state to keep DB consistent
+                    self._refresh_wf(fw_id_candidate)
+                except Exception:
+                    # if we can't refresh the workflow, issue a debug log and continue;
+                    # might also help unblock the queue on deserialization issues if reason we can't update offending FW
+                    # is because it's no longer in DB (in which case fine to continue with next FW)
+                    self.m_logger.debug(
+                        f"Error while refreshing workflow after fizzling fw_id={fw_id_candidate} due to deserialization"
+                        f" failure.\n{traceback.format_exc()}",
+                    )
+                continue
             if self._check_fw_for_uniqueness(m_fw):
                 return m_fw
 
@@ -1698,7 +1735,6 @@ class LaunchPad(FWSerializable):
             self.fireworks.find_one_and_update({"fw_id": fw_id}, {"$set": {"state": "FIZZLED"}})
             self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {"state": "FIZZLED"}})
             self.workflows.find_one_and_update({"nodes": fw_id}, {"$set": {f"fw_states.{fw_id}": "FIZZLED"}})
-            import traceback
 
             err_message = f"Error refreshing workflow. The full stack trace is: {traceback.format_exc()}"
             raise RuntimeError(err_message)

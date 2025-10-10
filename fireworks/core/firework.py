@@ -15,7 +15,7 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import Any, Iterator, NoReturn, Sequence
+from typing import TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
@@ -26,6 +26,9 @@ from fireworks.fw_config import NEGATIVE_FWID_CTR as NEGATIVE_FWID_CTR  # noqa: 
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_serializers import FWSerializable, recursive_deserialize, recursive_serialize, serialize_fw
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
+
+if TYPE_CHECKING:
+    from typing import Self
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -365,7 +368,7 @@ class Firework(FWSerializable):
 
     @classmethod
     @recursive_deserialize
-    def from_dict(cls, m_dict):
+    def from_dict(cls, m_dict: dict[str, Any]) -> Self:
         tasks = m_dict["spec"]["_tasks"]
         launches = [Launch.from_dict(tmp) for tmp in m_dict.get("launches", [])]
         archived_launches = [Launch.from_dict(tmp) for tmp in m_dict.get("archived_launches", [])]
@@ -373,8 +376,8 @@ class Firework(FWSerializable):
         state = m_dict.get("state", "WAITING")
         created_on = m_dict.get("created_on")
         updated_on = m_dict.get("updated_on")
-        name = m_dict.get("name", None)
-        return Firework(
+        name = m_dict.get("name")
+        return cls(
             tasks, m_dict["spec"], name, launches, archived_launches, state, created_on, fw_id, updated_on=updated_on
         )
 
