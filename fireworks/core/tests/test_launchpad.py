@@ -960,7 +960,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         rp = RapidfireProcess(self.lp, self.fworker)
         rp.start()
-        time.sleep(1)  # Wait 1 sec  and kill the running fws
+        time.sleep(1)  # Wait 1 sec and kill the running fws
         rp.terminate()
         # Ensure the states are sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)

@@ -206,9 +206,9 @@ class DataServer(BaseManager):
             DataServer: The configured DataServer instance.
         """
         DataServer.register("LaunchPad", callable=lambda: launchpad)
-        m = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
-        m.start()
-        return m
+        server = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
+        server.start()
+        return server
 
 
 class NestedClassGetter:
