@@ -78,7 +78,7 @@ JobId   User    Queue     Jobname  Nodes  Procs  Mode    WallTime  State    RunT
 977824  sokawaii  prod-long            N2048-P8192                           2048   8192    c4      12:00:00  queued      N/A       SeaSurvey            None
 977850  wscullin  prod-capability      hello                                 8192   32768   c4      24:00:00  queued      N/A       UQ2014               None
 977859  wscullin  prod-long            goodbye                               8192   32768   c4      24:00:00  queued      N/A       UQ2014               None
-"""
+"""  # noqa: E501
 
         p = CommonAdapter(q_type="PBS", q_name="hello", queue="home-ong", hello="world")
         assert p._parse_njobs(pbs, "ongsp") == 1

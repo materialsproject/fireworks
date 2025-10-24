@@ -497,10 +497,11 @@ class MongoTests(unittest.TestCase):
         launch_rocket(self.lp, self.fworker)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
         self.lp.delete_wf(fw.fw_id)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=f"No Firework exists with id: {fw.fw_id}"):
             self.lp.get_fw_by_id(fw.fw_id)
-        with pytest.raises(ValueError):
-            self.lp.get_launch_by_id(1)
+        launch_id = 1
+        with pytest.raises(ValueError, match=f"No Launch exists with {launch_id=}"):
+            self.lp.get_launch_by_id(launch_id)
 
     def test_duplicate_delete_fw(self) -> None:
         test1 = ScriptTask.from_str("python -c 'print(\"test1\")'", {"store_stdout": True})
@@ -515,7 +516,7 @@ class MongoTests(unittest.TestCase):
         run_id = self.lp.get_launch_by_id(1).fw_id
         del_id = 1 if run_id == 2 else 2
         self.lp.delete_wf(del_id)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=f"No Firework exists with id: {del_id}"):
             self.lp.get_fw_by_id(del_id)
         assert self.lp.get_launch_by_id(1).action.stored_data["stdout"] == "test1\n"
 

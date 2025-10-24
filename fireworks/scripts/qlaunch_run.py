@@ -219,12 +219,12 @@ def qlaunch(argv: Sequence[str] | None = None) -> int:
                 config=fabric.Config({"run": {"shell": args.remote_shell}}),
                 connect_kwargs=connect_kwargs,
             ) as conn:
-                for r in args.remote_config_dir:
-                    r = os.path.expanduser(r)
-                    conn.run(f"mkdir -p {r}")
+                for remote_dir in args.remote_config_dir:
+                    remote_dir = os.path.expanduser(remote_dir)
+                    conn.run(f"mkdir -p {remote_dir}")
                     for f in os.listdir(args.config_dir):
                         if os.path.isfile(f):
-                            conn.put(f, os.path.join(r, f))
+                            conn.put(f, os.path.join(remote_dir, f))
     non_default = []
     for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
         v = getattr(args, k, None)
@@ -252,9 +252,9 @@ def qlaunch(argv: Sequence[str] | None = None) -> int:
                     config=fabric.Config({"run": {"shell": args.remote_shell}}),
                     connect_kwargs=connect_kwargs,
                 ) as conn:
-                    for r in args.remote_config_dir:
-                        r = os.path.expanduser(r)
-                        with conn.cd(r):
+                    for remote_dir in args.remote_config_dir:
+                        remote_dir = os.path.expanduser(remote_dir)
+                        with conn.cd(remote_dir):
                             conn.run(f"qlaunch {pre_non_default} {args.command} {non_default}")
         else:
             do_launch(args)
