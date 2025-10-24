@@ -506,6 +506,13 @@ def detect_lostruns(args: Namespace) -> None:
         query=query,
         launch_query=launch_query,
     )
+
+    # Print performance summary
+    print("\nDetection completed:")
+    print(f"  Lost launches: {len(fl)}")
+    print(f"  Lost FireWorks: {len(ff)}")
+    print(f"  Inconsistent FireWorks: {len(fi)}")
+
     lp.m_logger.debug(f"Detected {len(fl)} lost launches: {fl}")
     lp.m_logger.info(f"Detected {len(ff)} lost FWs: {ff}")
     if args.display_format is not None and args.display_format != "none":
