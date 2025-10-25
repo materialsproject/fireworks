@@ -134,7 +134,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
     """
 
     def get_path():
-        time_now = datetime.datetime.utcnow().strftime(FW_BLOCK_FORMAT)
+        time_now = datetime.datetime.now(datetime.timezone.utc).strftime(FW_BLOCK_FORMAT)
         block_path = prefix + time_now
         return os.path.join(root_dir, block_path)
 
@@ -190,6 +190,16 @@ def get_slug(m_str):
     return m_str.replace(" ", "_")
 
 
+class _LaunchPadCallable:
+    """Picklable callable wrapper for LaunchPad objects in multiprocessing contexts."""
+
+    def __init__(self, launchpad):
+        self.launchpad = launchpad
+
+    def __call__(self):
+        return self.launchpad
+
+
 class DataServer(BaseManager):
     """Provide a server that can host shared objects between multiprocessing
     Processes (that normally can't share data). For example, a common LaunchPad is
@@ -198,17 +208,29 @@ class DataServer(BaseManager):
 
     @classmethod
     def setup(cls, launchpad):
-        """
+        """Set up DataServer with a shared LaunchPad.
+
         Args:
-            launchpad (LaunchPad): The LaunchPad object to register with the server.
+            launchpad: The LaunchPad object to share across processes.
 
         Returns:
-            DataServer: The configured DataServer instance.
+            DataServer: Configured DataServer instance.
         """
-        DataServer.register("LaunchPad", callable=lambda: launchpad)
+        # Use a picklable callable class for spawn-based multiprocessing compatibility
+        cls._register_launchpad(_LaunchPadCallable(launchpad))
         server = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
         server.start()
         return server
+
+    @classmethod
+    def _register_launchpad(cls, callable_obj=None):
+        """Register the LaunchPad with the manager.
+
+        Args:
+            callable_obj: Callable returning LaunchPad (server-side) or None (client-side).
+        """
+        # BaseManager creates an AutoProxy that exposes all public methods automatically
+        DataServer.register("LaunchPad", callable=callable_obj)
 
 
 class NestedClassGetter:
@@ -230,7 +252,7 @@ def explicit_serialize(o):
     """Mark a class for explicit serialization by adding _fw_name attribute."""
     module_name = o.__module__
     if module_name == "__main__":
-        import __main__
+        import __main__  # noqa: PLC0415
 
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
     o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"

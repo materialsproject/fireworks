@@ -36,6 +36,17 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 PYMONGO_MAJOR_VERSION = int(PYMONGO_VERSION[0])
 
 
+# Module-level helper functions for Python 3.13+ spawn compatibility
+def _run_rocket(lpad, fworker, fw_id=None) -> None:
+    """Helper function for launching rockets in multiprocess tests."""
+    launch_rocket(lpad, fworker, fw_id=fw_id)
+
+
+def _run_rapidfire(lpad, fworker) -> None:
+    """Helper function for running rapidfire in multiprocess tests."""
+    rapidfire(lpad, fworker)
+
+
 class AuthenticationTest(unittest.TestCase):
     """Tests whether users are authenticating against the correct mongo dbs."""
 
@@ -43,9 +54,23 @@ class AuthenticationTest(unittest.TestCase):
     def setUpClass(cls) -> None:
         try:
             client = fireworks.fw_config.MongoClient()
+            # Drop user if exists, then create
+            try:
+                client.not_the_admin_db.command("dropUser", "myuser")
+            except OperationFailure:
+                pass  # User doesn't exist, that's fine
             client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+
+    @classmethod
+    def tearDownClass(cls) -> None:
+        """Clean up the test user and database."""
+        try:
+            client = fireworks.fw_config.MongoClient()
+            client.drop_database("not_the_admin_db")
+        except Exception:
+            pass
 
     def test_no_admin_privileges_for_plebs(self) -> None:
         """Normal users can not authenticate against the admin db."""
@@ -596,16 +621,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def test_detect_lostruns(self) -> None:
         # Launch the timed firework in a separate process
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self) -> None:
-                launch_rocket(self.lpad, self.fworker)
-
-        rp = RocketProcess(self.lp, self.fworker)
+        rp = Process(target=_run_rocket, args=(self.lp, self.fworker))
         rp.start()
 
         # Wait for fw to start
@@ -635,16 +651,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def test_detect_lostruns_defuse(self) -> None:
         # Launch the timed firework in a separate process
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self) -> None:
-                launch_rocket(self.lpad, self.fworker)
-
-        rp = RocketProcess(self.lp, self.fworker)
+        rp = Process(target=_run_rocket, args=(self.lp, self.fworker))
         rp.start()
 
         # Wait for fw to start
@@ -667,16 +674,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
 
     def test_state_after_run_start(self) -> None:
         # Launch the timed firework in a separate process
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self) -> None:
-                launch_rocket(self.lpad, self.fworker)
-
-        rp = RocketProcess(self.lp, self.fworker)
+        rp = Process(target=_run_rocket, args=(self.lp, self.fworker))
         rp.start()
 
         # Wait for running
@@ -949,16 +947,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
     def test_rerun_timed_fws(self) -> None:
         # Launch all fireworks in a separate process
-        class RapidfireProcess(Process):
-            def __init__(self, lpad, fworker) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-
-            def run(self) -> None:
-                rapidfire(self.lpad, self.fworker)
-
-        rp = RapidfireProcess(self.lp, self.fworker)
+        rp = Process(target=_run_rapidfire, args=(self.lp, self.fworker))
         rp.start()
         time.sleep(1)  # Wait 1 sec and kill the running fws
         rp.terminate()
@@ -983,7 +972,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         # Rerun fizzled runs
         for fw_id in lost_fwids:
             self.lp.rerun_fw(fw_id)
-        rp = RapidfireProcess(self.lp, self.fworker)
+        rp = Process(target=_run_rapidfire, args=(self.lp, self.fworker))
         rp.start()
         for _ in range(20):
             wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
@@ -1141,18 +1130,8 @@ class WFLockTest(unittest.TestCase):
             shutil.rmtree(ldir)
 
     def test_fix_db_inconsistencies_completed(self) -> None:
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker, fw_id) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-                self.fw_id = fw_id
-
-            def run(self) -> None:
-                launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
-
         # Launch the slow firework in a separate process
-        rp = RocketProcess(self.lp, self.fworker, fw_id=1)
+        rp = Process(target=_run_rocket, args=(self.lp, self.fworker, 1))
         rp.start()
 
         time.sleep(1)
@@ -1188,20 +1167,10 @@ class WFLockTest(unittest.TestCase):
         assert fast_fw.state == "COMPLETED"
 
     def test_fix_db_inconsistencies_fizzled(self) -> None:
-        class RocketProcess(Process):
-            def __init__(self, lpad, fworker, fw_id) -> None:
-                super(self.__class__, self).__init__()
-                self.lpad = lpad
-                self.fworker = fworker
-                self.fw_id = fw_id
-
-            def run(self) -> None:
-                launch_rocket(self.lpad, self.fworker, fw_id=self.fw_id)
-
         self.lp.update_spec([2], {"fizzle": True})
 
         # Launch the slow firework in a separate process
-        rp = RocketProcess(self.lp, self.fworker, fw_id=1)
+        rp = Process(target=_run_rocket, args=(self.lp, self.fworker, 1))
         rp.start()
 
         time.sleep(1)
