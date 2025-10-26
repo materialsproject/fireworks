@@ -42,20 +42,21 @@ class FilePad(MSONable):
     ) -> None:
         """
         Args:
-            host (str): hostname
-            port (int): port number
-            name (str): database name
-            username (str)
-            password (str).
-            authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
-                not set
-            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
-                the host).
-            filepad_coll_name (str): filepad collection name
-            gridfs_coll_name (str): gridfs collection name
-            logdir (str): path to the log directory
+            host (str): Hostname
+            port (int): Port number
+            name (str): Database name
+            username (str): Username for MongoDB authentication
+            password (str): Password for MongoDB authentication
+            authsource (str): Authentication source parameter for MongoDB authentication;
+                defaults to "name" (i.e., db name) if not set
+            uri_mode (bool): If set True, all Mongo connection parameters occur through a MongoDB URI
+                string (set as the host).
+            mongoclient_kwargs (dict): Additional keyword arguments to be passed into the MongoClient connection.
+            filepad_coll_name (str): Filepad collection name
+            gridfs_coll_name (str): GridFS collection name
+            logdir (str): Path to the log directory
             strm_lvl (str): the logger stream level
-            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
+            text_mode (bool): Whether to use text_mode for file read/write (instead of binary). Might be useful if
                 working only with text files between Windows and Unix systems.
         """
         self.host = host if (host or uri_mode) else "localhost"
@@ -279,7 +280,7 @@ class FilePad(MSONable):
     def _get_file_contents(self, doc):
         """
         Args:
-            doc (dict).
+            doc (dict): From the filepad collection.
 
         Returns:
             (str, dict): the file content as a string, document dictionary
@@ -295,8 +296,8 @@ class FilePad(MSONable):
     def _update_file_contents(self, doc, path, compress):
         """
         Args:
-            doc (dict)
-            path (str): path to the new file whose contents will replace the existing one.
+            doc (dict): From the filepad collection.
+            path (str): Path to the new file whose contents will replace the existing one.
             compress (bool): whether or not to compress the contents before inserting to gridfs.
 
         Returns:

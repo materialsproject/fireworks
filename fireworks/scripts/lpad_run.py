@@ -73,8 +73,9 @@ def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw:
     """Helper method to parse args that can take either id, name, state or query.
 
     Args:
+        lp (LaunchPad): The Launchpad instance.
         args: Namespace of parsed CLI arguments.
-        wf_mode (bool): If True, will query lp for workflow instead of fireworks IDs.
+        wf_mode (bool): If True, will query lp for Workflow instead of Firework IDs.
         skip_pw (bool): If True, skip PW check. Defaults to False.
 
     Returns:
