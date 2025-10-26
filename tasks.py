@@ -60,7 +60,7 @@ def publish(ctx) -> None:
 
 
 @task
-def release_github(ctx) -> None:
+def release_github(_ctx) -> None:
     """
     Create a new release on GitHub.
     """
@@ -97,7 +97,7 @@ def release(ctx) -> None:
 
 
 @task
-def open_doc(ctx) -> None:
+def open_doc(_ctx) -> None:
     """
     Open the local documentation in a web browser.
     """

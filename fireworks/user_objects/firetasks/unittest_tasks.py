@@ -23,7 +23,7 @@ class UnitTestSerializer(FWSerializable):
     def __init__(self, a: Any, m_date: datetime.datetime) -> None:
         """Construct with a generic payload and a datetime stamp."""
         if not isinstance(m_date, datetime.datetime):
-            raise ValueError("m_date must be a datetime instance!")
+            raise TypeError("m_date must be a datetime instance!")
 
         self.a = a
         self.m_date = m_date

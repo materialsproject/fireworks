@@ -45,7 +45,7 @@ def get_ancestors(lpad, fw_id):
     return list(ancestors)
 
 
-def run_fireworks(lpad, fw_ids):
+def run_fireworks(lpad, fw_ids) -> None:
     """Launch fireworks with the provided fw_ids."""
     while fw_ids:
         ready = lpad.get_fw_ids({"fw_id": {"$in": fw_ids}, "state": "READY"})

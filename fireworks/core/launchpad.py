@@ -1578,7 +1578,7 @@ class LaunchPad(FWSerializable):
                 err.args = (
                     f"{err.args[0]}. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml to a value different from None",
                 )
-                raise err
+                raise
 
             # encoding required for python2/3 compatibility.
             action_id = self.gridfs_fallback.put(
@@ -1982,7 +1982,7 @@ class LaunchPad(FWSerializable):
 
         except Exception:
             if print_errors:
-                self.m_logger.error(f"failed recovering {launch_id=}.\n{traceback.format_exc()}")
+                self.m_logger.exception(f"failed recovering {launch_id=}.\n{traceback.format_exc()}")
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(
