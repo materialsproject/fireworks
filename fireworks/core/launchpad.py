@@ -419,7 +419,7 @@ class LaunchPad(FWSerializable):
         ]
         for wf in tqdm(wfs):
             # Reassign fw_ids and increment the counter
-            old_new = dict(zip(wf.id_fw, range(new_fw_counter, new_fw_counter + len(wf))))
+            old_new = dict(zip(wf.id_fw, range(new_fw_counter, new_fw_counter + len(wf)), strict=True))
             for fw in wf:
                 fw.fw_id = old_new[fw.fw_id]
             wf._reassign_ids(old_new)

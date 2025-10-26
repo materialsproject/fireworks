@@ -106,7 +106,7 @@ def home():
     for state in STATES:
         fw_nums.append(app.lp.get_fw_ids(query=_addq_FW({"state": state}), count_only=True))
         wf_nums.append(app.lp.get_wf_ids(query=_addq_WF({"state": state}), count_only=True))
-    state_nums = zip(STATES, fw_nums, wf_nums)
+    state_nums = zip(STATES, fw_nums, wf_nums, strict=True)
 
     tot_fws = sum(fw_nums)
     tot_wfs = sum(wf_nums)

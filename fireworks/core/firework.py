@@ -1034,7 +1034,7 @@ class Workflow(FWSerializable):
             detours = detour
 
         # make sure detour runs do not link to ready/running/completed/etc. runs
-        for fw_id, det in zip(fw_ids, detours):
+        for fw_id, det in zip(fw_ids, detours, strict=True):
             if det and fw_id in self.links:
                 # make sure all of these links are WAITING, else the DETOUR is not well defined
                 ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
@@ -1055,7 +1055,7 @@ class Workflow(FWSerializable):
 
             if new_fw.fw_id in leaf_ids:
                 self.links[new_fw.fw_id] = []
-                for fw_id, det in zip(fw_ids, detours):
+                for fw_id, det in zip(fw_ids, detours, strict=True):
                     if det:
                         self.links[new_fw.fw_id] += [f for f in self.links[fw_id] if f >= 0]
             else:

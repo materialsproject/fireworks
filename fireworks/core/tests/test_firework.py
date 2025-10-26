@@ -131,7 +131,7 @@ class WorkflowTest(unittest.TestCase):
 
             orig_children = wf.links.get(orig_id, list())
 
-            for child_id, orig_child_id in zip(children, orig_children):
+            for child_id, orig_child_id in zip(children, orig_children, strict=True):
                 assert orig_child_id == wf_copy.id_fw[child_id].name
 
     def test_remove_leaf_fws(self) -> None:
