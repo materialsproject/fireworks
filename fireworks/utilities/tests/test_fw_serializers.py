@@ -109,9 +109,10 @@ class SerializationTest(unittest.TestCase):
         )
 
     def test_unicode_json_file(self) -> None:
-        with open(os.path.join(self.module_dir, "test_reference.json")) as f, open(
-            "test.json", **ENCODING_PARAMS
-        ) as f2:
+        with (
+            open(os.path.join(self.module_dir, "test_reference.json")) as f,
+            open("test.json", **ENCODING_PARAMS) as f2,
+        ):
             obj1 = json.load(f)
             obj2 = json.load(f2)
             assert obj1 == obj2, "Unicode JSON file export fails"

@@ -6,8 +6,8 @@ import os
 import signal
 import sys
 from argparse import ArgumentParser
+from collections.abc import Sequence
 from importlib import metadata
-from typing import Sequence
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad

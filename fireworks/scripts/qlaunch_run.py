@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import time
 from argparse import ArgumentParser
-from typing import Sequence
+from collections.abc import Sequence
 
 try:
     import fabric

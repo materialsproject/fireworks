@@ -11,8 +11,9 @@ import re
 import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
+from collections.abc import Sequence
 from importlib import metadata
-from typing import Any, Sequence
+from typing import Any
 
 from pymongo import ASCENDING, DESCENDING
 from ruamel.yaml import YAML

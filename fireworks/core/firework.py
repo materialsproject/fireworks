@@ -13,9 +13,10 @@ import abc
 import os
 import pprint
 from collections import defaultdict
+from collections.abc import Iterator, Sequence
 from copy import deepcopy
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
