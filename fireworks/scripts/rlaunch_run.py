@@ -6,8 +6,8 @@ import os
 import signal
 import sys
 from argparse import ArgumentParser
-from collections.abc import Sequence
 from importlib import metadata
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -17,6 +17,9 @@ from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STR
 from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
 from ._helpers import _validate_config_file_paths
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"

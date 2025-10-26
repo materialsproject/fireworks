@@ -4,6 +4,7 @@ add/delete/update any file of any size.
 
 import os
 import zlib
+from typing import TYPE_CHECKING
 
 import gridfs
 from bson.objectid import ObjectId
@@ -13,6 +14,9 @@ from pymongo import DESCENDING
 
 from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL, MongoClient
 from fireworks.utilities.fw_utilities import get_fw_logger
+
+if TYPE_CHECKING:
+    from typing import Self
 
 __author__ = "Kiran Mathew"
 __email__ = "kmathew@lbl.gov"
@@ -52,7 +56,7 @@ class FilePad(MSONable):
             logdir (str): path to the log directory
             strm_lvl (str): the logger stream level
             text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
-                working only with text files between Windows and Unix systems
+                working only with text files between Windows and Unix systems.
         """
         self.host = host if (host or uri_mode) else "localhost"
         self.port = port if (port or uri_mode) else 27017
@@ -309,7 +313,7 @@ class FilePad(MSONable):
         return old_gfs_id, gfs_id
 
     @classmethod
-    def from_db_file(cls, db_file, admin=True):
+    def from_db_file(cls, db_file: str, admin: bool = True) -> "Self":
         """
         Args:
             db_file (str): path to the filepad cred file.
@@ -363,11 +367,11 @@ class FilePad(MSONable):
         self.db[self.gridfs_coll_name].chunks.delete_many({})
         self.build_indexes()
 
-    def count(self, filter=None, **kwargs):
+    def count(self, filter: dict | None = None, **kwargs) -> int:
         """Get the number of documents in filepad.
 
         Args:
-            filter (dict)
+            filter (dict): pymongo query dict.
             kwargs (dict): see pymongo.Collection.count for the supported
                 keyword arguments.
 

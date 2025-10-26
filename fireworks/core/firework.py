@@ -13,7 +13,6 @@ import abc
 import os
 import pprint
 from collections import defaultdict
-from collections.abc import Iterator, Sequence
 from copy import deepcopy
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, NoReturn
@@ -29,6 +28,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_deseria
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
     from typing import Self
 
 __author__ = "Anubhav Jain"

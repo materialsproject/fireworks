@@ -5,7 +5,6 @@ from __future__ import annotations
 import os
 import time
 from argparse import ArgumentParser
-from collections.abc import Sequence
 
 try:
     import fabric
@@ -18,6 +17,7 @@ else:
     HAS_FABRIC = True
 
 from importlib import metadata
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -26,6 +26,9 @@ from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
 from ._helpers import _validate_config_file_paths
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"

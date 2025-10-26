@@ -11,9 +11,8 @@ import re
 import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
-from collections.abc import Sequence
 from importlib import metadata
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from pymongo import ASCENDING, DESCENDING
 from ruamel.yaml import YAML
@@ -40,6 +39,9 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 from ._helpers import _validate_config_file_paths
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
