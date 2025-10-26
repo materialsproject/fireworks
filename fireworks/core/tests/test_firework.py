@@ -6,6 +6,7 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
 
+import pickle
 import unittest
 
 import pytest
@@ -60,8 +61,6 @@ class PickleTask(FiretaskBase):
 
 class FiretaskPickleTest(unittest.TestCase):
     def setUp(self) -> None:
-        import pickle
-
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
         self.upkl_task = pickle.loads(self.pkl_task)
@@ -104,9 +103,9 @@ class WorkflowTest(unittest.TestCase):
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
         assert isinstance(wf, Workflow)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
     def test_copy(self) -> None:

@@ -215,7 +215,7 @@ class FilePad(MSONable):
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         doc = self.filepad.find_one({"identifier": identifier})
         return self._update_file_contents(doc, path, compress)
@@ -245,7 +245,7 @@ class FilePad(MSONable):
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._update_file_contents(doc, path, compress)
@@ -300,7 +300,7 @@ class FilePad(MSONable):
             compress (bool): whether or not to compress the contents before inserting to gridfs.
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         if doc is None:
             return None, None
@@ -317,6 +317,7 @@ class FilePad(MSONable):
         """
         Args:
             db_file (str): path to the filepad cred file.
+            admin (bool): Whether to authenticate as admin or read-only user.
 
         Returns:
             FilePad object
