@@ -14,7 +14,7 @@ jobs:
             conda config --set always_yes yes --set changeps1 no
             conda update -q conda
             conda info -a
-            conda create -q -n test-environment python=3.8
+            conda create -q -n test-environment python=3.10
             source activate test-environment
             conda update --quiet --all
             pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
@@ -38,7 +38,7 @@ jobs:
             conda config --set always_yes yes --set changeps1 no
             conda update -q conda
             conda info -a
-            conda create -q -n test-environment python=3.8
+            conda create -q -n test-environment python=3.10
             source activate test-environment
             conda update --quiet --all
             pip install --quiet --ignore-installed -r requirements.txt -r requirements-ci.txt
@@ -58,5 +58,5 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-    - pytest_mongodb
-    - pytest_mongomock
+      - pytest_mongodb
+      - pytest_mongomock
