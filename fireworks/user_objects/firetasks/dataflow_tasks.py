@@ -190,7 +190,7 @@ class CommandLineTask(FiretaskBase):
                         assert arg["target"] is not None
                         assert arg["target"]["type"] == "stdin"
                         if arg["source"]["type"] == "path":
-                            stdin = open(arg["source"]["value"])
+                            stdin = open(arg["source"]["value"])  # noqa: SIM115
                         elif arg["source"]["type"] == "data":
                             stdin = PIPE
                             stdininp = str(arg["source"]["value"]).encode()
@@ -226,9 +226,9 @@ class CommandLineTask(FiretaskBase):
                         assert arg["source"] is not None
                         assert "type" in arg["source"]
                         if arg["source"]["type"] == "stdout":
-                            stdout = open(path, "w")
+                            stdout = open(path, "w")  # noqa: SIM115
                         elif arg["source"]["type"] == "stderr":
-                            stderr = open(path, "w")
+                            stderr = open(path, "w")  # noqa: SIM115
                         elif arg["source"]["type"] == "path":
                             pass
                         else:

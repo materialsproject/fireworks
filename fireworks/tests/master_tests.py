@@ -43,7 +43,7 @@ class BasicTests(unittest.TestCase):
         wf3 = Workflow([fw1, fw2])
         assert wf3.links == {fw1.fw_id: [], fw2.fw_id: []}
 
-    def test_parentconnector(self) -> None:
+    def test_parent_connector(self) -> None:
         fw1 = Firework(ScriptTask.from_str('echo "1"'))
         fw2 = Firework(ScriptTask.from_str('echo "1"'), parents=fw1)
         fw3 = Firework(ScriptTask.from_str('echo "1"'), parents=[fw1, fw2])
@@ -53,7 +53,10 @@ class BasicTests(unittest.TestCase):
             fw2.fw_id: [fw3.fw_id],
             fw3.fw_id: [],
         }
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match="FW_id: -3 defines a dependent link to FW_id: -2, but the latter was not added to the workflow!",
+        ):
             Workflow([fw1, fw3])  # can't make this
 
 

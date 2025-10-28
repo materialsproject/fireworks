@@ -22,7 +22,7 @@ def test_qlaunch_report_version(capsys, arg) -> None:
 def test_qlaunch_config_file_flags() -> None:
     """Test qlaunch CLI throws errors on missing config file flags."""
     # qadapter.yaml is mandatory, test for ValueError if missing
-    with pytest.raises(ValueError, match="No path specified for qadapter_file."):
+    with pytest.raises(ValueError, match="No path specified for qadapter_file"):
         qlaunch([])
 
     # qadapter.yaml is mandatory, test for ValueError if missing

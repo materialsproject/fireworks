@@ -7,6 +7,12 @@ import os
 
 from fireworks.queue.queue_adapter import QueueAdapterBase
 
+try:
+    from requests import Session
+except ImportError:
+    Session = None
+    print("pip install requests to use PBSAdapterNEWT")
+
 __author__ = "Shreyas Cholia, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"
@@ -30,42 +36,37 @@ class PBSAdapterNEWT(QueueAdapterBase):
     def submit_to_queue(self, script_file: str) -> int:
         self._init_auth_session()
         jobfile = os.path.join(os.getcwd(), script_file)
-        r = PBSAdapterNEWT._session.post(f"https://newt.nersc.gov/newt/queue/{self.resource}/", {"jobfile": jobfile})
-        return int(r.json()["jobid"].split(".")[0])
+        resp = PBSAdapterNEWT._session.post(f"https://newt.nersc.gov/newt/queue/{self.resource}/", {"jobfile": jobfile})
+        return int(resp.json()["jobid"].split(".")[0])
 
     def get_njobs_in_queue(self, username: str | None = None) -> int:
         if username is None:
             username = getpass.getus
-        # hide import in case optional library not installeder()
-        from requests import Session
 
-        r = Session().get(f"https://newt.nersc.gov/newt/queue/{self.resource}/?user={username}")
-        return len(r.json())
+        resp = Session().get(f"https://newt.nersc.gov/newt/queue/{self.resource}/?user={username}")
+        return len(resp.json())
 
     @staticmethod
     def _init_auth_session(max_pw_requests: int = 3) -> None:
         """Initialize the _session class var with an authorized session. Asks for a /
         password in new sessions, skips PW check for previously authenticated sessions.
         """
-        # hide import in case optional library not installed
-        from requests import Session
-
         username = getpass.getuser()
         if not PBSAdapterNEWT._session:
             PBSAdapterNEWT._session = Session()  # create new session
         else:
             # are we already authenticated?
-            r = PBSAdapterNEWT._session.get("https://newt.nersc.gov/newt/auth")
-            if r.json()["auth"] and r.json()["username"] == username:
+            resp = PBSAdapterNEWT._session.get("https://newt.nersc.gov/newt/auth")
+            if resp.json()["auth"] and resp.json()["username"] == username:
                 return
         # assert: not already authenticated, ask for a PW and authenticate
         pw_iterations = 0
         while pw_iterations < max_pw_requests:
             password = getpass.getpass()
-            r = PBSAdapterNEWT._session.post(
+            resp = PBSAdapterNEWT._session.post(
                 "https://newt.nersc.gov/newt/auth", {"username": username, "password": password}
             )
-            if r.json()["auth"] and r.json()["username"] == username:
+            if resp.json()["auth"] and resp.json()["username"] == username:
                 return
             pw_iterations += 1
         raise ValueError("Could not get authorized connection to NEWT!")

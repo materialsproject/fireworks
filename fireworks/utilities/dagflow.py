@@ -72,11 +72,7 @@ class DAGFlow(Graph):
             step["state"] = fwk.get("state", None)
             steps.append(step)
 
-        links = []
-        for src in wfd["links"]:
-            for trg in wfd["links"][src]:
-                links.append((int(src), trg))
-
+        links = [(int(src), trg) for src in wfd["links"] for trg in wfd["links"][src]]
         for idx, fwk in enumerate(wfd["fws"]):
             step = steps[idx]
             step.update(fwk["spec"])
@@ -168,12 +164,9 @@ class DAGFlow(Graph):
         """Returns a list of steps that act as sources for the data entity
         in the specified step.
         """
-        lst = []
         parents = set(self.predecessors(step))
         # data entity passed from parent steps
-        for parent in parents:
-            if entity in self.vs[parent]["outputs"] and not self.vs[parent]["chunk"]:
-                lst.append(parent)
+        lst = [parent for parent in parents if entity in self.vs[parent]["outputs"] and not self.vs[parent]["chunk"]]
 
         # data entity in the same step
         cparents = [p for p in parents if self.vs[p]["state"] == "COMPLETED"]
@@ -198,11 +191,7 @@ class DAGFlow(Graph):
         """Returns a list of IDs of all successor steps
         that are data targets for the specified step.
         """
-        lst = []
-        for child in set(self.successors(step)):
-            if entity in self.vs[child]["inputs"]:
-                lst.append(child)
-        return lst
+        return [child for child in set(self.successors(step)) if entity in self.vs[child]["inputs"]]
 
     @staticmethod
     def _set_io_fields(step) -> None:
@@ -335,9 +324,7 @@ class DAGFlow(Graph):
             for vertex1, vertex2 in combinations(graph.vs.indices, 2):
                 clinks = list(set(graph.incident(vertex1, mode="ALL")) & set(graph.incident(vertex2, mode="ALL")))
                 if len(clinks) > 1:
-                    for link in clinks:
-                        if graph.es[link]["label"] == " ":
-                            dlinks.append(link)
+                    dlinks.extend(link for link in clinks if graph.es[link]["label"] == " ")
             graph.delete_edges(dlinks)
         # remove non-string, non-numeric attributes because write_dot() warns
         for vertex in graph.vs:

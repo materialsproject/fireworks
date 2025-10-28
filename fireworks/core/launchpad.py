@@ -1300,6 +1300,9 @@ class LaunchPad(FWSerializable):
         """Detect lost runs i.e running fireworks that haven't been updated within the specified
         time limit or running firework whose launch has been marked fizzed or completed.
 
+        This method uses batch queries and aggregation pipelines for optimal performance with
+        large databases.
+
         Args:
             expiration_secs (seconds): expiration time in seconds
             fizzle (bool): if True, mark the lost runs fizzed
@@ -1314,6 +1317,7 @@ class LaunchPad(FWSerializable):
             ([int], [int], [int]): tuple of list of lost launch ids, lost firework ids and
                 inconsistent firework ids.
         """
+        start_time = time.perf_counter()
         lost_launch_ids = []
         lost_fw_ids = []
         potential_lost_fw_ids = []
@@ -1344,18 +1348,47 @@ class LaunchPad(FWSerializable):
                 lost_launch_ids.append(ld["launch_id"])
                 potential_lost_fw_ids.append(ld["fw_id"])
 
-        for fw_id in potential_lost_fw_ids:  # tricky: figure out what's actually lost
-            fw = self.fireworks.find_one({"fw_id": fw_id}, {"launches": 1, "state": 1}) or {}
+        # PERFORMANCE OPTIMIZATION: Batch fetch all potential lost FWs instead of individual queries
+        potential_lost_fw_ids_set = list(set(potential_lost_fw_ids))
+        fw_docs = {
+            fw["fw_id"]: fw
+            for fw in self.fireworks.find(
+                {"fw_id": {"$in": potential_lost_fw_ids_set}}, {"fw_id": 1, "state": 1, "launches": 1}
+            )
+        }
+
+        # PERFORMANCE OPTIMIZATION: Collect all launch IDs to check, then batch fetch states
+        launch_ids_to_check = set()
+        for fw_id in potential_lost_fw_ids_set:
+            fw = fw_docs.get(fw_id, {})
+            if fw.get("state") == "RUNNING":
+                not_lost = [x for x in fw.get("launches", []) if x not in lost_launch_ids]
+                launch_ids_to_check.update(not_lost)
+
+        launch_states = (
+            {
+                launch["launch_id"]: launch["state"]
+                for launch in self.launches.find(
+                    {"launch_id": {"$in": list(launch_ids_to_check)}}, {"launch_id": 1, "state": 1}
+                )
+            }
+            if launch_ids_to_check
+            else {}
+        )
+
+        # Determine which FireWorks are actually lost
+        for fw_id in potential_lost_fw_ids_set:  # tricky: figure out what's actually lost
+            fw = fw_docs.get(fw_id, {})
             # only RUNNING FireWorks can be "lost", i.e. not defused or archived
             if fw.get("state") == "RUNNING":
-                l_ids = fw["launches"]
+                l_ids = fw.get("launches", [])
                 not_lost = [x for x in l_ids if x not in lost_launch_ids]
                 if len(not_lost) == 0:  # all launches are lost - we are lost!
                     lost_fw_ids.append(fw_id)
                 else:
                     for l_id in not_lost:
-                        l_state = self.launches.find_one({"launch_id": l_id}, {"state": 1})["state"]
-                        if Firework.STATE_RANKS[l_state] > Firework.STATE_RANKS["FIZZLED"]:
+                        l_state = launch_states.get(l_id, "UNKNOWN")
+                        if Firework.STATE_RANKS.get(l_state, 0) > Firework.STATE_RANKS["FIZZLED"]:
                             break
                     else:
                         lost_fw_ids.append(fw_id)  # all Launches not lost are anyway FIZZLED / ARCHIVED
@@ -1375,17 +1408,37 @@ class LaunchPad(FWSerializable):
                     if fw_id in lost_fw_ids:
                         self.rerun_fw(fw_id)
 
-        inconsistent_fw_ids = []
-        inconsistent_query = query or {}
-        inconsistent_query["state"] = "RUNNING"
-        running_fws = self.fireworks.find(inconsistent_query, {"fw_id": 1, "launches": 1})
-        for fw in running_fws:
-            if self.launches.find_one(
-                {"launch_id": {"$in": fw["launches"]}, "state": {"$in": ["FIZZLED", "COMPLETED"]}}
-            ):
-                inconsistent_fw_ids.append(fw["fw_id"])
-                if refresh:
-                    self._refresh_wf(fw["fw_id"])
+        # PERFORMANCE OPTIMIZATION: Use aggregation pipeline for inconsistent FWs (server-side join)
+        inconsistent_pipeline = [
+            {"$match": {"state": {"$in": ["FIZZLED", "COMPLETED"]}}},
+            {"$group": {"_id": "$fw_id"}},
+            {
+                "$lookup": {
+                    "from": "fireworks",
+                    "localField": "_id",
+                    "foreignField": "fw_id",
+                    "as": "fw",
+                }
+            },
+            {"$unwind": "$fw"},
+            {"$match": {"fw.state": "RUNNING"}},
+            {"$project": {"fw_id": "$_id"}},
+        ]
+
+        # Apply user query filter if provided
+        if query:
+            query_fw_ids = [x["fw_id"] for x in self.fireworks.find(query, {"fw_id": 1})]
+            inconsistent_pipeline.insert(0, {"$match": {"fw_id": {"$in": query_fw_ids}}})
+
+        inconsistent_results = list(self.launches.aggregate(inconsistent_pipeline))
+        inconsistent_fw_ids = [doc["fw_id"] for doc in inconsistent_results]
+
+        if refresh:
+            for fw_id in inconsistent_fw_ids:
+                self._refresh_wf(fw_id)
+
+        elapsed_time = time.perf_counter() - start_time
+        self.m_logger.debug(f"detect_lostruns completed in {elapsed_time:.2f}s")
 
         return lost_launch_ids, lost_fw_ids, inconsistent_fw_ids
 
@@ -1695,8 +1748,8 @@ class LaunchPad(FWSerializable):
         for fw in duplicates:
             self.m_logger.info(f"Also rerunning duplicate fw_id: {fw}")
             # False for speed, True shouldn't be needed
-            r = self.rerun_fw(fw, rerun_duplicates=False, recover_launch=recover_launch, recover_mode=recover_mode)
-            reruns.extend(r)
+            rerun = self.rerun_fw(fw, rerun_duplicates=False, recover_launch=recover_launch, recover_mode=recover_mode)
+            reruns.extend(rerun)
 
         return reruns
 

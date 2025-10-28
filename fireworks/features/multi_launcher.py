@@ -23,6 +23,8 @@ def ping_multilaunch(port, stop_event) -> None:
         port (int): Listening port number of the DataServer
         stop_event (Thread.Event): stop event
     """
+    # Register LaunchPad before connecting to the DataServer (client-side)
+    DataServer._register_launchpad()
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     fd = FWData()
@@ -57,6 +59,8 @@ def rapidfire_process(
         timeout (int): # of seconds after which to stop the rapidfire process
         local_redirect (bool): redirect standard input and output to local file
     """
+    # Register LaunchPad before connecting to the DataServer (client-side)
+    DataServer._register_launchpad()
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()

@@ -432,7 +432,7 @@ class Tracker(FWSerializable):
         if os.path.exists(m_file):
             with zopen(m_file, "rt", errors="surrogateescape") as f:
                 for line in reverse_readline(f):
-                    lines.append(line)
+                    lines.append(line.rstrip("\n\r"))
                     if len(lines) == self.nlines:
                         break
             self.content = "\n".join(reversed(lines))
