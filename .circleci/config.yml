@@ -4,8 +4,8 @@ jobs:
   pytest_mongodb:
     working_directory: ~/fireworks
     docker:
-      - image: continuumio/miniconda3:4.6.14
-      - image: circleci/mongo:latest
+      - image: continuumio/miniconda3:latest
+      - image: mongo:latest
     steps:
       - checkout
       - run:
@@ -34,7 +34,7 @@ jobs:
   pytest_mongomock:
     working_directory: ~/fireworks
     docker:
-      - image: continuumio/miniconda3:4.6.14
+      - image: continuumio/miniconda3:latest
     steps:
       - checkout
       - run:
