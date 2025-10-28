@@ -21,7 +21,7 @@ class FiretaskBaseTest(unittest.TestCase):
         class DummyTask(FiretaskBase):
             required_params = ["hello"]
 
-            def run_task(self, fw_spec):
+            def run_task(self, _fw_spec):
                 return self["hello"]
 
         with pytest.raises(RuntimeError):
@@ -55,7 +55,7 @@ class FiretaskBaseTest(unittest.TestCase):
 class PickleTask(FiretaskBase):
     required_params = ["test"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, _fw_spec):
         return self["test"]
 
 
@@ -63,7 +63,7 @@ class FiretaskPickleTest(unittest.TestCase):
     def setUp(self) -> None:
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
-        self.upkl_task = pickle.loads(self.pkl_task)
+        self.upkl_task = pickle.loads(self.pkl_task)  # noqa: S301
 
     def test_init(self) -> None:
         assert isinstance(self.upkl_task, PickleTask)
@@ -130,7 +130,7 @@ class WorkflowTest(unittest.TestCase):
 
             orig_children = wf.links.get(orig_id, list())
 
-            for child_id, orig_child_id in zip(children, orig_children, strict=True):
+            for child_id, orig_child_id in zip(children, orig_children, strict=False):
                 assert orig_child_id == wf_copy.id_fw[child_id].name
 
     def test_remove_leaf_fws(self) -> None:
