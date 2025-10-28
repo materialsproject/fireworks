@@ -9,6 +9,11 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Install system dependencies
+          command: |
+            apt-get update
+            apt-get install -y cmake build-essential
+      - run:
           command: |
             export PATH=$HOME/miniconda3/bin:$PATH
             conda config --set always_yes yes --set changeps1 no
@@ -32,6 +37,11 @@ jobs:
       - image: continuumio/miniconda3:4.6.14
     steps:
       - checkout
+      - run:
+          name: Install system dependencies
+          command: |
+            apt-get update
+            apt-get install -y cmake build-essential
       - run:
           command: |
             export PATH=$HOME/miniconda3/bin:$PATH

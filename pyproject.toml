@@ -21,6 +21,7 @@ ignore = [
   "EM101",
   "EM102",
   "FBT",
+  "G004",
   "ISC001",
   "PLR",     # pylint refactor
   "PLW2901", # Outer for loop variable overwritten by inner assignment target

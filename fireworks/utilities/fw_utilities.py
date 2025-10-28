@@ -255,7 +255,7 @@ def explicit_serialize(o):
         import __main__  # noqa: PLC0415
 
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
-    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"
+    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"  # noqa: SLF001
     return o
 
 
