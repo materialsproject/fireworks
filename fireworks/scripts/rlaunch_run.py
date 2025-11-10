@@ -185,7 +185,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
             timeout=args.timeout,
             exclude_current_node=args.exclude_current_node,
             local_redirect=args.local_redirect,
-            max_loops = args.max_loops,
+            max_loops=args.max_loops,
         )
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)

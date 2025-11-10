@@ -70,7 +70,7 @@ class FWReport:
         pipeline = []
         match_q = additional_query or {}
         if num_intervals:
-            now_time = datetime.datetime.now(datetime.UTC)
+            now_time = datetime.datetime.now(datetime.timezone.utc)
             start_time = now_time - relativedelta(**{interval: num_intervals})
             date_q = {"$gte": start_time.isoformat()} if string_type_dates else {"$gte": start_time}
             match_q.update({time_field: date_q})

@@ -44,14 +44,14 @@ class ExplicitTestSerializer(FWSerializable):
 
 class SerializationTest(unittest.TestCase):
     def setUp(self) -> None:
-        test_date = datetime.datetime.now(datetime.UTC)
+        test_date = datetime.datetime.now(datetime.timezone.utc)
         # A basic datetime test serialized object
         self.obj_1 = UnitTestSerializer("prop1", test_date)
         self.obj_1_copy = UnitTestSerializer("prop1", test_date)
 
         # A nested test serialized object
         self.obj_2 = UnitTestSerializer(
-            {"p1": 1234, "p2": 5.0, "p3": "Hi!", "p4": datetime.datetime.now(datetime.UTC)}, test_date
+            {"p1": 1234, "p2": 5.0, "p3": "Hi!", "p4": datetime.datetime.now(datetime.timezone.utc)}, test_date
         )
 
         # A unicode test serialized object

@@ -10,11 +10,11 @@
 from __future__ import annotations
 
 import abc
+import datetime
 import os
 import pprint
 from collections import defaultdict
 from copy import deepcopy
-import datetime
 from typing import TYPE_CHECKING, Any, NoReturn
 
 from monty.io import reverse_readline, zopen
@@ -284,8 +284,8 @@ class Firework(FWSerializable):
 
         self.launches = launches or []
         self.archived_launches = archived_launches or []
-        self.created_on = created_on or datetime.datetime.now(datetime.UTC)
-        self.updated_on = updated_on or datetime.datetime.now(datetime.UTC)
+        self.created_on = created_on or datetime.datetime.now(datetime.timezone.utc)
+        self.updated_on = updated_on or datetime.datetime.now(datetime.timezone.utc)
 
         parents = [parents] if isinstance(parents, Firework) else parents
         self.parents = parents or []
@@ -307,7 +307,7 @@ class Firework(FWSerializable):
             state (str): the state to set for the FW
         """
         self._state = state
-        self.updated_on = datetime.datetime.now(datetime.UTC)
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc)
 
     @recursive_serialize
     def to_dict(self):
@@ -504,7 +504,7 @@ class Launch(FWSerializable):
         Args:
             update_time (datetime)
         """
-        update_time = update_time or datetime.datetime.now(datetime.UTC)
+        update_time = update_time or datetime.datetime.now(datetime.timezone.utc)
         if checkpoint:
             self.state_history[-1]["checkpoint"] = checkpoint
         self.state_history[-1]["updated_on"] = update_time
@@ -583,7 +583,7 @@ class Launch(FWSerializable):
         """
         start = self.time_reserved
         if start:
-            end = self.time_start or datetime.datetime.now(datetime.UTC)
+            end = self.time_start or datetime.datetime.now(datetime.timezone.utc)
             return (end - start).total_seconds()
         return None
 
@@ -643,7 +643,7 @@ class Launch(FWSerializable):
         else:
             last_state, last_checkpoint = None, None
         if state != last_state:
-            now_time = datetime.datetime.now(datetime.UTC)
+            now_time = datetime.datetime.now(datetime.timezone.utc)
             new_history_entry = {"state": state, "created_on": now_time}
             if state != "COMPLETED" and last_checkpoint:
                 new_history_entry.update(checkpoint=last_checkpoint)
@@ -818,8 +818,8 @@ class Workflow(FWSerializable):
             raise ValueError("Workflow cannot be empty (must contain at least 1 FW)")
 
         self.metadata = metadata or {}
-        self.created_on = created_on or datetime.datetime.now(datetime.UTC)
-        self.updated_on = updated_on or datetime.datetime.now(datetime.UTC)
+        self.created_on = created_on or datetime.datetime.now(datetime.timezone.utc)
+        self.updated_on = updated_on or datetime.datetime.now(datetime.timezone.utc)
 
         # dict containing mapping of an id to a firework state. The states are stored locally and
         # redundantly for speed purpose
@@ -1150,7 +1150,7 @@ class Workflow(FWSerializable):
                 for child_id in self.links[fw_id]:
                     updated_ids = updated_ids.union(self.refresh(child_id, updated_ids))
 
-        self.updated_on = datetime.datetime.now(datetime.UTC)
+        self.updated_on = datetime.datetime.now(datetime.timezone.utc)
 
         return updated_ids
 

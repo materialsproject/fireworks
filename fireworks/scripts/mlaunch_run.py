@@ -115,7 +115,7 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
         args.ppn,
         timeout=args.timeout,
         exclude_current_node=args.exclude_current_node,
-        max_loops = args.max_loops,
+        max_loops=args.max_loops,
     )
 
     return 0

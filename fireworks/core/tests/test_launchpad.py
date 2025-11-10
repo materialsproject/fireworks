@@ -16,7 +16,7 @@ from multiprocessing import Process
 
 import pytest
 from monty.os import cd
-from pymongo import __version__ as PYMONGO_VERSION, MongoClient
+from pymongo import __version__ as PYMONGO_VERSION
 from pymongo.errors import OperationFailure
 
 import fireworks.fw_config
@@ -47,15 +47,13 @@ def _run_rapidfire(lpad, fworker) -> None:
     """Helper function for running rapidfire in multiprocess tests."""
     rapidfire(lpad, fworker)
 
+
 # This block needed for pytest>=9.0.0, where `raise unittest.SkipTest`
 # is caught as a test failure by pytest
 try:
-    assert isinstance(fireworks.fw_config.MongoClient(),pymongo.MongoClient)
+    assert isinstance(fireworks.fw_config.MongoClient(), pymongo.MongoClient)
 except Exception:
-    pytest.skip(
-        "MongoDB is not running in localhost:27017! Skipping tests.",
-        allow_module_level=True
-    )
+    pytest.skip("MongoDB is not running in localhost:27017! Skipping tests.", allow_module_level=True)
 
 
 class AuthenticationTest(unittest.TestCase):
@@ -569,7 +567,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        ts = datetime.datetime.now(datetime.UTC)
+        ts = datetime.datetime.now(datetime.timezone.utc)
 
         # check that all the zeus children are completed
         completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))

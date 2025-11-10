@@ -43,7 +43,17 @@ def ping_multilaunch(port, stop_event) -> None:
 
 
 def rapidfire_process(
-    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops : int
+    fworker,
+    nlaunches,
+    sleep,
+    loglvl,
+    port,
+    node_list,
+    sub_nproc,
+    timeout,
+    running_ids_dict,
+    local_redirect,
+    max_loops: int,
 ) -> None:
     """Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
@@ -140,7 +150,7 @@ def start_rockets(
     timeout=None,
     running_ids_dict=None,
     local_redirect=False,
-    max_loops : int = -1
+    max_loops: int = -1,
 ):
     """Create each sub job and start a rocket launch in each one.
 
@@ -164,7 +174,19 @@ def start_rockets(
     processes = [
         Process(
             target=rapidfire_process,
-            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops),
+            args=(
+                fworker,
+                nlaunches,
+                sleep,
+                loglvl,
+                port,
+                nl,
+                sub_nproc,
+                timeout,
+                running_ids_dict,
+                local_redirect,
+                max_loops,
+            ),
         )
         for nl, sub_nproc in zip(node_lists, sub_nproc_list, strict=True)
     ]
@@ -212,7 +234,7 @@ def launch_multiprocess(
     timeout=None,
     exclude_current_node=False,
     local_redirect=False,
-    max_loops : int = -1,
+    max_loops: int = -1,
 ) -> None:
     """Launch the jobs in the job packing mode.
 
