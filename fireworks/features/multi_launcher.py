@@ -159,7 +159,7 @@ def start_rockets(
             target=rapidfire_process,
             args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect),
         )
-        for nl, sub_nproc in zip(node_lists, sub_nproc_list)
+        for nl, sub_nproc in zip(node_lists, sub_nproc_list, strict=True)
     ]
     for p in processes:
         p.start()

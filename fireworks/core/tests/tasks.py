@@ -52,12 +52,12 @@ class SlowAdditionTask(FiretaskBase):
     def run_task(self, fw_spec):
         time.sleep(5)
         return FWAction(
-            additions=Firework(SlowTodictTask(seconds=fw_spec.get("seconds", 10))), update_spec={"SlowAdditionTask": 1}
+            additions=Firework(SlowToDictTask(seconds=fw_spec.get("seconds", 10))), update_spec={"SlowAdditionTask": 1}
         )
 
 
 @explicit_serialize
-class SlowTodictTask(FiretaskBase):
+class SlowToDictTask(FiretaskBase):
     def to_dict(self):
         time.sleep(self.get("seconds", 10))
         return super().to_dict()
@@ -70,7 +70,7 @@ class SlowTodictTask(FiretaskBase):
 class WaitWFLockTask(FiretaskBase):
     def run_task(self, fw_spec):
         if "_add_launchpad_and_fw_id" not in fw_spec:
-            raise SkipTest("Couldn't load lunchpad")
+            raise SkipTest("Couldn't load launchpad")
 
         timeout = 20
         while not self.launchpad.workflows.find_one({"locked": {"$exists": True}, "nodes": self.fw_id}) and timeout > 0:
@@ -99,8 +99,5 @@ class DetoursTask(FiretaskBase):
     def run_task(self, fw_spec):
         data_per_detour = self.get("data_per_detour", None)
         n_detours = self.get("n_detours", 10)
-        fws = []
-        for _ in range(n_detours):
-            fws.append(Firework([DoNothingTask(data=data_per_detour)]))
-
+        fws = [Firework([DoNothingTask(data=data_per_detour)]) for _ in range(n_detours)]
         return FWAction(detours=fws)

@@ -152,7 +152,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
             break
         except OSError as e:
             if ctn > max_try or e.errno != errno.EEXIST:
-                raise e
+                raise
             ctn += 1
             full_path = None
             continue
@@ -193,7 +193,7 @@ def get_slug(m_str):
 class _LaunchPadCallable:
     """Picklable callable wrapper for LaunchPad objects in multiprocessing contexts."""
 
-    def __init__(self, launchpad):
+    def __init__(self, launchpad) -> None:
         self.launchpad = launchpad
 
     def __call__(self):
@@ -223,7 +223,7 @@ class DataServer(BaseManager):
         return server
 
     @classmethod
-    def _register_launchpad(cls, callable_obj=None):
+    def _register_launchpad(cls, callable_obj=None) -> None:
         """Register the LaunchPad with the manager.
 
         Args:
@@ -255,7 +255,7 @@ def explicit_serialize(o):
         import __main__  # noqa: PLC0415
 
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
-    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"
+    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"  # noqa: SLF001
     return o
 
 

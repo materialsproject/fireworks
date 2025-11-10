@@ -4,6 +4,7 @@ add/delete/update any file of any size.
 
 import os
 import zlib
+from typing import TYPE_CHECKING
 
 import gridfs
 from bson.objectid import ObjectId
@@ -13,6 +14,9 @@ from pymongo import DESCENDING
 
 from fireworks.fw_config import LAUNCHPAD_LOC, MONGO_SOCKET_TIMEOUT_MS, STREAM_LOGLEVEL, MongoClient
 from fireworks.utilities.fw_utilities import get_fw_logger
+
+if TYPE_CHECKING:
+    from typing import Self
 
 __author__ = "Kiran Mathew"
 __email__ = "kmathew@lbl.gov"
@@ -38,21 +42,22 @@ class FilePad(MSONable):
     ) -> None:
         """
         Args:
-            host (str): hostname
-            port (int): port number
-            name (str): database name
-            username (str)
-            password (str).
-            authsource (str): authSource parameter for MongoDB authentication; defaults to "name" (i.e., db name) if
-                not set
-            uri_mode (bool): if set True, all Mongo connection parameters occur through a MongoDB URI string (set as
-                the host).
-            filepad_coll_name (str): filepad collection name
-            gridfs_coll_name (str): gridfs collection name
-            logdir (str): path to the log directory
+            host (str): Hostname
+            port (int): Port number
+            name (str): Database name
+            username (str): Username for MongoDB authentication
+            password (str): Password for MongoDB authentication
+            authsource (str): Authentication source parameter for MongoDB authentication;
+                defaults to "name" (i.e., db name) if not set
+            uri_mode (bool): If set True, all Mongo connection parameters occur through a MongoDB URI
+                string (set as the host).
+            mongoclient_kwargs (dict): Additional keyword arguments to be passed into the MongoClient connection.
+            filepad_coll_name (str): Filepad collection name
+            gridfs_coll_name (str): GridFS collection name
+            logdir (str): Path to the log directory
             strm_lvl (str): the logger stream level
-            text_mode (bool): whether to use text_mode for file read/write (instead of binary). Might be useful if
-                working only with text files between Windows and Unix systems
+            text_mode (bool): Whether to use text_mode for file read/write (instead of binary). Might be useful if
+                working only with text files between Windows and Unix systems.
         """
         self.host = host if (host or uri_mode) else "localhost"
         self.port = port if (port or uri_mode) else 27017
@@ -211,7 +216,7 @@ class FilePad(MSONable):
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         doc = self.filepad.find_one({"identifier": identifier})
         return self._update_file_contents(doc, path, compress)
@@ -241,7 +246,7 @@ class FilePad(MSONable):
             compress (bool): whether or not to compress the contents before inserting to gridfs
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         doc = self.filepad.find_one({"gfs_id": gfs_id})
         return self._update_file_contents(doc, path, compress)
@@ -275,7 +280,7 @@ class FilePad(MSONable):
     def _get_file_contents(self, doc):
         """
         Args:
-            doc (dict).
+            doc (dict): From the filepad collection.
 
         Returns:
             (str, dict): the file content as a string, document dictionary
@@ -291,12 +296,12 @@ class FilePad(MSONable):
     def _update_file_contents(self, doc, path, compress):
         """
         Args:
-            doc (dict)
-            path (str): path to the new file whose contents will replace the existing one.
+            doc (dict): From the filepad collection.
+            path (str): Path to the new file whose contents will replace the existing one.
             compress (bool): whether or not to compress the contents before inserting to gridfs.
 
         Returns:
-            (str, str): old file id , new file id
+            (str, str): old file ID, new file ID
         """
         if doc is None:
             return None, None
@@ -309,10 +314,11 @@ class FilePad(MSONable):
         return old_gfs_id, gfs_id
 
     @classmethod
-    def from_db_file(cls, db_file, admin=True):
+    def from_db_file(cls, db_file: str, admin: bool = True) -> "Self":
         """
         Args:
             db_file (str): path to the filepad cred file.
+            admin (bool): Whether to authenticate as admin or read-only user.
 
         Returns:
             FilePad object
@@ -363,11 +369,11 @@ class FilePad(MSONable):
         self.db[self.gridfs_coll_name].chunks.delete_many({})
         self.build_indexes()
 
-    def count(self, filter=None, **kwargs):
+    def count(self, filter: dict | None = None, **kwargs) -> int:
         """Get the number of documents in filepad.
 
         Args:
-            filter (dict)
+            filter (dict): pymongo query dict.
             kwargs (dict): see pymongo.Collection.count for the supported
                 keyword arguments.
 

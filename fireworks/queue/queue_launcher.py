@@ -8,10 +8,13 @@ import glob
 import os
 import time
 from datetime import datetime
+from logging import Logger
+from typing import TYPE_CHECKING
 
 from monty.os import cd
 
 from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import (
     ALWAYS_CREATE_NEW_BLOCK,
     QSTAT_FREQUENCY,
@@ -24,6 +27,9 @@ from fireworks.fw_config import (
 )
 from fireworks.utilities.fw_serializers import load_object
 from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
+
+if TYPE_CHECKING:
+    from fireworks.queue.queue_adapter import QueueAdapterBase
 
 __author__ = "Anubhav Jain, Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -165,7 +171,7 @@ def launch_rocket_to_queue(
 
 
 def rapidfire(
-    launchpad,
+    launchpad: LaunchPad,
     fworker,
     qadapter,
     launch_dir=".",
@@ -182,21 +188,21 @@ def rapidfire(
     """Submit many jobs to the queue.
 
     Args:
-        launchpad (LaunchPad)
-        fworker (FWorker)
-        qadapter (QueueAdapterBase)
-        launch_dir (str): directory where we want to write the blocks
-        block_dir (str): directory to use as block dir. Can be a new or existing block. Dirname must
+        launchpad (LaunchPad): The Launchpad instance.
+        fworker (FWorker): The FWorker instance.
+        qadapter (QueueAdapterBase): The QueueAdapter instance.
+        launch_dir (str): Directory where we want to write the blocks
+        block_dir (str): Directory to use as block dir. Can be a new or existing block. Dirname must
             start with 'block_'.
-        nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
+        nlaunches (int): Total number of launches desired; "infinite" for loop, 0 for one round
         njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
             If 0 skips the check on the number of jobs in the queue.
-        njobs_block (int): automatically write a new block when njobs_block jobs are in a single block
-        sleep_time (int): secs to sleep between rapidfire loop iterations
+        njobs_block (int): Automatically write a new block when njobs_block jobs are in a single block
+        sleep_time (int): Seconds to sleep between rapidfire loop iterations
         reserve (bool): Whether to queue in reservation mode
         strm_lvl (str): level at which to stream log messages
-        timeout (int): # of seconds after which to stop the rapidfire process
-        fill_mode (bool): whether to submit jobs even when there is nothing to run (only in
+        timeout (int): Number of seconds after which to stop the rapidfire process
+        fill_mode (bool): Whether to submit jobs even when there is nothing to run (only in
             non-reservation mode)
     """
     sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
@@ -298,14 +304,14 @@ def _njobs_in_dir(block_dir):
     return len(glob.glob(f"{os.path.abspath(block_dir)}/launcher_*"))
 
 
-def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
+def _get_number_of_jobs_in_queue(qadapter: "QueueAdapterBase", njobs_queue: int, l_logger: Logger) -> int:
     """Internal method to get the number of jobs in the queue using the given job params.
     In case of failure, automatically retries at certain intervals...
 
     Args:
-        qadapter (QueueAdapter)
+        qadapter (QueueAdapterBase): The queue adapter to use.
         njobs_queue (int): The desired maximum number of jobs in the queue
-        l_logger (logger): A logger to put errors/info/warnings/etc.
+        l_logger (Logger): A logger to put errors/info/warnings/etc.
 
     Return:
         (int)

@@ -97,7 +97,7 @@ class CommandLineTask(FiretaskBase):
 
         inputs = []
         outputs = []
-        for ios, labels in zip([inputs, outputs], [ilabels, olabels]):
+        for ios, labels in zip([inputs, outputs], [ilabels, olabels], strict=True):
             # cmd_spec: {label: {{binding: {}}, {source: {}}, {target: {}}}}
             for label in labels:
                 if isinstance(cmd_spec[label], str):
@@ -128,12 +128,12 @@ class CommandLineTask(FiretaskBase):
                 mod_spec = []
                 if len(olabels) > 1:
                     assert len(olabels) == len(outlist)
-                    for olab, out in zip(olabels, outlist):
+                    for olab, out in zip(olabels, outlist, strict=True):
                         mod_spec.extend({"_push": {olab: item}} for item in out)
                 else:
                     mod_spec.extend({"_push": {olabels[0]: out}} for out in outlist)
                 return FWAction(mod_spec=mod_spec)
-            output_dict = dict(zip(olabels, outlist))
+            output_dict = dict(zip(olabels, outlist, strict=True))
             return FWAction(update_spec=output_dict)
         return FWAction()
 

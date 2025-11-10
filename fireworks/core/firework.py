@@ -15,7 +15,7 @@ import pprint
 from collections import defaultdict
 from copy import deepcopy
 from datetime import datetime
-from typing import TYPE_CHECKING, Any, Iterator, NoReturn, Sequence
+from typing import TYPE_CHECKING, Any, NoReturn
 
 from monty.io import reverse_readline, zopen
 from monty.os.path import zpath
@@ -28,6 +28,7 @@ from fireworks.utilities.fw_serializers import FWSerializable, recursive_deseria
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
 
 if TYPE_CHECKING:
+    from collections.abc import Iterator, Sequence
     from typing import Self
 
 __author__ = "Anubhav Jain"
@@ -1033,7 +1034,7 @@ class Workflow(FWSerializable):
             detours = detour
 
         # make sure detour runs do not link to ready/running/completed/etc. runs
-        for fw_id, det in zip(fw_ids, detours):
+        for fw_id, det in zip(fw_ids, detours, strict=True):
             if det and fw_id in self.links:
                 # make sure all of these links are WAITING, else the DETOUR is not well defined
                 ready_run = [(f >= 0 and Firework.STATE_RANKS[self.fw_states[f]] > 1) for f in self.links[fw_id]]
@@ -1054,7 +1055,7 @@ class Workflow(FWSerializable):
 
             if new_fw.fw_id in leaf_ids:
                 self.links[new_fw.fw_id] = []
-                for fw_id, det in zip(fw_ids, detours):
+                for fw_id, det in zip(fw_ids, detours, strict=True):
                     if det:
                         self.links[new_fw.fw_id] += [f for f in self.links[fw_id] if f >= 0]
             else:

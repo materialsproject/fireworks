@@ -117,7 +117,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: dict[str, Any] | None = None, wf_show_
     """
     dag_kwargs = dag_kwargs or {}
     if not isinstance(wf, (Workflow, Firework)):
-        raise ValueError(f"expected instance of Workflow or Firework, got {wf}")
+        raise TypeError(f"expected instance of Workflow or Firework, got {wf}")
 
     if isinstance(wf, Workflow) and not wf_show_tasks:
         # if we're rendering a Workflow and not showing tasks, we render the graph from left to right

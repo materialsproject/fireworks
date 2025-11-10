@@ -52,7 +52,7 @@ class AddFilesTask(FiretaskBase):
 
         fpad = get_fpad(self.get("filepad_file", None))
 
-        for path, ident in zip(paths, identifiers):
+        for path, ident in zip(paths, identifiers, strict=True):
             compress = self.get("compress", True)
             md = self.get("metadata")
             fpad.add_file(path, identifier=ident, metadata=md, compress=compress)

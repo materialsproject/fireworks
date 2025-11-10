@@ -6,6 +6,7 @@ but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
 import re
+from typing import Any
 
 from monty.design_patterns import singleton
 
@@ -31,12 +32,12 @@ def get_nested_dict(input_dict, key):
     return None
 
 
-def arrow_to_dot(input_dict):
+def arrow_to_dot(input_dict: dict[str, Any]) -> dict[str, Any]:
     """Converts arrows ('->') in dict keys to dots '.' recursively.
-    Allows for storing MongoDB neseted document queries in MongoDB.
+    Allows for storing MongoDB nested document queries in MongoDB.
 
     Args:
-      input_dict (dict)
+      input_dict (dict): Data to convert.
 
     Returns:
       dict

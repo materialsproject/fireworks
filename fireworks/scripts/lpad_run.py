@@ -12,7 +12,7 @@ import sys
 import time
 from argparse import ArgumentParser, ArgumentTypeError, Namespace
 from importlib import metadata
-from typing import Any, Sequence
+from typing import TYPE_CHECKING, Any
 
 from pymongo import ASCENDING, DESCENDING
 from ruamel.yaml import YAML
@@ -39,6 +39,9 @@ from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.utilities.fw_serializers import DATETIME_HANDLER, recursive_dict
 
 from ._helpers import _validate_config_file_paths
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __author__ = "Anubhav Jain"
 __credits__ = "Shyue Ping Ong"
@@ -70,8 +73,9 @@ def parse_helper(lp: LaunchPad, args: Namespace, wf_mode: bool = False, skip_pw:
     """Helper method to parse args that can take either id, name, state or query.
 
     Args:
+        lp (LaunchPad): The Launchpad instance.
         args: Namespace of parsed CLI arguments.
-        wf_mode (bool): If True, will query lp for workflow instead of fireworks IDs.
+        wf_mode (bool): If True, will query lp for Workflow instead of Firework IDs.
         skip_pw (bool): If True, skip PW check. Defaults to False.
 
     Returns:
@@ -632,7 +636,7 @@ def rerun_fws(args: Namespace) -> None:
             raise ValueError("Specify the same number of tasks and launches")
     else:
         launch_ids = [None] * len(fw_ids)
-    for fw_id, l_id in zip(fw_ids, launch_ids):
+    for fw_id, l_id in zip(fw_ids, launch_ids, strict=True):
         lp.rerun_fw(int(fw_id), recover_launch=l_id, recover_mode=args.recover_mode)
         lp.m_logger.debug(f"Processed {fw_id=}")
     lp.m_logger.info(f"Finished setting {len(fw_ids)} FWs to rerun")

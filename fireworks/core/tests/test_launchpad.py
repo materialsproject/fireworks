@@ -8,6 +8,7 @@ import datetime
 import filecmp
 import glob
 import os
+import re
 import shutil
 import time
 import unittest
@@ -56,10 +57,10 @@ class AuthenticationTest(unittest.TestCase):
             client = fireworks.fw_config.MongoClient()
             # Drop user if exists, then create
             try:
-                client.not_the_admin_db.command("dropUser", "myuser")
+                client.not_the_admin_db.command("dropUser", "my-user")
             except OperationFailure:
                 pass  # User doesn't exist, that's fine
-            client.not_the_admin_db.command("createUser", "myuser", pwd="mypassword", roles=["dbOwner"])
+            client.not_the_admin_db.command("createUser", "my-user", pwd="my-password", roles=["dbOwner"])
         except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
@@ -74,29 +75,30 @@ class AuthenticationTest(unittest.TestCase):
 
     def test_no_admin_privileges_for_plebs(self) -> None:
         """Normal users can not authenticate against the admin db."""
+        lp = LaunchPad(name="admin", username="my-user", password="my-password", authsource="admin")
         with pytest.raises(OperationFailure):
-            lp = LaunchPad(name="admin", username="myuser", password="mypassword", authsource="admin")
             lp.db.collection.count_documents({})
 
     def test_authenticating_to_users_db(self) -> None:
         """A user should be able to authenticate against a database that they
         are a user of.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser", password="mypassword", authsource="not_the_admin_db")
+        lp = LaunchPad(
+            name="not_the_admin_db", username="my-user", password="my-password", authsource="not_the_admin_db"
+        )
         lp.db.collection.count_documents({})
 
-    def test_authsource_infered_from_db_name(self) -> None:
+    def test_authsource_inferred_from_db_name(self) -> None:
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="myuser", password="mypassword")
+        lp = LaunchPad(name="not_the_admin_db", username="my-user", password="my-password")
         lp.db.collection.count_documents({})
 
 
 class LaunchPadTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
-        cls.lp = None
         cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
@@ -108,7 +110,7 @@ class LaunchPadTest(unittest.TestCase):
     def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TEST_DB_NAME)
-        cls.lp.connection
+        del cls.lp.connection
 
     def setUp(self) -> None:
         self.old_wd = os.getcwd()
@@ -139,7 +141,13 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         wf = Workflow([fw], name="test_workflow")
         self.lp.add_wf(wf)
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError,
+            match=re.escape(
+                "Password check cannot be overridden since the size of DB "
+                "(1 workflows) is greater than the max_reset_wo_password parameter (0)."
+            ),
+        ):
             self.lp.reset("", require_password=False, max_reset_wo_password=0)
         assert self.lp.workflows.count_documents({}) == 1
         self.lp.reset("", require_password=False)
@@ -150,7 +158,7 @@ class LaunchPadTest(unittest.TestCase):
         for _ in range(30):
             self.lp.add_wf(Workflow([Firework(ScriptTask.from_str('echo "hello"'))]))
 
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Invalid password! Password is today's date: "):
             self.lp.reset("")
         self.lp.reset("", False, 100)  # reset back
 
@@ -158,7 +166,7 @@ class LaunchPadTest(unittest.TestCase):
         fw = Firework(ScriptTask.from_str('echo "hello"'), name="hello")
         self.lp.add_wf(fw)
         args = ("",)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Invalid password! Password is today's date: "):
             self.lp.reset(*args)
 
     def test_add_wf(self) -> None:
@@ -510,10 +518,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         assert os.path.isdir(first_ldir)
 
         # Delete workflow containing Zeus.
-        self.lp.delete_wf(self.zeus_fw_id)
+        fw_id = self.zeus_fw_id
+        self.lp.delete_wf(fw_id)
         # Check if any fireworks and the workflow are available
-        with pytest.raises(ValueError):
-            self.lp.get_wf_by_fw_id(self.zeus_fw_id)
+        with pytest.raises(ValueError, match=f"Could not find a Workflow with {fw_id=}"):
+            self.lp.get_wf_by_fw_id(fw_id)
         fw_ids = self.lp.get_fw_ids()
         assert not fw_ids
         wf_ids = self.lp.get_wf_ids()
@@ -532,10 +541,11 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         assert os.path.isdir(first_ldir)
 
         # Delete workflow containing Zeus.
-        self.lp.delete_wf(self.zeus_fw_id, delete_launch_dirs=True)
+        fw_id = self.zeus_fw_id
+        self.lp.delete_wf(fw_id, delete_launch_dirs=True)
         # Check if any fireworks and the workflow are available
-        with pytest.raises(ValueError):
-            self.lp.get_wf_by_fw_id(self.zeus_fw_id)
+        with pytest.raises(ValueError, match=f"Could not find a Workflow with {fw_id=}"):
+            self.lp.get_wf_by_fw_id(fw_id)
         fw_ids = self.lp.get_fw_ids()
         assert not fw_ids
         wf_ids = self.lp.get_wf_ids()

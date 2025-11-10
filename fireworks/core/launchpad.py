@@ -419,7 +419,7 @@ class LaunchPad(FWSerializable):
         ]
         for wf in tqdm(wfs):
             # Reassign fw_ids and increment the counter
-            old_new = dict(zip(wf.id_fw, range(new_fw_counter, new_fw_counter + len(wf))))
+            old_new = dict(zip(wf.id_fw, range(new_fw_counter, new_fw_counter + len(wf)), strict=True))
             for fw in wf:
                 fw.fw_id = old_new[fw.fw_id]
             wf._reassign_ids(old_new)
@@ -1578,7 +1578,7 @@ class LaunchPad(FWSerializable):
                 err.args = (
                     f"{err.args[0]}. Set GRIDFS_FALLBACK_COLLECTION in FW_config.yaml to a value different from None",
                 )
-                raise err
+                raise
 
             # encoding required for python2/3 compatibility.
             action_id = self.gridfs_fallback.put(
@@ -1982,7 +1982,7 @@ class LaunchPad(FWSerializable):
 
         except Exception:
             if print_errors:
-                self.m_logger.error(f"failed recovering {launch_id=}.\n{traceback.format_exc()}")
+                self.m_logger.exception(f"failed recovering {launch_id=}.\n{traceback.format_exc()}")
             if not ignore_errors:
                 traceback.print_exc()
                 m_action = FWAction(

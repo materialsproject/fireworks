@@ -28,7 +28,7 @@ if __name__ == "__main__":
             "fireworks.flask_site.static.font-awesome-4.0.3": ["css/*", "fonts/*", "less/*", "scss/*"],
         },
         zip_safe=False,
-        python_requires=">=3.8",
+        python_requires=">=3.10",
         install_requires=[
             "ruamel.yaml>=0.15.35",
             "pymongo>=4.0.0",

@@ -45,7 +45,7 @@ def get_ancestors(lpad, fw_id):
     return list(ancestors)
 
 
-def run_fireworks(lpad, fw_ids):
+def run_fireworks(lpad, fw_ids) -> None:
     """Launch fireworks with the provided fw_ids."""
     while fw_ids:
         ready = lpad.get_fw_ids({"fw_id": {"$in": fw_ids}, "state": "READY"})
@@ -82,7 +82,6 @@ if __name__ == "__main__":
     det_id = lpad.fireworks.find_one({"name": det_name}, {"fw_id": True})["fw_id"]
     run_fireworks(lpad, [*get_ancestors(lpad, det_id), det_id])
 
-    lpad.get_fw_by_id(det_id).launches[-1].launch_id
     launch_id = lpad.get_fw_by_id(det_id).launches[-1].launch_id
     result = lpad.launches.find_one({"launch_id": launch_id})["action"]["update_spec"]
     print(result)

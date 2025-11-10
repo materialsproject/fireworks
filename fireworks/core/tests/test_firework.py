@@ -6,6 +6,7 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
 
+import pickle
 import unittest
 
 import pytest
@@ -20,7 +21,7 @@ class FiretaskBaseTest(unittest.TestCase):
         class DummyTask(FiretaskBase):
             required_params = ["hello"]
 
-            def run_task(self, fw_spec):
+            def run_task(self, _fw_spec):
                 return self["hello"]
 
         with pytest.raises(RuntimeError):
@@ -54,17 +55,15 @@ class FiretaskBaseTest(unittest.TestCase):
 class PickleTask(FiretaskBase):
     required_params = ["test"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, _fw_spec):
         return self["test"]
 
 
 class FiretaskPickleTest(unittest.TestCase):
     def setUp(self) -> None:
-        import pickle
-
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
-        self.upkl_task = pickle.loads(self.pkl_task)
+        self.upkl_task = pickle.loads(self.pkl_task)  # noqa: S301
 
     def test_init(self) -> None:
         assert isinstance(self.upkl_task, PickleTask)
@@ -104,9 +103,9 @@ class WorkflowTest(unittest.TestCase):
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
         assert isinstance(wf, Workflow)
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
     def test_copy(self) -> None:
@@ -131,7 +130,7 @@ class WorkflowTest(unittest.TestCase):
 
             orig_children = wf.links.get(orig_id, list())
 
-            for child_id, orig_child_id in zip(children, orig_children):
+            for child_id, orig_child_id in zip(children, orig_children, strict=False):
                 assert orig_child_id == wf_copy.id_fw[child_id].name
 
     def test_remove_leaf_fws(self) -> None:

@@ -203,7 +203,7 @@ class PyTask(FiretaskBase):
         elif len(outputs) > 1:
             assert isinstance(output, (list, tuple, set))
             assert len(output) == len(outputs)
-            actions["update_spec"] = dict(zip(outputs, output))
+            actions["update_spec"] = dict(zip(outputs, output, strict=True))
         if self.get("stored_data_varname"):
             actions["stored_data"] = {self["stored_data_varname"]: output}
         if len(actions) > 0:

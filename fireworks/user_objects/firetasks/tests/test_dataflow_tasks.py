@@ -205,7 +205,7 @@ class ForeachTaskTest(unittest.TestCase):
             for detour in action.detours
             for mod in detour.tasks[0].run_task(detour.spec).mod_spec
         ]
-        for number, result in zip(numbers, results):
+        for number, result in zip(numbers, results, strict=True):
             assert result == pow(number, power)
 
     def test_foreach_commandlinetask(self) -> None:

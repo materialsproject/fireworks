@@ -187,11 +187,7 @@ override_user_settings()
 
 
 def config_to_dict() -> dict[str, Any]:
-    d = {}
-    for k, v in globals().items():
-        if k.upper() == k and k != "NEGATIVE_FWID_CTR":
-            d[k] = v
-    return d
+    return {k: v for k, v in globals().items() if k.upper() == k and k != "NEGATIVE_FWID_CTR"}
 
 
 def write_config(path: str | None = None) -> None:

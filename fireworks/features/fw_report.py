@@ -162,11 +162,11 @@ class FWReport:
                     ax.fill_between(
                         range(len(bottom)),
                         bottom,
-                        [x + y for x, y in zip(bottom, data[state])],
+                        [x + y for x, y in zip(bottom, data[state], strict=True)],
                         color=state_to_color[state],
                         label=state,
                     )
-                bottom = [x + y for x, y in zip(bottom, data[state])]
+                bottom = [x + y for x, y in zip(bottom, data[state], strict=True)]
 
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))

@@ -112,7 +112,7 @@ class Introspector:
 
         # get stats on fizzled docs
         fizzled_keys = []
-        nsamples_fizzled = 0
+        n_samples_fizzled = 0
 
         q = {"state": "FIZZLED"}
         if coll == "launches":
@@ -120,10 +120,9 @@ class Introspector:
             q["launch_id"] = {"$in": all_launch_ids}
 
         for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
-            nsamples_fizzled += 1
+            n_samples_fizzled += 1
             if state_key == "spec._tasks":
-                for t in doc["spec"]["_tasks"]:
-                    fizzled_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
+                fizzled_keys.extend(f"_fw_name{separator_str}{t['_fw_name']}" for t in doc["spec"]["_tasks"])
             elif state_key == "action.stored_data._exception._stacktrace":
                 stacktrace = (
                     doc.get("action", {})
@@ -138,35 +137,31 @@ class Introspector:
         fizzled_d = collect_stats(fizzled_keys)
 
         # get stats on completed docs
-        completed_keys = []
-        nsamples_completed = 0
+        completed_keys: list[str] = []
+        n_samples_completed = 0
 
         if coll != "launches":
             for doc in self.db[coll].find({"state": "COMPLETED"}, {state_key: 1}, sort=sort_key).limit(limit):
-                nsamples_completed += 1
+                n_samples_completed += 1
                 if state_key == "spec._tasks":
-                    for t in doc["spec"]["_tasks"]:
-                        completed_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
+                    completed_keys.extend(f"_fw_name{separator_str}{t['_fw_name']}" for t in doc["spec"]["_tasks"])
                 else:
                     completed_keys.extend(flatten_to_keys(doc[state_key]))
 
         completed_d = collect_stats(completed_keys)
 
-        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled, threshold=threshold)
+        diff_d = compare_stats(completed_d, n_samples_completed, fizzled_d, n_samples_fizzled, threshold=threshold)
 
-        table = []
-        for w in sorted(diff_d, key=diff_d.get, reverse=True):
-            table.append(
-                [
-                    w.split(separator_str)[0],
-                    w.split(separator_str)[1],
-                    completed_d.get(w, 0),
-                    fizzled_d.get(w, 0),
-                    diff_d[w],
-                ]
-            )
-
-        return table
+        return [
+            [
+                w.split(separator_str)[0],
+                w.split(separator_str)[1],
+                completed_d.get(w, 0),
+                fizzled_d.get(w, 0),
+                diff_d[w],
+            ]
+            for w in sorted(diff_d, key=diff_d.get, reverse=True)
+        ]
 
     @staticmethod
     def print_report(table, coll) -> None:

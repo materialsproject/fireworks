@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from argparse import ArgumentParser
 from importlib import metadata
-from typing import Sequence
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
@@ -13,6 +13,9 @@ from fireworks.features.multi_launcher import launch_multiprocess
 from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STREAM_LOGLEVEL
 
 from ._helpers import _validate_config_file_paths
+
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
