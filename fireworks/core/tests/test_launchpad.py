@@ -47,6 +47,13 @@ def _run_rapidfire(lpad, fworker) -> None:
     """Helper function for running rapidfire in multiprocess tests."""
     rapidfire(lpad, fworker)
 
+# This block needed for pytest>=9.0.0, where `raise unittest.SkipTest`
+# is caught as a test failure by pytest
+try:
+    client = fireworks.fw_config.MongoClient()
+except Exception:
+    pytest.skip("MongoDB is not running in localhost:27017! Skipping tests.", allow_module_level=True)
+
 
 class AuthenticationTest(unittest.TestCase):
     """Tests whether users are authenticating against the correct mongo dbs."""
