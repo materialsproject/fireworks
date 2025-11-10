@@ -564,7 +564,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        ts = datetime.datetime.utcnow()  # noqa: DTZ003
+        ts = datetime.datetime.now(datetime.timezone.utc)
 
         # check that all the zeus children are completed
         completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))

@@ -4,6 +4,7 @@ completes the Launch.
 
 from __future__ import annotations
 
+import datetime
 import errno
 import glob
 import json
@@ -13,7 +14,6 @@ import os
 import pdb
 import shutil
 import traceback
-from datetime import datetime
 from threading import Event, Thread, current_thread
 from typing import TYPE_CHECKING
 
@@ -49,7 +49,7 @@ def do_ping(launchpad: LaunchPad, launch_id: int) -> None:
         launchpad.ping_launch(launch_id)
     else:
         with open("FW_ping.json", "w") as f:
-            f.write(f'{{"ping_time": "{datetime.utcnow().isoformat()}"}}')
+            f.write(f'{{"ping_time": "{datetime.datetime.now(datetime.timezone.utc).isoformat()}"}}')
 
 
 def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_thread: Thread) -> None:
@@ -144,7 +144,7 @@ class Rocket:
             fpath = zpath("FW_offline.json")
             with zopen(fpath) as f_in:
                 d = json.loads(f_in.read())
-                d["started_on"] = datetime.utcnow().isoformat()
+                d["started_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -299,7 +299,7 @@ class Rocket:
                             d = json.loads(f_in.read())
                             d["fwaction"] = m_action.to_dict()
                             d["state"] = "FIZZLED"
-                            d["completed_on"] = datetime.utcnow().isoformat()
+                            d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                             with zopen(fpath, "wt") as f_out:
                                 f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -361,7 +361,7 @@ class Rocket:
                     d = json.loads(f_in.read())
                     d["fwaction"] = m_action.to_dict()
                     d["state"] = "COMPLETED"
-                    d["completed_on"] = datetime.utcnow().isoformat()
+                    d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -417,7 +417,7 @@ class Rocket:
                     d = json.loads(f_in.read())
                     d["fwaction"] = m_action.to_dict()
                     d["state"] = "FIZZLED"
-                    d["completed_on"] = datetime.utcnow().isoformat()
+                    d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
