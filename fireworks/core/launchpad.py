@@ -953,7 +953,7 @@ class LaunchPad(FWSerializable):
         allowed_states = ["WAITING", "READY", "RESERVED"]
         f = self.fireworks.find_one_and_update(
             {"fw_id": fw_id, "state": {"$in": allowed_states}},
-            {"$set": {"state": "PAUSED", "updated_on": datetime.datetime.utcnow()}},
+            {"$set": {"state": "PAUSED", "updated_on": datetime.datetime.now(datetime.UTC)}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -972,7 +972,7 @@ class LaunchPad(FWSerializable):
         allowed_states = ["DEFUSED", "WAITING", "READY", "FIZZLED", "PAUSED"]
         f = self.fireworks.find_one_and_update(
             {"fw_id": fw_id, "state": {"$in": allowed_states}},
-            {"$set": {"state": "DEFUSED", "updated_on": datetime.datetime.utcnow()}},
+            {"$set": {"state": "DEFUSED", "updated_on": datetime.datetime.now(datetime.UTC)}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -980,7 +980,7 @@ class LaunchPad(FWSerializable):
             self.rerun_fw(fw_id, rerun_duplicates)
             f = self.fireworks.find_one_and_update(
                 {"fw_id": fw_id, "state": {"$in": allowed_states}},
-                {"$set": {"state": "DEFUSED", "updated_on": datetime.datetime.utcnow()}},
+                {"$set": {"state": "DEFUSED", "updated_on": datetime.datetime.now(datetime.UTC)}},
             )
             if f:
                 self._refresh_wf(fw_id)
@@ -994,7 +994,7 @@ class LaunchPad(FWSerializable):
         """
         f = self.fireworks.find_one_and_update(
             {"fw_id": fw_id, "state": "DEFUSED"},
-            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}},
+            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.now(datetime.UTC)}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -1008,7 +1008,7 @@ class LaunchPad(FWSerializable):
         """
         f = self.fireworks.find_one_and_update(
             {"fw_id": fw_id, "state": "PAUSED"},
-            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.utcnow()}},
+            {"$set": {"state": "WAITING", "updated_on": datetime.datetime.now(datetime.UTC)}},
         )
         if f:
             self._refresh_wf(fw_id)
@@ -1064,7 +1064,7 @@ class LaunchPad(FWSerializable):
             wf = self.get_wf_by_fw_id_lzyfw(fw_id)
             for fw in wf:
                 self.fireworks.find_one_and_update(
-                    {"fw_id": fw.fw_id}, {"$set": {"state": "ARCHIVED", "updated_on": datetime.datetime.utcnow()}}
+                    {"fw_id": fw.fw_id}, {"$set": {"state": "ARCHIVED", "updated_on": datetime.datetime.now(datetime.UTC)}}
                 )
                 self._refresh_wf(fw.fw_id)
 
@@ -1128,7 +1128,7 @@ class LaunchPad(FWSerializable):
             # check out the matching firework, depending on the query set by the FWorker
             if checkout:
                 m_fw = self.fireworks.find_one_and_update(
-                    m_query, {"$set": {"state": "RESERVED", "updated_on": datetime.datetime.utcnow()}}, sort=sortby
+                    m_query, {"$set": {"state": "RESERVED", "updated_on": datetime.datetime.now(datetime.UTC)}}, sort=sortby
                 )
             else:
                 m_fw = self.fireworks.find_one(m_query, {"fw_id": 1, "spec": 1}, sort=sortby)
@@ -1146,7 +1146,7 @@ class LaunchPad(FWSerializable):
                 )
                 try:
                     err_details = traceback.format_exc()
-                    now = datetime.datetime.utcnow()
+                    now = datetime.datetime.now(datetime.UTC)
                     self.fireworks.find_one_and_update(
                         {"fw_id": fw_id_candidate},
                         {
@@ -1255,7 +1255,7 @@ class LaunchPad(FWSerializable):
         Returns:
             [int]: list of expired launch ids
         """
-        now_time = datetime.datetime.utcnow()
+        now_time = datetime.datetime.now(datetime.UTC)
         cutoff_time_str = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
         bad_launch_data = self.launches.find(
             {
@@ -1321,7 +1321,7 @@ class LaunchPad(FWSerializable):
         lost_launch_ids = []
         lost_fw_ids = []
         potential_lost_fw_ids = []
-        now_time = datetime.datetime.utcnow()
+        now_time = datetime.datetime.now(datetime.UTC)
         cutoff_timestr = (now_time - datetime.timedelta(seconds=expiration_secs)).isoformat()
 
         lostruns_query = launch_query or {}
@@ -1895,8 +1895,8 @@ class LaunchPad(FWSerializable):
         d = {"fw_id": fw_id}
         d["launch_id"] = launch_id
         d["name"] = name
-        d["created_on"] = datetime.datetime.utcnow().isoformat()
-        d["updated_on"] = datetime.datetime.utcnow().isoformat()
+        d["created_on"] = datetime.datetime.now(datetime.UTC).isoformat()
+        d["updated_on"] = datetime.datetime.now(datetime.UTC).isoformat()
         d["deprecated"] = False
         d["completed"] = False
         self.offline_runs.insert_one(d)
@@ -1969,14 +1969,14 @@ class LaunchPad(FWSerializable):
                 )
                 fw_id = launch["fw_id"]
                 f = self.fireworks.find_one_and_update(
-                    {"fw_id": fw_id}, {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.utcnow()}}
+                    {"fw_id": fw_id}, {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.now(datetime.UTC)}}
                 )
                 if f:
                     self._refresh_wf(fw_id)
 
             # update the updated_on
             self.offline_runs.update_one(
-                {"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.utcnow().isoformat()}}
+                {"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.now(datetime.UTC).isoformat()}}
             )
             return None
 
@@ -2079,7 +2079,7 @@ class LazyFirework:
     @state.setter
     def state(self, state) -> None:
         self.partial_fw._state = state
-        self.partial_fw.updated_on = datetime.datetime.utcnow()
+        self.partial_fw.updated_on = datetime.datetime.now(datetime.UTC)
 
     def to_dict(self):
         return self.full_fw.to_dict()

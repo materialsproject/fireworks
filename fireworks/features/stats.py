@@ -1,7 +1,7 @@
 """Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class."""
 
 from collections import defaultdict
-from datetime import datetime, timedelta
+import datetime
 
 from bson.son import SON
 from dateutil import parser
@@ -373,11 +373,11 @@ class FWStats:
         """
         if start_time and time_delta:
             raise SyntaxError("Can't specify start_time and time_delta at the same time!")
-        end_time = parser.parse(end_time) if end_time else datetime.utcnow()
+        end_time = parser.parse(end_time) if end_time else datetime.datetime.now(datetime.UTC)
         if not start_time:
             if not time_delta:
                 time_delta = {"days": 30}
-            start_time = end_time - timedelta(**time_delta)
+            start_time = end_time - datetime.timedelta(**time_delta)
         else:
             start_time = parser.parse(start_time)
         if start_time > end_time:
