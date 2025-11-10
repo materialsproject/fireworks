@@ -21,6 +21,11 @@ from ._helpers import _validate_config_file_paths
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+try:
+    import argcomplete
+except ImportError:
+    argcomplete = None
+
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -29,12 +34,26 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
 
 
-def handle_interrupt(signum, frame) -> None:
+def handle_interrupt(signum, _frame) -> None:
+    """Handle interrupt signal and exit gracefully.
+
+    Args:
+        signum: Signal number
+        _frame: Frame object (unused)
+    """
     sys.stderr.write(f"Interrupted by signal {signum:d}\n")
     sys.exit(1)
 
 
 def rlaunch(argv: Sequence[str] | None = None) -> int:
+    """Launch one or more Rockets.
+
+    Args:
+        argv: Command line arguments (optional, defaults to sys.argv)
+
+    Returns:
+        int: Exit code (0 for success)
+    """
     m_description = (
         "This program launches one or more Rockets. A Rocket retrieves a job from the "
         'central database and runs it. The "single-shot" option launches a single Rocket, '
@@ -118,16 +137,12 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
-    try:
-        import argcomplete
-
+    if argcomplete is not None:
         argcomplete.autocomplete(parser)
         # This supports bash autocompletion. To enable this, pip install
         # argcomplete, activate global completion, or add
         #      eval "$(register-python-argcomplete rlaunch)"
         # into your .bash_profile or .bashrc
-    except ImportError:
-        pass
 
     args = parser.parse_args(argv)
 

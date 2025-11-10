@@ -145,7 +145,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
         full_path = get_path()
         if os.path.exists(full_path):
             full_path = None
-            time.sleep(random.random() / 3 + 0.1)
+            time.sleep(random.random() / 3 + 0.1)  # noqa: S311 (pseudo-random sufficient for retry timing)
             continue
         try:
             os.mkdir(full_path)
@@ -170,7 +170,7 @@ def get_my_ip():
     if _g_ip is None:
         try:
             _g_ip = socket.gethostbyname(socket.gethostname())
-        except Exception:
+        except (OSError, socket.herror, socket.gaierror, TimeoutError):
             _g_ip = "127.0.0.1"
     return _g_ip
 
@@ -217,13 +217,13 @@ class DataServer(BaseManager):
             DataServer: Configured DataServer instance.
         """
         # Use a picklable callable class for spawn-based multiprocessing compatibility
-        cls._register_launchpad(_LaunchPadCallable(launchpad))
+        cls.register_launchpad(_LaunchPadCallable(launchpad))
         server = DataServer(address=("127.0.0.1", 0), authkey=DS_PASSWORD)  # random port
         server.start()
         return server
 
     @classmethod
-    def _register_launchpad(cls, callable_obj=None) -> None:
+    def register_launchpad(cls, callable_obj=None) -> None:
         """Register the LaunchPad with the manager.
 
         Args:

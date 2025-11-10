@@ -17,6 +17,11 @@ from ._helpers import _validate_config_file_paths
 if TYPE_CHECKING:
     from collections.abc import Sequence
 
+try:
+    import argcomplete
+except ImportError:
+    argcomplete = None
+
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
 __maintainer__ = "Xiaohui Qu"
@@ -25,6 +30,14 @@ __date__ = "Aug 19, 2013"
 
 
 def mlaunch(argv: Sequence[str] | None = None) -> int:
+    """Launch multiple Rockets simultaneously.
+
+    Args:
+        argv: Command line arguments (optional, defaults to sys.argv)
+
+    Returns:
+        int: Exit code (0 for success)
+    """
     m_description = "This program launches multiple Rockets simultaneously"
 
     parser = ArgumentParser("mlaunch", description=m_description)
@@ -72,16 +85,12 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
         type=int,
     )
 
-    try:
-        import argcomplete
-
+    if argcomplete is not None:
         argcomplete.autocomplete(parser)
         # This supports bash autocompletion. To enable this, pip install
         # argcomplete, activate global completion, or add
         #      eval "$(register-python-argcomplete mlaunch)"
         # into your .bash_profile or .bashrc
-    except ImportError:
-        pass
 
     args = parser.parse_args(argv)
 
