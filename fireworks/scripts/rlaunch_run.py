@@ -99,6 +99,12 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     multi_parser.add_argument(
         "--local_redirect", help="Redirect stdout and stderr to the launch directory", action="store_true"
     )
+    multi_parser.add_argument(
+        "--max_loops",
+        help="after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)",
+        default=-1,
+        type=int,
+    )
 
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
     parser.add_argument("-w", "--fworker_file", help="path to fworker file")
@@ -179,6 +185,7 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
             timeout=args.timeout,
             exclude_current_node=args.exclude_current_node,
             local_redirect=args.local_redirect,
+            max_loops = args.max_loops,
         )
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)

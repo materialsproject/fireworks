@@ -43,7 +43,7 @@ def ping_multilaunch(port, stop_event) -> None:
 
 
 def rapidfire_process(
-    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect
+    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops : int
 ) -> None:
     """Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
@@ -58,6 +58,9 @@ def rapidfire_process(
         sub_nproc (int): number of processors of the sub job
         timeout (int): # of seconds after which to stop the rapidfire process
         local_redirect (bool): redirect standard input and output to local file
+        max_loops (int) : After `max_loops` attempts to search for
+            new fireworks to run, a single rapidfire process will terminate.
+            -1 indicates that the process will not stop searching for new jobs to run.
     """
     # Register LaunchPad before connecting to the DataServer (client-side)
     DataServer._register_launchpad()
@@ -79,7 +82,7 @@ def rapidfire_process(
         fworker=fworker,
         m_dir=None,
         nlaunches=nlaunches,
-        max_loops=-1,
+        max_loops=max_loops,
         sleep_time=sleep,
         strm_lvl=loglvl,
         timeout=timeout,
@@ -115,7 +118,7 @@ def rapidfire_process(
                 fworker=fworker,
                 m_dir=None,
                 nlaunches=nlaunches,
-                max_loops=-1,
+                max_loops=max_loops,
                 sleep_time=sleep,
                 strm_lvl=loglvl,
                 timeout=timeout,
@@ -137,6 +140,7 @@ def start_rockets(
     timeout=None,
     running_ids_dict=None,
     local_redirect=False,
+    max_loops : int = -1
 ):
     """Create each sub job and start a rocket launch in each one.
 
@@ -151,13 +155,16 @@ def start_rockets(
         timeout (int): # of seconds after which to stop the rapidfire process
         running_ids_dict (dict): Shared dict between process to record IDs
         local_redirect (bool): redirect standard input and output to local file
+        max_loops (int) : After `max_loops` attempts to search for
+            new fireworks to run, a single rapidfire process will terminate.
+            -1 indicates that the process will not stop searching for new jobs to run.
     Returns:
         ([multiprocessing.Process]) all the created processes
     """
     processes = [
         Process(
             target=rapidfire_process,
-            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect),
+            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops),
         )
         for nl, sub_nproc in zip(node_lists, sub_nproc_list, strict=True)
     ]
@@ -205,6 +212,7 @@ def launch_multiprocess(
     timeout=None,
     exclude_current_node=False,
     local_redirect=False,
+    max_loops : int = -1,
 ) -> None:
     """Launch the jobs in the job packing mode.
 
@@ -220,6 +228,9 @@ def launch_multiprocess(
         timeout (int): # of seconds after which to stop the rapidfire process
         exclude_current_node: Don't use the script launching node as a compute node
         local_redirect (bool): redirect standard input and output to local file
+        max_loops (int, default = -1): After `max_loops` attempts to search for
+            new fireworks to run, a single rapidfire process will terminate.
+            -1 indicates that the process will not stop searching for new jobs to run.
     """
     # parse node file contents
     if exclude_current_node:
@@ -251,6 +262,7 @@ def launch_multiprocess(
         timeout=timeout,
         running_ids_dict=running_ids_dict,
         local_redirect=local_redirect,
+        max_loops=max_loops,
     )
     FWData().Running_IDs = running_ids_dict
 

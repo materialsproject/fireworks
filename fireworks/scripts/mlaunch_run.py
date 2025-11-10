@@ -65,6 +65,12 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--exclude_current_node", help="Don't use the script launching node as compute node", action="store_true"
     )
+    parser.add_argument(
+        "--max_loops",
+        help="after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)",
+        default=-1,
+        type=int,
+    )
 
     try:
         import argcomplete
@@ -109,6 +115,7 @@ def mlaunch(argv: Sequence[str] | None = None) -> int:
         args.ppn,
         timeout=args.timeout,
         exclude_current_node=args.exclude_current_node,
+        max_loops = args.max_loops,
     )
 
     return 0
