@@ -48,6 +48,17 @@ def _run_rapidfire(lpad, fworker) -> None:
     rapidfire(lpad, fworker)
 
 
+def _is_mongomock() -> bool:
+    """Check if mongomock is being used instead of real MongoDB."""
+    try:
+        client = fireworks.fw_config.MongoClient()
+        # Check if the client is from mongomock
+        return "mongomock" in str(type(client).__module__)
+    except Exception:  # noqa: BLE001
+        return False
+
+
+@unittest.skipIf(_is_mongomock(), "Authentication tests require real MongoDB, not mongomock")
 class AuthenticationTest(unittest.TestCase):
     """Tests whether users are authenticating against the correct mongo dbs."""
 
@@ -62,7 +73,7 @@ class AuthenticationTest(unittest.TestCase):
                 pass  # User doesn't exist, that's fine
             client.not_the_admin_db.command({"createUser": "my-user", "pwd": "my-password", "roles": ["dbOwner"]})
         except Exception:  # noqa: BLE001
-            raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
+            raise unittest.SkipTest("MongoDB is not running or authentication not available")
 
     @classmethod
     def tearDownClass(cls) -> None:
