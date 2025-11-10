@@ -24,7 +24,7 @@ def ping_multilaunch(port, stop_event) -> None:
         stop_event (Thread.Event): stop event
     """
     # Register LaunchPad before connecting to the DataServer (client-side)
-    DataServer._register_launchpad()
+    DataServer.register_launchpad()
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     fd = FWData()
@@ -43,7 +43,17 @@ def ping_multilaunch(port, stop_event) -> None:
 
 
 def rapidfire_process(
-    fworker, nlaunches, sleep, loglvl, port, node_list, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops : int
+    fworker,
+    nlaunches,
+    sleep,
+    loglvl,
+    port,
+    node_list,
+    sub_nproc,
+    timeout,
+    running_ids_dict,
+    local_redirect,
+    max_loops: int,
 ) -> None:
     """Initializes shared data with multiprocessing parameters and starts a rapidfire.
 
@@ -57,13 +67,14 @@ def rapidfire_process(
         node_list ([str]): computer node list
         sub_nproc (int): number of processors of the sub job
         timeout (int): # of seconds after which to stop the rapidfire process
+        running_ids_dict (dict): Shared dict between processes to record IDs
         local_redirect (bool): redirect standard input and output to local file
         max_loops (int) : After `max_loops` attempts to search for
             new fireworks to run, a single rapidfire process will terminate.
             -1 indicates that the process will not stop searching for new jobs to run.
     """
     # Register LaunchPad before connecting to the DataServer (client-side)
-    DataServer._register_launchpad()
+    DataServer.register_launchpad()
     ds = DataServer(address=("127.0.0.1", port), authkey=DS_PASSWORD)
     ds.connect()
     launchpad = ds.LaunchPad()
@@ -140,7 +151,7 @@ def start_rockets(
     timeout=None,
     running_ids_dict=None,
     local_redirect=False,
-    max_loops : int = -1
+    max_loops: int = -1,
 ):
     """Create each sub job and start a rocket launch in each one.
 
@@ -158,13 +169,26 @@ def start_rockets(
         max_loops (int) : After `max_loops` attempts to search for
             new fireworks to run, a single rapidfire process will terminate.
             -1 indicates that the process will not stop searching for new jobs to run.
+
     Returns:
         ([multiprocessing.Process]) all the created processes
     """
     processes = [
         Process(
             target=rapidfire_process,
-            args=(fworker, nlaunches, sleep, loglvl, port, nl, sub_nproc, timeout, running_ids_dict, local_redirect, max_loops),
+            args=(
+                fworker,
+                nlaunches,
+                sleep,
+                loglvl,
+                port,
+                nl,
+                sub_nproc,
+                timeout,
+                running_ids_dict,
+                local_redirect,
+                max_loops,
+            ),
         )
         for nl, sub_nproc in zip(node_lists, sub_nproc_list, strict=True)
     ]
@@ -199,7 +223,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     return node_lists, sub_nproc_list
 
 
-# TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??
+# TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??  # noqa: E501, FIX002, TD002, TD003
 def launch_multiprocess(
     launchpad,
     fworker,
@@ -212,13 +236,13 @@ def launch_multiprocess(
     timeout=None,
     exclude_current_node=False,
     local_redirect=False,
-    max_loops : int = -1,
+    max_loops: int = -1,
 ) -> None:
     """Launch the jobs in the job packing mode.
 
     Args:
-        launchpad (LaunchPad)
-        fworker (FWorker)
+        launchpad (LaunchPad): LaunchPad object for managing FireWorks
+        fworker (FWorker): FWorker object for worker configuration
         loglvl (str): level at which to output logs
         nlaunches (int): 0 means 'until completion', -1 or "infinite" means to loop forever
         num_jobs(int): number of sub jobs

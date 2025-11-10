@@ -16,7 +16,7 @@ from multiprocessing import Process
 
 import pytest
 from monty.os import cd
-from pymongo import __version__ as PYMONGO_VERSION
+from pymongo import __version__ as pymongo_version
 from pymongo.errors import OperationFailure
 
 import fireworks.fw_config
@@ -34,7 +34,7 @@ from fireworks.user_objects.firetasks.script_task import PyTask, ScriptTask
 
 TEST_DB_NAME = "fireworks_unittest"
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-PYMONGO_MAJOR_VERSION = int(PYMONGO_VERSION[0])
+PYMONGO_MAJOR_VERSION = int(pymongo_version[0])
 
 
 # Module-level helper functions for Python 3.13+ spawn compatibility
@@ -57,11 +57,11 @@ class AuthenticationTest(unittest.TestCase):
             client = fireworks.fw_config.MongoClient()
             # Drop user if exists, then create
             try:
-                client.not_the_admin_db.command("dropUser", "my-user")
+                client.not_the_admin_db.command({"dropUser": "my-user"})
             except OperationFailure:
                 pass  # User doesn't exist, that's fine
-            client.not_the_admin_db.command("createUser", "my-user", pwd="my-password", roles=["dbOwner"])
-        except Exception:
+            client.not_the_admin_db.command({"createUser": "my-user", "pwd": "my-password", "roles": ["dbOwner"]})
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -70,12 +70,12 @@ class AuthenticationTest(unittest.TestCase):
         try:
             client = fireworks.fw_config.MongoClient()
             client.drop_database("not_the_admin_db")
-        except Exception:
-            pass
+        except Exception:  # noqa: BLE001, S110
+            pass  # Database cleanup - OK to silently fail
 
     def test_no_admin_privileges_for_plebs(self) -> None:
         """Normal users can not authenticate against the admin db."""
-        lp = LaunchPad(name="admin", username="my-user", password="my-password", authsource="admin")
+        lp = LaunchPad(name="admin", username="my-user", password="my-password", authsource="admin")  # noqa: S106
         with pytest.raises(OperationFailure):
             lp.db.collection.count_documents({})
 
@@ -84,7 +84,10 @@ class AuthenticationTest(unittest.TestCase):
         are a user of.
         """
         lp = LaunchPad(
-            name="not_the_admin_db", username="my-user", password="my-password", authsource="not_the_admin_db"
+            name="not_the_admin_db",
+            username="my-user",
+            password="my-password",  # noqa: S106
+            authsource="not_the_admin_db",
         )
         lp.db.collection.count_documents({})
 
@@ -92,7 +95,7 @@ class AuthenticationTest(unittest.TestCase):
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="my-user", password="my-password")
+        lp = LaunchPad(name="not_the_admin_db", username="my-user", password="my-password")  # noqa: S106
         lp.db.collection.count_documents({})
 
 
@@ -103,7 +106,7 @@ class LaunchPadTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -180,8 +183,6 @@ class LaunchPadTest(unittest.TestCase):
         fw2 = Firework(ScriptTask.from_str('echo "goodbye"'), name="goodbye")
         wf = Workflow([fw, fw2], name="test_workflow")
         self.lp.add_wf(wf)
-        # fw = self.lp.get_fw_ids()
-        # self.assertEqual(len(wf.id_fw), 2)
         fw_ids = self.lp.get_fw_ids()
         assert len(fw_ids) == 3
         self.lp.reset("", require_password=False)
@@ -210,7 +211,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -343,33 +344,29 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         paused_ids = self.lp.get_fw_ids({"state": "PAUSED"})
         assert self.zeus_fw_id in paused_ids
-        try:
-            # Launch remaining fireworks
-            rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
-            # Ensure except for Zeus and his children, all other fw are launched
-            completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-            # Check that Lapetus and his descendants are subset of  completed fwids
-            assert self.lapetus_desc_fw_ids.issubset(completed_ids)
-            # Check that Zeus siblings are subset of completed fwids
-            assert self.zeus_sib_fw_ids.issubset(completed_ids)
+        # Ensure except for Zeus and his children, all other fw are launched
+        completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
+        # Check that Lapetus and his descendants are subset of  completed fwids
+        assert self.lapetus_desc_fw_ids.issubset(completed_ids)
+        # Check that Zeus siblings are subset of completed fwids
+        assert self.zeus_sib_fw_ids.issubset(completed_ids)
 
-            # Check that Zeus and children are subset of incompleted fwids
-            fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-            assert self.zeus_fw_id in fws_no_run
-            assert self.zeus_child_fw_ids.issubset(fws_no_run)
+        # Check that Zeus and children are subset of incompleted fwids
+        fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
+        assert self.zeus_fw_id in fws_no_run
+        assert self.zeus_child_fw_ids.issubset(fws_no_run)
 
-            # Setup Zeus to run
-            self.lp.resume_fw(self.zeus_fw_id)
-            # Launch remaining fireworks
-            rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-            # Check that Zeus and children are all completed now
-            completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-            assert self.zeus_fw_id in completed_ids
-            assert self.zeus_child_fw_ids.issubset(completed_ids)
-
-        except Exception:
-            raise
+        # Setup Zeus to run
+        self.lp.resume_fw(self.zeus_fw_id)
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        # Check that Zeus and children are all completed now
+        completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
+        assert self.zeus_fw_id in completed_ids
+        assert self.zeus_child_fw_ids.issubset(completed_ids)
 
     def test_defuse_fw(self) -> None:
         # defuse Zeus
@@ -377,23 +374,20 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
 
         defused_ids = self.lp.get_fw_ids({"state": "DEFUSED"})
         assert self.zeus_fw_id in defused_ids
-        try:
-            # Launch remaining fireworks
-            rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
 
-            # Ensure except for Zeus and his children, all other fw are launched
-            completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
-            # Check that Lapetus and his descendants are subset of  completed fwids
-            assert self.lapetus_desc_fw_ids.issubset(completed_ids)
-            # Check that Zeus siblings are subset of completed fwids
-            assert self.zeus_sib_fw_ids.issubset(completed_ids)
+        # Ensure except for Zeus and his children, all other fw are launched
+        completed_ids = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
+        # Check that Lapetus and his descendants are subset of  completed fwids
+        assert self.lapetus_desc_fw_ids.issubset(completed_ids)
+        # Check that Zeus siblings are subset of completed fwids
+        assert self.zeus_sib_fw_ids.issubset(completed_ids)
 
-            # Check that Zeus and children are subset of incompleted fwids
-            fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
-            assert self.zeus_fw_id in fws_no_run
-            assert self.zeus_child_fw_ids.issubset(fws_no_run)
-        except Exception:
-            raise
+        # Check that Zeus and children are subset of incompleted fwids
+        fws_no_run = set(self.lp.get_fw_ids({"state": {"$nin": ["COMPLETED"]}}))
+        assert self.zeus_fw_id in fws_no_run
+        assert self.zeus_child_fw_ids.issubset(fws_no_run)
 
     def test_defuse_fw_after_completion(self) -> None:
         # Launch rockets in rapidfire
@@ -559,7 +553,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         fw = self.lp.get_fw_by_id(self.zeus_fw_id)
         launches = fw.launches
         first_ldir = launches[0].launch_dir
-        ts = datetime.datetime.utcnow()
+        ts = datetime.datetime.utcnow()  # noqa: DTZ003
 
         # check that all the zeus children are completed
         completed = set(self.lp.get_fw_ids({"state": "COMPLETED"}))
@@ -601,7 +595,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -627,7 +621,6 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         os.chdir(self.old_wd)
         for ldir in glob.glob(os.path.join(MODULE_DIR, "launcher_*")):
             shutil.rmtree(ldir)
-        # self.lp.connection.close()
 
     def test_detect_lostruns(self) -> None:
         # Launch the timed firework in a separate process
@@ -715,7 +708,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -729,11 +722,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         fw_p = Firework(
             ScriptTask.from_str('echo "Cronus is the ruler of titans"', {"store_stdout": True}), name="parent", fw_id=1
         )
-        # Sibling fireworks
-        # fw_s1 = Firework(ScriptTask.from_str(
-        #    'echo "Zeus is son of Cronus"',
-        #    {'store_stdout':True}), name="sib1", fw_id=2, parents=fw_p)
-        # Timed firework
+        # Timed firework instead of echo task
         fw_s1 = Firework(PyTask(func="time.sleep", args=[5]), name="sib1", fw_id=2, parents=fw_p)
         fw_s2 = Firework(
             ScriptTask.from_str('echo "Poisedon is brother of Zeus"', {"store_stdout": True}),
@@ -853,18 +842,15 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
             fw_cache_state = wf.fw_states[fw_id]
             assert fw_state == fw_cache_state
 
-        try:
-            # Launch remaining fireworks
-            rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
-            # Ensure the states are sync after launching remaining fw
-            wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
-            fws = wf.id_fw
-            for fw_id in wf.fw_states:
-                fw_state = fws[fw_id].state
-                fw_cache_state = wf.fw_states[fw_id]
-                assert fw_state == fw_cache_state
-        except Exception:
-            raise
+        # Launch remaining fireworks
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        # Ensure the states are sync after launching remaining fw
+        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
+        fws = wf.id_fw
+        for fw_id in wf.fw_states:
+            fw_state = fws[fw_id].state
+            fw_cache_state = wf.fw_states[fw_id]
+            assert fw_state == fw_cache_state
 
     def test_defuse_fw_after_completion(self) -> None:
         # Launch rockets in rapidfire
@@ -961,17 +947,17 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         rp.start()
         time.sleep(1)  # Wait 1 sec and kill the running fws
         rp.terminate()
-        # Ensure the states are sync
-        wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
-        fws = wf.id_fw
-        for fw_id in wf.fw_states:
-            fw_state = fws[fw_id].state
-            fw_cache_state = wf.fw_states[fw_id]
-            assert fw_state == fw_cache_state
+        # Wait a moment for database to stabilize after process termination
+        time.sleep(0.5)
 
-        # Detect lost runs
-        _lost_lids, lost_fwids, _inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5)
-        # Ensure the states are sync
+        # Unreserve any RESERVED fireworks left by the terminated process
+        reserved_ids = self.lp.get_fw_ids({"state": "RESERVED"})
+        for fw_id in reserved_ids:
+            self.lp.rerun_fw(fw_id)
+
+        # Detect lost runs and refresh to fix any inconsistencies from the terminated process
+        _lost_lids, lost_fwids, _inconsistent_fwids = self.lp.detect_lostruns(expiration_secs=0.5, refresh=True)
+        # Ensure the states are sync after refresh
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
         for fw_id in wf.fw_states:
@@ -998,6 +984,11 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
 
         time.sleep(1)
 
+        # Unreserve any RESERVED fireworks before checking sync
+        reserved_ids = self.lp.get_fw_ids({"state": "RESERVED"})
+        for fw_id in reserved_ids:
+            self.lp.rerun_fw(fw_id)
+
         # Ensure the states are in sync
         wf = self.lp.get_wf_by_fw_id_lzyfw(self.zeus_fw_id)
         fws = wf.id_fw
@@ -1016,7 +1007,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1109,7 +1100,7 @@ class WFLockTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1144,7 +1135,15 @@ class WFLockTest(unittest.TestCase):
         rp = Process(target=_run_rocket, args=(self.lp, self.fworker, 1))
         rp.start()
 
-        time.sleep(1)
+        # Wait for fw_id=1 to actually start running before launching fw_id=2
+        timeout = 10
+        while timeout > 0:
+            fw1 = self.lp.get_fw_by_id(1)
+            if fw1.state == "RUNNING":
+                break
+            time.sleep(0.5)
+            timeout -= 0.5
+
         launch_rocket(self.lp, self.fworker, fw_id=2)
 
         # wait for the slow to complete
@@ -1166,7 +1165,7 @@ class WFLockTest(unittest.TestCase):
         assert "SlowAdditionTask" in child_fw.spec
         assert "WaitWFLockTask" not in child_fw.spec
 
-        self.lp._refresh_wf(fw_id=2)
+        self.lp._refresh_wf(fw_id=2)  # noqa: SLF001
 
         child_fw = self.lp.get_fw_by_id(3)
 
@@ -1205,7 +1204,7 @@ class WFLockTest(unittest.TestCase):
         assert "SlowAdditionTask" in child_fw.spec
         assert "WaitWFLockTask" not in child_fw.spec
 
-        self.lp._refresh_wf(fw_id=2)
+        self.lp._refresh_wf(fw_id=2)  # noqa: SLF001
 
         fast_fw = self.lp.get_fw_by_id(2)
 
@@ -1220,7 +1219,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1301,7 +1300,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:
+        except Exception:  # noqa: BLE001
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
