@@ -436,11 +436,14 @@ def reconstitute_dates(obj_dict):
         return [reconstitute_dates(v) for v in obj_dict]
 
     if isinstance(obj_dict, str):
-        try:
-            return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S.%f")
-        except Exception:
+
+        for method, args in [
+            (datetime.datetime.fromisoformat,tuple()),
+            (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S.%f",)),
+            (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S", )),
+        ]:
             try:
-                return datetime.datetime.strptime(obj_dict, "%Y-%m-%dT%H:%M:%S")
+                return method(obj_dict,*args)
             except Exception:
                 pass
     return obj_dict
