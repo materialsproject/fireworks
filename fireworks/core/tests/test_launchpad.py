@@ -16,7 +16,7 @@ from multiprocessing import Process
 
 import pytest
 from monty.os import cd
-from pymongo import __version__ as PYMONGO_VERSION
+from pymongo import __version__ as PYMONGO_VERSION, MongoClient
 from pymongo.errors import OperationFailure
 
 import fireworks.fw_config
@@ -50,9 +50,12 @@ def _run_rapidfire(lpad, fworker) -> None:
 # This block needed for pytest>=9.0.0, where `raise unittest.SkipTest`
 # is caught as a test failure by pytest
 try:
-    client = fireworks.fw_config.MongoClient()
+    assert isinstance(fireworks.fw_config.MongoClient(),pymongo.MongoClient)
 except Exception:
-    pytest.skip("MongoDB is not running in localhost:27017! Skipping tests.", allow_module_level=True)
+    pytest.skip(
+        "MongoDB is not running in localhost:27017! Skipping tests.",
+        allow_module_level=True
+    )
 
 
 class AuthenticationTest(unittest.TestCase):
