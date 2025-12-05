@@ -665,9 +665,12 @@ class Launch(FWSerializable):
         states = states if isinstance(states, (list, tuple)) else [states]
         for data in self.state_history:
             if data["state"] in states:
-                if use_update_time:
-                    return data["updated_on"]
-                return data["created_on"]
+                time_val = data["updated_on"] if use_update_time else data["created_on"]
+                # Normalize timezone-naive datetimes to UTC-aware to avoid
+                # TypeError when subtracting mixed naive/aware datetimes
+                if time_val is not None and time_val.tzinfo is None:
+                    time_val = time_val.replace(tzinfo=datetime.timezone.utc)
+                return time_val
         return None
 
 

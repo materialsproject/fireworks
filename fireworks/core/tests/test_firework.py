@@ -6,12 +6,13 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
 
+import datetime
 import pickle
 import unittest
 
 import pytest
 
-from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
+from fireworks.core.firework import FiretaskBase, Firework, FWAction, Launch, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 
@@ -164,3 +165,37 @@ class WorkflowTest(unittest.TestCase):
         assert len(wflow) == len(fws)
 
         assert wflow[0] == self.fw1
+
+
+UTC = datetime.timezone.utc
+
+
+class TestLaunchRuntimeSecs:
+    """Tests for Launch.runtime_secs with mixed timezone datetimes."""
+
+    @pytest.mark.parametrize(
+        ("start_tz", "end_tz"),
+        [(None, UTC), (UTC, None), (None, None), (UTC, UTC)],
+        ids=["naive-aware", "aware-naive", "naive-naive", "aware-aware"],
+    )
+    def test_mixed_tz_datetimes(self, start_tz: datetime.timezone | None, end_tz: datetime.timezone | None) -> None:
+        """Handles mixed timezone-aware/naive datetimes without TypeError."""
+        now = datetime.datetime.now(UTC)
+        start = now.replace(tzinfo=start_tz)
+        end = (now + datetime.timedelta(seconds=120)).replace(tzinfo=end_tz)
+
+        launch = Launch(
+            state="COMPLETED",
+            launch_dir="/test",
+            state_history=[{"state": "RUNNING", "created_on": start}, {"state": "COMPLETED", "created_on": end}],
+        )
+        assert launch.runtime_secs == pytest.approx(120.0)
+
+    def test_none_when_incomplete(self) -> None:
+        """Returns None when launch hasn't completed."""
+        launch = Launch(
+            state="RUNNING",
+            launch_dir="/test",
+            state_history=[{"state": "RUNNING", "created_on": datetime.datetime.now(UTC)}],
+        )
+        assert launch.runtime_secs is None
