@@ -261,12 +261,12 @@ these multiple resources.</p>
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowTodictTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.tasks.</span></span><span class="sig-name descname"><span class="pre">SlowTodictTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowToDictTask">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.tasks.</span></span><span class="sig-name descname"><span class="pre">SlowToDictTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowToDictTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <dl class="py method">
-<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowTodictTask.run_task">
-<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.run_task" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowToDictTask.run_task">
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowToDictTask.run_task" title="Link to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
@@ -290,8 +290,8 @@ these multiple resources.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowTodictTask.to_dict">
-<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowTodictTask.to_dict" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.core.tests.tasks.SlowToDictTask.to_dict">
+<span class="sig-name descname"><span class="pre">to_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.tasks.SlowToDictTask.to_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -411,7 +411,7 @@ these multiple resources.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.core.tests.test_firework.PickleTask.run_task">
-<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.run_task" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run_task</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_fw_spec</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.PickleTask.run_task" title="Link to this definition">¶</a></dt>
 <dd><p>This method gets called when the Firetask is run. It can take in a
 Firework spec, perform some task using that data, and then return an
 output in the form of a FWAction.</p>
@@ -499,6 +499,25 @@ these multiple resources.</p>
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.TestLaunchRuntimeSecs">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">TestLaunchRuntimeSecs</span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Tests for Launch.runtime_secs with mixed timezone datetimes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_mixed_tz_datetimes">
+<span class="sig-name descname"><span class="pre">test_mixed_tz_datetimes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start_tz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timezone" title="(in Python v3.14)"><span class="pre">timezone</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_tz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.timezone" title="(in Python v3.14)"><span class="pre">timezone</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_mixed_tz_datetimes" title="Link to this definition">¶</a></dt>
+<dd><p>Handles mixed timezone-aware/naive datetimes without TypeError.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_none_when_incomplete">
+<span class="sig-name descname"><span class="pre">test_none_when_incomplete</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_none_when_incomplete" title="Link to this definition">¶</a></dt>
+<dd><p>Returns None when launch hasn’t completed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="fireworks.core.tests.test_firework.WorkflowTest">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.core.tests.test_firework.</span></span><span class="sig-name descname"><span class="pre">WorkflowTest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">methodName</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'runTest'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.tests.test_firework.WorkflowTest" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TestCase</span></code></p>
@@ -552,6 +571,12 @@ has unique fw_ids.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.tearDownClass">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tearDownClass</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.tearDownClass" title="Link to this definition">¶</a></dt>
+<dd><p>Clean up the test user and database.</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db">
 <span class="sig-name descname"><span class="pre">test_authenticating_to_users_db</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db" title="Link to this definition">¶</a></dt>
 <dd><p>A user should be able to authenticate against a database that they
@@ -559,8 +584,8 @@ are a user of.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name">
-<span class="sig-name descname"><span class="pre">test_authsource_infered_from_db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name" title="Link to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_inferred_from_db_name">
+<span class="sig-name descname"><span class="pre">test_authsource_inferred_from_db_name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_inferred_from_db_name" title="Link to this definition">¶</a></dt>
 <dd><p>The default behavior is to authenticate against the db that the user
 is trying to access.</p>
 </dd></dl>
@@ -1158,9 +1183,9 @@ The states have to be in sync with the actual firework state.</p>
 <li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowAdditionTask.run_task"><code class="docutils literal notranslate"><span class="pre">SlowAdditionTask.run_task()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowTodictTask"><code class="docutils literal notranslate"><span class="pre">SlowTodictTask</span></code></a><ul>
-<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowTodictTask.run_task"><code class="docutils literal notranslate"><span class="pre">SlowTodictTask.run_task()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowTodictTask.to_dict"><code class="docutils literal notranslate"><span class="pre">SlowTodictTask.to_dict()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowToDictTask"><code class="docutils literal notranslate"><span class="pre">SlowToDictTask</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowToDictTask.run_task"><code class="docutils literal notranslate"><span class="pre">SlowToDictTask.run_task()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.tasks.SlowToDictTask.to_dict"><code class="docutils literal notranslate"><span class="pre">SlowToDictTask.to_dict()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#fireworks.core.tests.tasks.TodictErrorTask"><code class="docutils literal notranslate"><span class="pre">TodictErrorTask</span></code></a><ul>
@@ -1198,6 +1223,11 @@ The states have to be in sync with the actual firework state.</p>
 <li><a class="reference internal" href="#fireworks.core.tests.test_firework.Task2.run_task"><code class="docutils literal notranslate"><span class="pre">Task2.run_task()</span></code></a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs"><code class="docutils literal notranslate"><span class="pre">TestLaunchRuntimeSecs</span></code></a><ul>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_mixed_tz_datetimes"><code class="docutils literal notranslate"><span class="pre">TestLaunchRuntimeSecs.test_mixed_tz_datetimes()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_none_when_incomplete"><code class="docutils literal notranslate"><span class="pre">TestLaunchRuntimeSecs.test_none_when_incomplete()</span></code></a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest"><code class="docutils literal notranslate"><span class="pre">WorkflowTest</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.setUp"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.setUp()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.core.tests.test_firework.WorkflowTest.test_copy"><code class="docutils literal notranslate"><span class="pre">WorkflowTest.test_copy()</span></code></a></li>
@@ -1212,8 +1242,9 @@ The states have to be in sync with the actual firework state.</p>
 <li><a class="reference internal" href="#module-fireworks.core.tests.test_launchpad">fireworks.core.tests.test_launchpad module</a><ul>
 <li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.setUpClass"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.setUpClass()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.tearDownClass()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_authenticating_to_users_db()</span></code></a></li>
-<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_authsource_infered_from_db_name()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_inferred_from_db_name"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_authsource_inferred_from_db_name()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs"><code class="docutils literal notranslate"><span class="pre">AuthenticationTest.test_no_admin_privileges_for_plebs()</span></code></a></li>
 </ul>
 </li>

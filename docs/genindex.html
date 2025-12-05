@@ -1651,13 +1651,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LazyFirework.name">name (fireworks.core.launchpad.LazyFirework property)</a>
 </li>
-      <li><a href="fireworks.utilities.html#fireworks.utilities.fw_utilities.NestedClassGetter">NestedClassGetter (class in fireworks.utilities.fw_utilities)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="fireworks.core.html#fireworks.core.firework.Workflow.Links.nodes">nodes (fireworks.core.firework.Workflow.Links property)</a>
+      <li><a href="fireworks.utilities.html#fireworks.utilities.fw_utilities.NestedClassGetter">NestedClassGetter (class in fireworks.utilities.fw_utilities)</a>
 </li>
-      <li><a href="fireworks.flask_site.html#fireworks.flask_site.gunicorn.number_of_workers">number_of_workers() (in module fireworks.flask_site.gunicorn)</a>
+      <li><a href="fireworks.core.html#fireworks.core.firework.Workflow.Links.nodes">nodes (fireworks.core.firework.Workflow.Links property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -1837,6 +1835,8 @@
         <li><a href="fireworks.scripts.html#fireworks.scripts.lpad_run.refresh">(in module fireworks.scripts.lpad_run)</a>
 </li>
       </ul></li>
+      <li><a href="fireworks.utilities.html#fireworks.utilities.fw_utilities.DataServer.register_launchpad">register_launchpad() (fireworks.utilities.fw_utilities.DataServer class method)</a>
+</li>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.reignite_fw">reignite_fw() (fireworks.core.launchpad.LaunchPad method)</a>
 </li>
       <li><a href="fireworks.scripts.html#fireworks.scripts.lpad_run.reignite_fws">reignite_fws() (in module fireworks.scripts.lpad_run)</a>
@@ -1921,10 +1921,10 @@
 </li>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.restore_backup_data">restore_backup_data() (fireworks.core.launchpad.LaunchPad method)</a>
 </li>
-      <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.resume_fw">resume_fw() (fireworks.core.launchpad.LaunchPad method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="fireworks.core.html#fireworks.core.launchpad.LaunchPad.resume_fw">resume_fw() (fireworks.core.launchpad.LaunchPad method)</a>
+</li>
       <li><a href="fireworks.scripts.html#fireworks.scripts.lpad_run.resume_fws">resume_fws() (in module fireworks.scripts.lpad_run)</a>
 </li>
       <li><a href="fireworks.scripts.html#fireworks.scripts.rlaunch_run.rlaunch">rlaunch() (in module fireworks.scripts.rlaunch_run)</a>
@@ -1958,7 +1958,7 @@
 </li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowAdditionTask.run_task">(fireworks.core.tests.tasks.SlowAdditionTask method)</a>
 </li>
-        <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowTodictTask.run_task">(fireworks.core.tests.tasks.SlowTodictTask method)</a>
+        <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowToDictTask.run_task">(fireworks.core.tests.tasks.SlowToDictTask method)</a>
 </li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.TodictErrorTask.run_task">(fireworks.core.tests.tasks.TodictErrorTask method)</a>
 </li>
@@ -2158,7 +2158,7 @@
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowAdditionTask">SlowAdditionTask (class in fireworks.core.tests.tasks)</a>
 </li>
-      <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowTodictTask">SlowTodictTask (class in fireworks.core.tests.tasks)</a>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowToDictTask">SlowToDictTask (class in fireworks.core.tests.tasks)</a>
 </li>
       <li><a href="fireworks.core.html#fireworks.core.launchpad.sort_aggregation">sort_aggregation() (in module fireworks.core.launchpad)</a>
 </li>
@@ -2260,9 +2260,11 @@
         <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.tearDown">(fireworks.utilities.tests.test_fw_serializers.SerializationTest method)</a>
 </li>
       </ul></li>
-      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass">tearDownClass() (fireworks.core.tests.test_launchpad.GridfsStoredDataTest class method)</a>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.AuthenticationTest.tearDownClass">tearDownClass() (fireworks.core.tests.test_launchpad.AuthenticationTest class method)</a>
 
       <ul>
+        <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.tearDownClass">(fireworks.core.tests.test_launchpad.GridfsStoredDataTest class method)</a>
+</li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest.tearDownClass">(fireworks.core.tests.test_launchpad.LaunchPadDefuseReigniteRerunArchiveDeleteTest class method)</a>
 </li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest.tearDownClass">(fireworks.core.tests.test_launchpad.LaunchPadLostRunsDetectTest class method)</a>
@@ -2342,7 +2344,7 @@
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authenticating_to_users_db">test_authenticating_to_users_db() (fireworks.core.tests.test_launchpad.AuthenticationTest method)</a>
 </li>
-      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_infered_from_db_name">test_authsource_infered_from_db_name() (fireworks.core.tests.test_launchpad.AuthenticationTest method)</a>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.AuthenticationTest.test_authsource_inferred_from_db_name">test_authsource_inferred_from_db_name() (fireworks.core.tests.test_launchpad.AuthenticationTest method)</a>
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.mongo_tests.MongoTests.test_backgroundtask">test_backgroundtask() (fireworks.tests.mongo_tests.MongoTests method)</a>
 </li>
@@ -2522,6 +2524,8 @@
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.GridfsStoredDataTest.test_many_detours_offline">test_many_detours_offline() (fireworks.core.tests.test_launchpad.GridfsStoredDataTest method)</a>
 </li>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_mixed_tz_datetimes">test_mixed_tz_datetimes() (fireworks.core.tests.test_firework.TestLaunchRuntimeSecs method)</a>
+</li>
       <li><a href="fireworks.scripts.tests.html#fireworks.scripts.tests.test_mlaunch_run.test_mlaunch_config_file_flags">test_mlaunch_config_file_flags() (in module fireworks.scripts.tests.test_mlaunch_run)</a>
 </li>
       <li><a href="fireworks.scripts.tests.html#fireworks.scripts.tests.test_mlaunch_run.test_mlaunch_report_version">test_mlaunch_report_version() (in module fireworks.scripts.tests.test_mlaunch_run)</a>
@@ -2533,6 +2537,8 @@
       <li><a href="fireworks.tests.html#fireworks.tests.mongo_tests.MongoTests.test_multi_fw_complex">test_multi_fw_complex() (fireworks.tests.mongo_tests.MongoTests method)</a>
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.AuthenticationTest.test_no_admin_privileges_for_plebs">test_no_admin_privileges_for_plebs() (fireworks.core.tests.test_launchpad.AuthenticationTest method)</a>
+</li>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs.test_none_when_incomplete">test_none_when_incomplete() (fireworks.core.tests.test_firework.TestLaunchRuntimeSecs method)</a>
 </li>
       <li><a href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.test_numpy_array">test_numpy_array() (fireworks.utilities.tests.test_fw_serializers.SerializationTest method)</a>
 </li>
@@ -2546,7 +2552,7 @@
 </li>
       <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.FiretaskBaseTest.test_param_checks">test_param_checks() (fireworks.core.tests.test_firework.FiretaskBaseTest method)</a>
 </li>
-      <li><a href="fireworks.tests.html#fireworks.tests.master_tests.BasicTests.test_parentconnector">test_parentconnector() (fireworks.tests.master_tests.BasicTests method)</a>
+      <li><a href="fireworks.tests.html#fireworks.tests.master_tests.BasicTests.test_parent_connector">test_parent_connector() (fireworks.tests.master_tests.BasicTests method)</a>
 </li>
       <li><a href="fireworks.user_objects.queue_adapters.tests.html#fireworks.user_objects.queue_adapters.tests.test_common_adapter.CommonAdapterTest.test_parse_jobid">test_parse_jobid() (fireworks.user_objects.queue_adapters.tests.test_common_adapter.CommonAdapterTest method)</a>
 </li>
@@ -2686,6 +2692,8 @@
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.master_tests.TestImports">TestImports (class in fireworks.tests.master_tests)</a>
 </li>
+      <li><a href="fireworks.core.tests.html#fireworks.core.tests.test_firework.TestLaunchRuntimeSecs">TestLaunchRuntimeSecs (class in fireworks.core.tests.test_firework)</a>
+</li>
       <li><a href="fireworks.tests.html#fireworks.tests.multiprocessing_tests.TestLinks">TestLinks (class in fireworks.tests.multiprocessing_tests)</a>
 </li>
       <li><a href="fireworks.tests.html#fireworks.tests.test_workflow.TestWorkflowState">TestWorkflowState (class in fireworks.tests.test_workflow)</a>
@@ -2735,7 +2743,7 @@
 </li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SerializableException.to_dict">(fireworks.core.tests.tasks.SerializableException method)</a>
 </li>
-        <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowTodictTask.to_dict">(fireworks.core.tests.tasks.SlowTodictTask method)</a>
+        <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.SlowToDictTask.to_dict">(fireworks.core.tests.tasks.SlowToDictTask method)</a>
 </li>
         <li><a href="fireworks.core.tests.html#fireworks.core.tests.tasks.TodictErrorTask.to_dict">(fireworks.core.tests.tasks.TodictErrorTask method)</a>
 </li>
