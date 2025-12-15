@@ -79,7 +79,7 @@ def _addq_WF(q):
 def datetime(value):
     import datetime as dt
 
-    date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+    date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z")
     return date.strftime("%m/%d/%Y")
 
 
