@@ -78,8 +78,10 @@ def _addq_WF(q):
 @app.template_filter("datetime")
 def datetime(value):
     import datetime as dt
-
-    date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z")
+    try:
+        date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z")
+    except ValueError: #backwards comptability
+        date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
     return date.strftime("%m/%d/%Y")
 
 
