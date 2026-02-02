@@ -126,6 +126,7 @@ class FilePad(MSONable):
 
         Args:
             path (str): path to the file
+            contents (bytes): the contents of the file
             identifier (str): file identifier. If identifier = None then the identifier is set to the object id
                 returned by gridfs insertion.
             compress (bool): compress or not
