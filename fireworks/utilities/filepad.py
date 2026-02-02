@@ -120,7 +120,7 @@ class FilePad(MSONable):
         for i in indexes:
             self.filepad.create_index(i, unique=True, background=background)
 
-    def add_file(self, path, identifier=None, compress=True, metadata=None):
+    def add_file(self, path, contents=None, identifier=None, compress=True, metadata=None):
         """Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
         Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
 
@@ -150,8 +150,11 @@ class FilePad(MSONable):
         }
 
         read_mode = "r" if self.text_mode else "rb"
-        with open(path, read_mode) as f:
-            contents = f.read()
+        if contents is None:
+            with open(path, read_mode) as f:
+                contents = f.read()
+                return self._insert_contents(contents, identifier, root_data, compress)
+        else:
             return self._insert_contents(contents, identifier, root_data, compress)
 
     def get_file(self, identifier):
