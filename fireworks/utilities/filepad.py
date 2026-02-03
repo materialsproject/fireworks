@@ -120,13 +120,12 @@ class FilePad(MSONable):
         for i in indexes:
             self.filepad.create_index(i, unique=True, background=background)
 
-    def add_file(self, path, contents=None, identifier=None, compress=True, metadata=None):
+    def add_file(self, path, identifier=None, compress=True, metadata=None):
         """Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
         Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
 
         Args:
             path (str): path to the file
-            contents (bytes): the contents of the file
             identifier (str): file identifier. If identifier = None then the identifier is set to the object id
                 returned by gridfs insertion.
             compress (bool): compress or not
@@ -151,12 +150,37 @@ class FilePad(MSONable):
         }
 
         read_mode = "r" if self.text_mode else "rb"
-        if contents is None:
-            with open(path, read_mode) as f:
-                contents = f.read()
-                return self._insert_contents(contents, identifier, root_data, compress)
-        else:
+        with open(path, read_mode) as f:
+            contents = f.read()
             return self._insert_contents(contents, identifier, root_data, compress)
+
+    def add_contents(self, contents, identifier=None, compress=True, metadata=None):
+        """Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+        Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
+
+        Args:
+            contents (bytes): bytes object to insert
+            identifier (str): file identifier. If identifier = None then the identifier is set to the object id
+                returned by gridfs insertion.
+            compress (bool): compress or not
+            metadata (dict): file metadata
+
+        Returns:
+            (str, str): the id returned by gridfs, identifier
+        """
+        if identifier is not None:
+            _, doc = self.get_file(identifier)
+            if doc is not None:
+                self.logger.warning(f"{identifier=} exists. Skipping insertion")
+                return doc["gfs_id"], doc["identifier"]
+
+        root_data = {
+            "identifier": identifier,
+            "metadata": metadata,
+            "compressed": compress,
+        }
+
+        return self._insert_contents(contents, identifier, root_data, compress)
 
     def get_file(self, identifier):
         """Get file by identifier.
