@@ -1701,7 +1701,7 @@ class LaunchPad(FWSerializable):
         Returns:
             [int]: list of firework ids that were rerun
         """
-        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
+        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": True, "launches": True})
 
         if not m_fw:
             raise ValueError(f"FW with id: {fw_id} not found!")
