@@ -1722,15 +1722,20 @@ class LaunchPad(FWSerializable):
 
         # Launch recovery
         if recover_launch is not None:
-            rec_launch_id = m_fw.launches[-1] if recover_launch == "last" else recover_launch
+            if recover_launch == "last":
+                if not m_fw["launches"]:
+                    raise RuntimeError(f"FW with id: {fw_id} has no launches")
+                rec_launch_id = m_fw["launches"][-1]
+            else:
+                rec_launch_id = recover_launch
             recovery = self.get_recovery(rec_launch_id)
             if recovery:
                 recovery.update(_mode=recover_mode)
                 set_spec = recursive_dict({"$set": {"spec._recovery": recovery}})
                 if recover_mode == "prev_dir":
-                    launch_f = {'launch_id': recovery.get("_launch_id")}
-                    launch_p = {'launch_dir': True}
-                    prev_dir = self.launches.find_one(launch_f, launch_p)['launch_dir']
+                    launch_f = {"launch_id": recovery.get("_launch_id")}
+                    launch_p = {"launch_dir": True}
+                    prev_dir = self.launches.find_one(launch_f, launch_p)["launch_dir"]
                     set_spec["$set"]["spec._launch_dir"] = prev_dir
                 self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
 
@@ -1765,14 +1770,14 @@ class LaunchPad(FWSerializable):
         Args:
             launch_id (int): launch_id to get recovery data for
         """
-        launch_f = {'launch_id': launch_id}
-        launch_p = {'launch_dir': True, 'state_history': True}
+        launch_f = {"launch_id": launch_id}
+        launch_p = {"launch_dir": True, "state_history": True}
         launch_dct = self.launches.find_one(launch_f, launch_p)
-        if not launch_dct['state_history']:
+        if not launch_dct["state_history"]:
             return None
-        recovery = launch_dct['state_history'][-1].get("checkpoint")
+        recovery = launch_dct["state_history"][-1].get("checkpoint")
         if recovery:
-            recovery.update(_prev_dir=launch_dct['launch_dir'], _launch_id=launch_id)
+            recovery.update(_prev_dir=launch_dct["launch_dir"], _launch_id=launch_id)
         return recovery
 
     def _refresh_wf(self, fw_id) -> None:
