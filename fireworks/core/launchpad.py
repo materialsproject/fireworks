@@ -410,7 +410,7 @@ class LaunchPad(FWSerializable):
 
         """
         # Make all fireworks workflows
-        wfs = [Workflow.from_Firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
+        wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum(len(wf) for wf in wfs)
