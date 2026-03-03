@@ -1771,7 +1771,8 @@ class LaunchPad(FWSerializable):
         return reruns
 
     def get_recovery(self, launch_id):
-        """Function to get recovery data for a given launch
+        """Function to get recovery data for a given launch.
+
         Args:
             launch_id (int): launch_id to get recovery data for
 
