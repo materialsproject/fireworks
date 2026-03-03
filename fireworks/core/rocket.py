@@ -54,6 +54,7 @@ def do_ping(launchpad: LaunchPad, launch_id: int) -> None:
 
 def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_thread: Thread) -> None:
     while not stop_event.is_set() and master_thread.is_alive():
+        # wait before pinging to avoid a race condition with main thread
         stop_event.wait(PING_TIME_SECS)
         do_ping(launchpad, launch_id)
 
