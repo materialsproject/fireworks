@@ -32,7 +32,8 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL, pdb_on_exception=False):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL,
+                  pdb_on_exception=False, err_file=None):
     """Run a single rocket in the current directory.
 
     Args:
@@ -41,6 +42,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL,
         fw_id (int): if set, a particular Firework to run
         strm_lvl (str): level at which to output logs to stdout
         pdb_on_exception (bool): if True, Python will start the debugger on a firework exception
+        err_file (file object): file to which stderr is redirected; None for no redirect
 
     Returns:
         bool
@@ -51,7 +53,7 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL,
 
     log_multi(l_logger, "Launching Rocket")
     rocket = Rocket(launchpad, fworker, fw_id)
-    rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception)
+    rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception, err_file=err_file)
     log_multi(l_logger, "Rocket finished")
     return rocket_ran
 
@@ -80,7 +82,7 @@ def rapidfire(
         sleep_time (int): secs to sleep between rapidfire loop iterations
         strm_lvl (str): level at which to output logs to stdout
         timeout (int): of seconds after which to stop the rapidfire process
-        local_redirect (bool): redirect standard input and output to local file
+        local_redirect (bool): redirect standard output and standard error to local files
         pdb_on_exception (bool): if True, python will start the debugger on a firework exception
     """
     sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
@@ -104,8 +106,10 @@ def rapidfire(
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix="launcher_")
             os.chdir(launcher_dir)
             if local_redirect:
-                with redirect_local():
-                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
+                with redirect_local() as err_file:
+                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
+                                               pdb_on_exception=pdb_on_exception,
+                                               err_file=err_file[1])
             else:
                 rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
 
