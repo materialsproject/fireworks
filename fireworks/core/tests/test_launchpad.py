@@ -1102,6 +1102,38 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         assert ExecutionCounterTask.exec_counter == 1
         assert ExceptionTestTask.exec_counter == 2
 
+    def test_task_level_rerun_wrong_fw_id(self) -> None:
+        with pytest.raises(ValueError, match="FW with id: 999 not found!"):
+            self.lp.rerun_fw(999)
+
+    def test_task_level_rerun_recover_launch_id(self) -> None:
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        self.lp.rerun_fw(fw_id=1, recover_launch=1)
+        fw = self.lp.get_fw_by_id(1)
+        assert "_recovery" in fw.spec
+        assert isinstance(fw.spec["_recovery"], dict)
+        assert fw.spec["_recovery"]["_task_n"] == 2
+
+    def test_task_level_rerun_wrong_launch_id(self) -> None:
+        rapidfire(self.lp, self.fworker, m_dir=MODULE_DIR)
+        assert os.getcwd() == MODULE_DIR
+        with pytest.raises(ValueError, match="launch_id: 999 is no launch of fw_id: 1"):
+            self.lp.rerun_fw(1, recover_launch=999)
+
+    def test_task_level_rerun_wrong_state(self) -> None:
+        with pytest.raises(ValueError, match="FW with id: 1 has no active launches"):
+            self.lp.rerun_fw(1, recover_launch="last")
+
+    def test_task_level_rerun_no_recovery_info(self) -> None:
+        self.lp.add_wf(Firework(ScriptTask.from_str('echo')))
+        launch_rocket(self.lp, self.fworker, fw_id=2)
+        with pytest.raises(ValueError, match="No recovery info found in launch 1"):
+            self.lp.rerun_fw(2, recover_launch="last")
+
+    def test_get_recovery_wrong_launch_id(self) -> None:
+        with pytest.raises(ValueError, match="launch_id: 999 does not exist"):
+            self.lp.get_recovery(launch_id=999)
+
 
 class WFLockTest(unittest.TestCase):
     @classmethod

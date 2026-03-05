@@ -410,7 +410,7 @@ class LaunchPad(FWSerializable):
 
         """
         # Make all fireworks workflows
-        wfs = [Workflow.from_Firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
+        wfs = [Workflow.from_firework(wf) if isinstance(wf, Firework) else wf for wf in wfs]
 
         # Initialize new firework counter, starting from the next fw id
         total_num_fws = sum(len(wf) for wf in wfs)
@@ -1700,8 +1700,11 @@ class LaunchPad(FWSerializable):
 
         Returns:
             [int]: list of firework ids that were rerun
+
+        Raises:
+            ValueError: raised in case of firework, recover_launch or recovery info not found
         """
-        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": 1})
+        m_fw = self.fireworks.find_one({"fw_id": fw_id}, {"state": True, "launches": True})
 
         if not m_fw:
             raise ValueError(f"FW with id: {fw_id} not found!")
@@ -1722,14 +1725,25 @@ class LaunchPad(FWSerializable):
 
         # Launch recovery
         if recover_launch is not None:
-            recovery = self.get_recovery(fw_id, recover_launch)
+            if not m_fw["launches"]:
+                raise ValueError(f"FW with id: {fw_id} has no active launches")
+            if recover_launch == "last":
+                rec_launch_id = m_fw["launches"][-1]
+            else:
+                if recover_launch not in m_fw["launches"]:
+                    raise ValueError(f"launch_id: {recover_launch} is no launch of fw_id: {fw_id}")
+                rec_launch_id = recover_launch
+            recovery = self.get_recovery(rec_launch_id)
+            if not recovery:
+                raise ValueError(f"No recovery info found in launch {rec_launch_id}")
             recovery.update(_mode=recover_mode)
             set_spec = recursive_dict({"$set": {"spec._recovery": recovery}})
             if recover_mode == "prev_dir":
-                prev_dir = self.get_launch_by_id(recovery.get("_launch_id")).launch_dir
+                launch_f = {"launch_id": recovery.get("_launch_id")}
+                launch_p = {"launch_dir": True}
+                prev_dir = self.launches.find_one(launch_f, launch_p)["launch_dir"]
                 set_spec["$set"]["spec._launch_dir"] = prev_dir
             self.fireworks.find_one_and_update({"fw_id": fw_id}, set_spec)
-
         # If no launch recovery specified, unset the firework recovery spec
         else:
             set_spec = {"$unset": {"spec._recovery": ""}}
@@ -1756,17 +1770,28 @@ class LaunchPad(FWSerializable):
 
         return reruns
 
-    def get_recovery(self, fw_id, launch_id="last"):
-        """Function to get recovery data for a given fw and launch
+    def get_recovery(self, launch_id):
+        """Function to get recovery data for a given launch.
+
         Args:
-            fw_id (int): fw id to get recovery data for
-            launch_id (int or 'last'): launch_id to get recovery data for, if 'last'
-                recovery data is generated from last launch.
+            launch_id (int): launch_id to get recovery data for
+
+        Returns:
+            recovery (dict): recovery metadata, None when no recovery retrieved
+
+        Raises:
+            ValueError: raised when no launch under the the launch_id is found
         """
-        m_fw = self.get_fw_by_id(fw_id)
-        launch = m_fw.launches[-1] if launch_id == "last" else self.get_launch_by_id(launch_id)
-        recovery = launch.state_history[-1].get("checkpoint")
-        recovery.update(_prev_dir=launch.launch_dir, _launch_id=launch.launch_id)
+        launch_f = {"launch_id": launch_id}
+        launch_p = {"launch_dir": True, "state_history": True}
+        launch_dct = self.launches.find_one(launch_f, launch_p)
+        if launch_dct is None:
+            raise ValueError(f"launch_id: {launch_id} does not exist")
+        if not launch_dct["state_history"]:
+            return None
+        recovery = launch_dct["state_history"][-1].get("checkpoint")
+        if recovery:
+            recovery.update(_prev_dir=launch_dct["launch_dir"], _launch_id=launch_id)
         return recovery
 
     def _refresh_wf(self, fw_id) -> None:

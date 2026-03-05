@@ -6,12 +6,14 @@ import getpass
 import os
 
 from fireworks.queue.queue_adapter import QueueAdapterBase
+from fireworks.utilities.fw_utilities import get_fw_logger
 
 try:
     from requests import Session
 except ImportError:
     Session = None
-    print("pip install requests to use PBSAdapterNEWT")
+    msg = "install the fireworks[newt] extra or the requests package to use PBSAdapterNEWT"
+    get_fw_logger(__name__).warning(msg)
 
 __author__ = "Shreyas Cholia, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -41,7 +43,7 @@ class PBSAdapterNEWT(QueueAdapterBase):
 
     def get_njobs_in_queue(self, username: str | None = None) -> int:
         if username is None:
-            username = getpass.getus
+            username = getpass.getuser()
 
         resp = Session().get(f"https://newt.nersc.gov/newt/queue/{self.resource}/?user={username}")
         return len(resp.json())
