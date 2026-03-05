@@ -1,5 +1,4 @@
-"""
-This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
+"""This module is used to submit jobs to a queue on a cluster. It can submit a single job, or
 if used in "rapid-fire" mode, can submit multiple jobs within a directory structure.
 The details of job submission and queue communication are handled using Queueadapter,
 which specifies a QueueAdapter as well as desired properties of the submit script.
@@ -9,10 +8,13 @@ import glob
 import os
 import time
 from datetime import datetime
+from logging import Logger
+from typing import TYPE_CHECKING
 
-from monty.os import cd, makedirs_p
+from monty.os import cd
 
 from fireworks.core.fworker import FWorker
+from fireworks.core.launchpad import LaunchPad
 from fireworks.fw_config import (
     ALWAYS_CREATE_NEW_BLOCK,
     QSTAT_FREQUENCY,
@@ -20,15 +22,14 @@ from fireworks.fw_config import (
     QUEUE_RETRY_ATTEMPTS,
     QUEUE_UPDATE_INTERVAL,
     RAPIDFIRE_SLEEP_SECS,
+    STREAM_LOGLEVEL,
     SUBMIT_SCRIPT_NAME,
 )
 from fireworks.utilities.fw_serializers import load_object
-from fireworks.utilities.fw_utilities import (
-    create_datestamp_dir,
-    get_fw_logger,
-    get_slug,
-    log_exception,
-)
+from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, get_slug, log_exception
+
+if TYPE_CHECKING:
+    from fireworks.queue.queue_adapter import QueueAdapterBase
 
 __author__ = "Anubhav Jain, Michael Kocher"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -43,13 +44,12 @@ def launch_rocket_to_queue(
     qadapter,
     launcher_dir=".",
     reserve=False,
-    strm_lvl="INFO",
+    strm_lvl=STREAM_LOGLEVEL,
     create_launcher_dir=False,
     fill_mode=False,
     fw_id=None,
 ):
-    """
-    Submit a single job to the queue.
+    """Submit a single job to the queue.
 
     Args:
         launchpad (LaunchPad)
@@ -63,7 +63,7 @@ def launch_rocket_to_queue(
             (only in non-reservation mode)
         fw_id (int): specific fw_id to reserve (reservation mode only)
     """
-    fworker = fworker if fworker else FWorker()
+    fworker = fworker or FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
     l_logger = get_fw_logger("queue.launcher", l_dir=launchpad.logdir, stream_level=strm_lvl)
 
@@ -101,7 +101,7 @@ def launch_rocket_to_queue(
 
                 # update qadapter job_name based on FW name
                 job_name = get_slug(fw.name)[0:QUEUE_JOBNAME_MAXLEN]
-                qadapter.update({"job_name": job_name})
+                qadapter.update(job_name=job_name)
 
                 if "_queueadapter" in fw.spec:
                     l_logger.debug("updating queue params using Firework spec..")
@@ -119,7 +119,7 @@ def launch_rocket_to_queue(
 
                     launcher_dir = fw_launch_dir
 
-                    makedirs_p(launcher_dir)
+                    os.makedirs(launcher_dir, exist_ok=True)
 
                     launchpad.change_launch_dir(launch_id, launcher_dir)
                 elif create_launcher_dir:
@@ -135,7 +135,6 @@ def launch_rocket_to_queue(
             l_logger.info(f"moving to launch_dir {launcher_dir}")
 
             with cd(launcher_dir):
-
                 if "--offline" in qadapter["rocket_launch"]:
                     setup_offline_job(launchpad, fw, launch_id)
 
@@ -150,7 +149,7 @@ def launch_rocket_to_queue(
                     raise RuntimeError(
                         "queue script could not be submitted, check queue script/queue adapter/queue server status!"
                     )
-                elif reserve:
+                if reserve:
                     launchpad.set_reservation_id(launch_id, reservation_id)
             return reservation_id
 
@@ -172,7 +171,7 @@ def launch_rocket_to_queue(
 
 
 def rapidfire(
-    launchpad,
+    launchpad: LaunchPad,
     fworker,
     qadapter,
     launch_dir=".",
@@ -182,33 +181,31 @@ def rapidfire(
     njobs_block=500,
     sleep_time=None,
     reserve=False,
-    strm_lvl="INFO",
+    strm_lvl=STREAM_LOGLEVEL,
     timeout=None,
     fill_mode=False,
-):
-    """
-    Submit many jobs to the queue.
+) -> None:
+    """Submit many jobs to the queue.
 
     Args:
-        launchpad (LaunchPad)
-        fworker (FWorker)
-        qadapter (QueueAdapterBase)
-        launch_dir (str): directory where we want to write the blocks
-        block_dir (str): directory to use as block dir. Can be a new or existing block. Dirname must
+        launchpad (LaunchPad): The Launchpad instance.
+        fworker (FWorker): The FWorker instance.
+        qadapter (QueueAdapterBase): The QueueAdapter instance.
+        launch_dir (str): Directory where we want to write the blocks
+        block_dir (str): Directory to use as block dir. Can be a new or existing block. Dirname must
             start with 'block_'.
-        nlaunches (int): total number of launches desired; "infinite" for loop, 0 for one round
+        nlaunches (int): Total number of launches desired; "infinite" for loop, 0 for one round
         njobs_queue (int): stops submitting jobs when njobs_queue jobs are in the queue, 0 for no limit.
             If 0 skips the check on the number of jobs in the queue.
-        njobs_block (int): automatically write a new block when njobs_block jobs are in a single block
-        sleep_time (int): secs to sleep between rapidfire loop iterations
+        njobs_block (int): Automatically write a new block when njobs_block jobs are in a single block
+        sleep_time (int): Seconds to sleep between rapidfire loop iterations
         reserve (bool): Whether to queue in reservation mode
         strm_lvl (str): level at which to stream log messages
-        timeout (int): # of seconds after which to stop the rapidfire process
-        fill_mode (bool): whether to submit jobs even when there is nothing to run (only in
+        timeout (int): Number of seconds after which to stop the rapidfire process
+        fill_mode (bool): Whether to submit jobs even when there is nothing to run (only in
             non-reservation mode)
     """
-
-    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
+    sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
     nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
     l_logger = get_fw_logger("queue.launcher", l_dir=launchpad.logdir, stream_level=strm_lvl)
@@ -243,7 +240,6 @@ def rapidfire(
             job_counter = 0  # this is for QSTAT_FREQUENCY option
 
             while launchpad.run_exists(fworker) or (fill_mode and not reserve):
-
                 if timeout and (datetime.now() - start_time).total_seconds() >= timeout:
                     l_logger.info("Timeout reached.")
                     break
@@ -266,7 +262,7 @@ def rapidfire(
                 if return_code is None:
                     l_logger.info("No READY jobs detected...")
                     break
-                elif not return_code:
+                if not return_code:
                     raise RuntimeError("Launch unsuccessful!")
                 num_launched += 1
                 if nlaunches > 0 and num_launched == nlaunches:
@@ -297,8 +293,7 @@ def rapidfire(
 
 
 def _njobs_in_dir(block_dir):
-    """
-    Internal method to count the number of jobs inside a block
+    """Internal method to count the number of jobs inside a block.
 
     Args:
         block_dir: (str) the block directory we want to count the jobs in
@@ -309,22 +304,21 @@ def _njobs_in_dir(block_dir):
     return len(glob.glob(f"{os.path.abspath(block_dir)}/launcher_*"))
 
 
-def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
-    """
-    Internal method to get the number of jobs in the queue using the given job params.
+def _get_number_of_jobs_in_queue(qadapter: "QueueAdapterBase", njobs_queue: int, l_logger: Logger) -> int:
+    """Internal method to get the number of jobs in the queue using the given job params.
     In case of failure, automatically retries at certain intervals...
 
     Args:
-        qadapter (QueueAdapter)
+        qadapter (QueueAdapterBase): The queue adapter to use.
         njobs_queue (int): The desired maximum number of jobs in the queue
-        l_logger (logger): A logger to put errors/info/warnings/etc.
+        l_logger (Logger): A logger to put errors/info/warnings/etc.
 
     Return:
         (int)
     """
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
-    for i in range(QUEUE_RETRY_ATTEMPTS):
+    for _i in range(QUEUE_RETRY_ATTEMPTS):
         try:
             jobs_in_queue = qadapter.get_njobs_in_queue()
             if jobs_in_queue is not None:
@@ -338,9 +332,9 @@ def _get_number_of_jobs_in_queue(qadapter, njobs_queue, l_logger):
     raise RuntimeError("Unable to determine number of jobs in queue, check queue adapter and queue server status!")
 
 
-def setup_offline_job(launchpad, fw, launch_id):
+def setup_offline_job(launchpad, fw, launch_id) -> None:
     # separate this function out for reuse in unit testing
     fw.to_file("FW.json")
     with open("FW_offline.json", "w") as f:
-        f.write('{"launch_id":%s}' % launch_id)
+        f.write(f'{{"launch_id":{launch_id}}}')
     launchpad.add_offline_run(launch_id, fw.fw_id, fw.name)

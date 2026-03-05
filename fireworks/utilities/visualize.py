@@ -1,4 +1,8 @@
-from typing import Any, Dict
+"""Visualization utilities for Fireworks."""
+
+from __future__ import annotations
+
+from typing import Any
 
 from monty.dev import requires
 
@@ -23,9 +27,8 @@ def plot_wf(
     markersize=10,
     markerfacecolor="blue",
     fontsize=12,
-):
-    """
-    Generate a visual representation of the workflow. Useful for checking whether the firework
+) -> None:
+    """Generate a visual representation of the workflow. Useful for checking whether the firework
     connections are in order before launching the workflow.
 
     Args:
@@ -43,11 +46,11 @@ def plot_wf(
         fontsize (int): font size for the node label.
     """
     try:
-        import matplotlib.pyplot as plt
+        import matplotlib.pyplot as plt  # noqa: PLC0415
     except ImportError:
         raise SystemExit("Install matplotlib. Exiting.")
 
-    keys = sorted(wf.links.keys(), reverse=True)
+    keys = sorted(wf.links, reverse=True)
     n_root_nodes = len(wf.root_fw_ids)
 
     # set (x,y) coordinates for each node in the workflow links
@@ -60,7 +63,7 @@ def plot_wf(
     # the rest
     for k in keys:
         for i, j in enumerate(wf.links[k]):
-            if not points_map.get(j, None):
+            if not points_map.get(j):
                 points_map[j] = ((i - len(wf.links[k]) / 2.0) * breadth_factor, k * depth_factor)
 
     # connect the dots
@@ -98,22 +101,23 @@ def plot_wf(
     "graphviz package required for wf_to_graph.\n"
     "Follow the installation instructions here: https://github.com/xflr6/graphviz",
 )
-def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bool = True) -> Digraph:
+def wf_to_graph(wf: Workflow, dag_kwargs: dict[str, Any] | None = None, wf_show_tasks: bool = True) -> Digraph:
     """Renders a graph representation of a workflow or firework. Workflows are rendered as the
     control flow of the firework, while Fireworks are rendered as a sequence of Firetasks.
 
     Copied from https://git.io/JO6L8.
 
     Args:
-        workflow (Workflow | Firework): Workflow or Firework to be rendered.
+        wf (Workflow | Firework): Workflow or Firework to be rendered.
         dag_kwargs (dict[str, Any]): Arguments passed to Digraph.attr(). Defaults to {}.
         wf_show_tasks (bool): When rendering a Workflow, whether to show each Firetask in the graph. Defaults to False.
 
     Returns:
         Digraph: The Workflow or Firework directed acyclic graph.
     """
+    dag_kwargs = dag_kwargs or {}
     if not isinstance(wf, (Workflow, Firework)):
-        raise ValueError(f"expected instance of Workflow or Firework, got {wf}")
+        raise TypeError(f"expected instance of Workflow or Firework, got {wf}")
 
     if isinstance(wf, Workflow) and not wf_show_tasks:
         # if we're rendering a Workflow and not showing tasks, we render the graph from left to right
@@ -149,7 +153,7 @@ def wf_to_graph(wf: Workflow, dag_kwargs: Dict[str, Any] = {}, wf_show_tasks: bo
                 if idx == 0:
                     subgraph.edge(str(fw.fw_id), node_id)
                 else:
-                    subgraph.edge(f"{fw.fw_id}-{idx-1}", node_id)
+                    subgraph.edge(f"{fw.fw_id}-{idx - 1}", node_id)
 
             dag.subgraph(subgraph)
 

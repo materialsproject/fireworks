@@ -1,7 +1,4 @@
-"""
-TODO: Modify unittest doc.
-"""
-
+"""TODO: Modify unittest doc."""
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -9,44 +6,49 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "2/26/14"
 
+import datetime
+import pickle
 import unittest
 
-from fireworks.core.firework import FiretaskBase, Firework, FWAction, Workflow
+import pytest
+
+from fireworks.core.firework import FiretaskBase, Firework, FWAction, Launch, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 
 class FiretaskBaseTest(unittest.TestCase):
-    def test_init(self):
+    def test_init(self) -> None:
         class DummyTask(FiretaskBase):
-
             required_params = ["hello"]
 
-            def run_task(self, fw_spec):
+            def run_task(self, _fw_spec):
                 return self["hello"]
 
-        with self.assertRaises(RuntimeError):
+        with pytest.raises(RuntimeError):
             DummyTask()
         d = DummyTask(hello="world")
-        self.assertEqual(d.run_task({}), "world")
+        assert d.run_task({}) == "world"
         d = DummyTask({"hello": "world2"})
-        self.assertEqual(d.run_task({}), "world2")
+        assert d.run_task({}) == "world2"
 
         class DummyTask2(FiretaskBase):
-
             pass
 
         d = DummyTask2()
-        self.assertRaises(NotImplementedError, d.run_task, {})
+        with pytest.raises(NotImplementedError):
+            d.run_task({})
 
-    def test_param_checks(self):
+    def test_param_checks(self) -> None:
         class DummyTask(FiretaskBase):
             _fw_name = "DummyTask"
             required_params = ["param1"]
             optional_params = ["param2"]
 
-        self.assertRaises(RuntimeError, DummyTask, param2=3)  # missing required param
-        self.assertRaises(RuntimeError, DummyTask, param1=3, param3=5)  # extraneous param
+        with pytest.raises(RuntimeError):
+            DummyTask(param2=3)  # missing required param
+        with pytest.raises(RuntimeError):
+            DummyTask(param1=3, param3=5)  # extraneous param
         DummyTask(param1=1)  # OK
         DummyTask(param1=1, param2=1)  # OK
 
@@ -54,26 +56,24 @@ class FiretaskBaseTest(unittest.TestCase):
 class PickleTask(FiretaskBase):
     required_params = ["test"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, _fw_spec):
         return self["test"]
 
 
 class FiretaskPickleTest(unittest.TestCase):
-    def setUp(self):
-        import pickle
-
+    def setUp(self) -> None:
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
-        self.upkl_task = pickle.loads(self.pkl_task)
+        self.upkl_task = pickle.loads(self.pkl_task)  # noqa: S301
 
-    def test_init(self):
-        self.assertIsInstance(self.upkl_task, PickleTask)
-        self.assertEqual(PickleTask.from_dict(self.task.to_dict()), self.upkl_task)
-        self.assertEqual(dir(self.task), dir(self.upkl_task))
+    def test_init(self) -> None:
+        assert isinstance(self.upkl_task, PickleTask)
+        assert PickleTask.from_dict(self.task.to_dict()) == self.upkl_task
+        assert dir(self.task) == dir(self.upkl_task)
 
         result_task = self.task.run_task({})
         result_upkl_task = self.upkl_task.run_task({})
-        self.assertEqual(result_task, result_upkl_task)
+        assert result_task == result_upkl_task
 
 
 @explicit_serialize
@@ -91,24 +91,25 @@ class Task2(FiretaskBase):
 
 
 class WorkflowTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.fw1 = Firework(Task1())
         self.fw2 = Firework([Task2(), Task2()], parents=self.fw1)
         self.fw3 = Firework(Task1(), parents=self.fw1)
 
-    def test_init(self):
-
+    def test_init(self) -> None:
         fws = []
         for i in range(5):
             fw = Firework([PyTask(func="print", args=[i])], fw_id=i)
 
             fws.append(fw)
         wf = Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [4]})
-        self.assertIsInstance(wf, Workflow)
-        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
-        self.assertRaises(ValueError, Workflow, fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
+        assert isinstance(wf, Workflow)
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
+            Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
+        with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
+            Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
 
-    def test_copy(self):
+    def test_copy(self) -> None:
         """Test that we can produce a copy of a Workflow but that the copy
         has unique fw_ids.
         """
@@ -130,10 +131,10 @@ class WorkflowTest(unittest.TestCase):
 
             orig_children = wf.links.get(orig_id, list())
 
-            for child_id, orig_child_id in zip(children, orig_children):
-                self.assertEqual(orig_child_id, wf_copy.id_fw[child_id].name)
+            for child_id, orig_child_id in zip(children, orig_children, strict=False):
+                assert orig_child_id == wf_copy.id_fw[child_id].name
 
-    def test_remove_leaf_fws(self):
+    def test_remove_leaf_fws(self) -> None:
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
         fws = [self.fw1, self.fw2, self.fw3, fw4]
         wflow = Workflow(fws)
@@ -142,9 +143,9 @@ class WorkflowTest(unittest.TestCase):
         for i in leaf_ids:
             parents.extend(wflow.links.parent_links[i])
         wflow.remove_fws(wflow.leaf_fw_ids)
-        self.assertEqual(wflow.leaf_fw_ids, parents)
+        assert wflow.leaf_fw_ids == parents
 
-    def test_remove_root_fws(self):
+    def test_remove_root_fws(self) -> None:
         fw4 = Firework(Task1(), parents=[self.fw2, self.fw3])
         fws = [self.fw1, self.fw2, self.fw3, fw4]
         wflow = Workflow(fws)
@@ -153,18 +154,48 @@ class WorkflowTest(unittest.TestCase):
         for i in root_ids:
             children.extend(wflow.links[i])
         wflow.remove_fws(wflow.root_fw_ids)
-        self.assertEqual(sorted(wflow.root_fw_ids), sorted(children))
+        assert sorted(wflow.root_fw_ids) == sorted(children)
 
-    def test_iter_len_index(self):
+    def test_iter_len_index(self) -> None:
         fws = [self.fw1, self.fw2, self.fw3]
         wflow = Workflow(fws)
         for idx, fw in enumerate(wflow):
-            self.assertEqual(fw, fws[idx])
+            assert fw == fws[idx]
 
         assert len(wflow) == len(fws)
 
         assert wflow[0] == self.fw1
 
 
-if __name__ == "__main__":
-    unittest.main()
+UTC = datetime.timezone.utc
+
+
+class TestLaunchRuntimeSecs:
+    """Tests for Launch.runtime_secs with mixed timezone datetimes."""
+
+    @pytest.mark.parametrize(
+        ("start_tz", "end_tz"),
+        [(None, UTC), (UTC, None), (None, None), (UTC, UTC)],
+        ids=["naive-aware", "aware-naive", "naive-naive", "aware-aware"],
+    )
+    def test_mixed_tz_datetimes(self, start_tz: datetime.timezone | None, end_tz: datetime.timezone | None) -> None:
+        """Handles mixed timezone-aware/naive datetimes without TypeError."""
+        now = datetime.datetime.now(UTC)
+        start = now.replace(tzinfo=start_tz)
+        end = (now + datetime.timedelta(seconds=120)).replace(tzinfo=end_tz)
+
+        launch = Launch(
+            state="COMPLETED",
+            launch_dir="/test",
+            state_history=[{"state": "RUNNING", "created_on": start}, {"state": "COMPLETED", "created_on": end}],
+        )
+        assert launch.runtime_secs == pytest.approx(120.0)
+
+    def test_none_when_incomplete(self) -> None:
+        """Returns None when launch hasn't completed."""
+        launch = Launch(
+            state="RUNNING",
+            launch_dir="/test",
+            state_history=[{"state": "RUNNING", "created_on": datetime.datetime.now(UTC)}],
+        )
+        assert launch.runtime_secs is None

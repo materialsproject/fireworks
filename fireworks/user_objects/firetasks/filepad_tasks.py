@@ -1,6 +1,17 @@
+"""Firetasks for interacting with FilePad: add, fetch, query, and delete files."""
+
+from __future__ import annotations
+
+import json
 import os
+from glob import glob
+from typing import Any
+
+from pymongo import DESCENDING
+from ruamel.yaml import YAML
 
 from fireworks.core.firework import FiretaskBase
+from fireworks.utilities.dict_mods import arrow_to_dot
 from fireworks.utilities.filepad import FilePad
 
 __author__ = "Kiran Mathew, Johannes Hoermann"
@@ -9,8 +20,7 @@ __credits__ = "Anubhav Jain"
 
 
 class AddFilesTask(FiretaskBase):
-    """
-    A Firetask to add files to the filepad.
+    """A Firetask to add files to the filepad.
 
     Required params:
         - paths (list/str): either list of paths or a glob pattern string.
@@ -27,10 +37,7 @@ class AddFilesTask(FiretaskBase):
     required_params = ["paths"]
     optional_params = ["identifiers", "directory", "filepad_file", "compress", "metadata"]
 
-    def run_task(self, fw_spec):
-
-        from glob import glob
-
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         directory = os.path.abspath(self.get("directory", "."))
 
         if isinstance(self["paths"], list):
@@ -45,14 +52,15 @@ class AddFilesTask(FiretaskBase):
 
         fpad = get_fpad(self.get("filepad_file", None))
 
-        for p, l in zip(paths, identifiers):
-            fpad.add_file(p, identifier=l, metadata=self.get("metadata", None), compress=self.get("compress", True))
+        for path, ident in zip(paths, identifiers, strict=True):
+            compress = self.get("compress", True)
+            md = self.get("metadata")
+            fpad.add_file(path, identifier=ident, metadata=md, compress=compress)
 
 
 class GetFilesTask(FiretaskBase):
-    """
-    A Firetask to fetch files from the filepad and write it to specified directory (current working
-    directory if not specified)
+    """A Firetask to fetch files from the filepad and write it to specified directory (current working
+    directory if not specified).
 
     Required params:
         - identifiers ([str]): identifiers of files to fetch
@@ -67,13 +75,13 @@ class GetFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file", "dest_dir", "new_file_names"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
-        for i, l in enumerate(self["identifiers"]):
-            file_contents, doc = fpad.get_file(identifier=l)
-            file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
+        for idx, ident in enumerate(self["identifiers"]):
+            file_contents, doc = fpad.get_file(identifier=ident)
+            file_name = new_file_names[idx] if new_file_names else doc["original_file_name"]
             if fpad.text_mode:
                 with open(os.path.join(dest_dir, file_name), "w") as f:
                     f.write(file_contents.decode())
@@ -83,8 +91,7 @@ class GetFilesTask(FiretaskBase):
 
 
 class GetFilesByQueryTask(FiretaskBase):
-    """
-    A Firetask to query files from the filepad and write them to specified
+    """A Firetask to query files from the filepad and write them to specified
     directory (current working directory if not specified).
 
     Required params:
@@ -141,20 +148,13 @@ class GetFilesByQueryTask(FiretaskBase):
         "sort_key",
     ]
 
-    def run_task(self, fw_spec):
-        import json
-
-        import pymongo
-        from ruamel.yaml import YAML
-
-        from fireworks.utilities.dict_mods import arrow_to_dot
-
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
         dest_dir = self.get("dest_dir", os.path.abspath("."))
         new_file_names = self.get("new_file_names", [])
         query = self.get("query", {})
         sort_key = self.get("sort_key", None)
-        sort_direction = self.get("sort_direction", pymongo.DESCENDING)
+        sort_direction = self.get("sort_direction", DESCENDING)
         limit = self.get("limit", None)
         fizzle_empty_result = self.get("fizzle_empty_result", True)
         fizzle_degenerate_file_name = self.get("fizzle_degenerate_file_name", True)
@@ -164,18 +164,18 @@ class GetFilesByQueryTask(FiretaskBase):
         assert isinstance(query, dict)
         query = arrow_to_dot(query)
 
-        l = fpad.get_file_by_query(query, sort_key, sort_direction)
-        assert isinstance(l, list)
+        lst = fpad.get_file_by_query(query, sort_key, sort_direction)
+        assert isinstance(lst, list)
 
-        if fizzle_empty_result and (len(l) == 0):
+        if fizzle_empty_result and (len(lst) == 0):
             raise ValueError(f"Query yielded empty result! (query: {json.dumps(query):s})")
 
         unique_file_names = set()  # track all used file names
-        for i, (file_contents, doc) in enumerate(l[:limit]):
+        for i, (file_contents, doc) in enumerate(lst[:limit]):
             file_name = new_file_names[i] if new_file_names else doc["original_file_name"]
             if fizzle_degenerate_file_name and (file_name in unique_file_names):
                 raise ValueError(
-                    f"The local file name {file_name} is used a second time by result {i}/{len(l)}! "
+                    f"The local file name {file_name} is used a second time by result {i}/{len(lst)}! "
                     f"(query: {json.dumps(query)})"
                 )
 
@@ -191,8 +191,7 @@ class GetFilesByQueryTask(FiretaskBase):
 
 
 class DeleteFilesTask(FiretaskBase):
-    """
-    A Firetask to delete files from the filepad
+    """A Firetask to delete files from the filepad.
 
     Required params:
         - identifiers ([str]): identifiers of files to delete
@@ -205,14 +204,14 @@ class DeleteFilesTask(FiretaskBase):
     required_params = ["identifiers"]
     optional_params = ["filepad_file"]
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec: dict[str, Any]) -> None:
         fpad = get_fpad(self.get("filepad_file", None))
-        for l in self["identifiers"]:
-            fpad.delete_file(l)
+        for file in self["identifiers"]:
+            fpad.delete_file(file)
 
 
-def get_fpad(fpad_file):
+def get_fpad(fpad_file: str | None) -> FilePad:
+    """Return a FilePad instance from file if provided, else auto-load one."""
     if fpad_file:
         return FilePad.from_db_file(fpad_file)
-    else:
-        return FilePad.auto_load()
+    return FilePad.auto_load()

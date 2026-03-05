@@ -1,23 +1,26 @@
-"""
-A runnable script to launch Job Packing (Multiple) Rockets
-"""
+"""A runnable script to launch Job Packing (Multiple) Rockets."""
+
+from __future__ import annotations
 
 import os
-import sys
 from argparse import ArgumentParser
-from typing import Optional, Sequence
+from importlib import metadata
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.features.multi_launcher import launch_multiprocess
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STREAM_LOGLEVEL
 
 from ._helpers import _validate_config_file_paths
 
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+try:
+    import argcomplete
+except ImportError:
+    argcomplete = None
 
 __author__ = "Xiaohui Qu, Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project & Electrolyte Genome Project"
@@ -26,8 +29,15 @@ __email__ = "xqu@lbl.gov"
 __date__ = "Aug 19, 2013"
 
 
-def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def mlaunch(argv: Sequence[str] | None = None) -> int:
+    """Launch multiple Rockets simultaneously.
 
+    Args:
+        argv: Command line arguments (optional, defaults to sys.argv)
+
+    Returns:
+        int: Exit code (0 for success)
+    """
     m_description = "This program launches multiple Rockets simultaneously"
 
     parser = ArgumentParser("mlaunch", description=m_description)
@@ -38,8 +48,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     parser.add_argument(
         "--nlaunches",
-        help="number of FireWorks to run in series per parallel job "
-        '(int or "infinite"; default 0 is all jobs in DB)',
+        help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)',
         default=0,
     )
     parser.add_argument(
@@ -56,7 +65,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
         default=CONFIG_FILE_DIR,
     )
 
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
     parser.add_argument(
@@ -69,17 +78,19 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument(
         "--exclude_current_node", help="Don't use the script launching node as compute node", action="store_true"
     )
+    parser.add_argument(
+        "--max_loops",
+        help="after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)",
+        default=-1,
+        type=int,
+    )
 
-    try:
-        import argcomplete
-
+    if argcomplete is not None:
         argcomplete.autocomplete(parser)
         # This supports bash autocompletion. To enable this, pip install
         # argcomplete, activate global completion, or add
         #      eval "$(register-python-argcomplete mlaunch)"
         # into your .bash_profile or .bashrc
-    except ImportError:
-        pass
 
     args = parser.parse_args(argv)
 
@@ -93,17 +104,14 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
 
     launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
-    if args.fworker_file:
-        fworker = FWorker.from_file(args.fworker_file)
-    else:
-        fworker = FWorker()
+    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
 
     total_node_list = None
     if args.nodefile:
         if args.nodefile in os.environ:
             args.nodefile = os.environ[args.nodefile]
         with open(args.nodefile) as f:
-            total_node_list = [line.strip() for line in f.readlines()]
+            total_node_list = [line.strip() for line in f]
 
     launch_multiprocess(
         launchpad,
@@ -116,6 +124,7 @@ def mlaunch(argv: Optional[Sequence[str]] = None) -> int:
         args.ppn,
         timeout=args.timeout,
         exclude_current_node=args.exclude_current_node,
+        max_loops=args.max_loops,
     )
 
     return 0

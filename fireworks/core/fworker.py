@@ -1,6 +1,4 @@
-"""
-This module contains FireWorker, which encapsulates information about a computing resource
-"""
+"""This module contains FireWorker, which encapsulates information about a computing resource."""
 
 import json
 
@@ -21,7 +19,7 @@ __date__ = "Dec 12, 2012"
 
 
 class FWorker(FWSerializable):
-    def __init__(self, name="Automatically generated Worker", category="", query=None, env=None):
+    def __init__(self, name="Automatically generated Worker", category="", query=None, env=None) -> None:
         """
         Args:
             name (str): the name of the resource, should be unique
@@ -37,8 +35,8 @@ class FWorker(FWSerializable):
         """
         self.name = name
         self.category = category
-        self._query = query if query else {}
-        self.env = env if env else {}
+        self._query = query or {}
+        self.env = env or {}
 
     @recursive_serialize
     def to_dict(self):
@@ -56,9 +54,7 @@ class FWorker(FWSerializable):
 
     @property
     def query(self):
-        """
-        Returns updated query dict.
-        """
+        """Returns updated query dict."""
         q = dict(self._query)
         fworker_check = [{"spec._fworker": {"$exists": False}}, {"spec._fworker": None}, {"spec._fworker": self.name}]
         if "$or" in q:
@@ -78,9 +74,7 @@ class FWorker(FWSerializable):
 
     @classmethod
     def auto_load(cls):
-        """
-        Returns FWorker object from settings file(my_fworker.yaml).
-        """
+        """Returns FWorker object from settings file(my_fworker.yaml)."""
         if FWORKER_LOC:
             return FWorker.from_file(FWORKER_LOC)
         return FWorker()

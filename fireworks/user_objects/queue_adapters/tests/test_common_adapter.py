@@ -1,7 +1,4 @@
-"""
-TODO: Modify unittest doc.
-"""
-
+"""TODO: Modify unittest doc."""
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -9,14 +6,17 @@ __maintainer__ = "Shyue Ping Ong"
 __email__ = "shyuep@gmail.com"
 __date__ = "12/31/13"
 
+import sys
 import unittest
 
-from fireworks.user_objects.queue_adapters.common_adapter import *
+from ruamel.yaml import YAML
+
+from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter, os
 from fireworks.utilities.fw_serializers import load_object, load_object_from_file
 
 
 class CommonAdapterTest(unittest.TestCase):
-    def test_serialization(self):
+    def test_serialization(self) -> None:
         p = CommonAdapter(
             q_type="PBS",
             q_name="hello",
@@ -30,24 +30,25 @@ class CommonAdapterTest(unittest.TestCase):
         for a in [p, p_new]:
             script = a.get_script_str("here")
             lines = script.split("\n")
-            self.assertIn("# world", lines)
-            self.assertIn("#PBS -q random", lines)
+            assert "# world" in lines
+            assert "#PBS -q random" in lines
 
         p = CommonAdapter(q_type="PBS", q_name="hello", hello="world", queue="random")
         # this uses the default template, which does not have $${hello}
-        self.assertNotEqual("# world", p.get_script_str("here").split("\n")[-1])
-        self.assertNotIn("_fw_template_file", p.to_dict())
+        assert p.get_script_str("here").split("\n")[-1] != "# world"
+        assert "_fw_template_file" not in p.to_dict()
 
-    def test_yaml_load(self):
+    def test_yaml_load(self) -> None:
         # Test yaml loading.
         p = load_object_from_file(os.path.join(os.path.dirname(__file__), "pbs.yaml"))
         p = CommonAdapter(q_type="PBS", q_name="hello", ppnode="8:ib", nnodes=1, hello="world", queue="random")
         print(p.get_script_str("."))
-        import ruamel.yaml as yaml
+        yaml = YAML(typ="safe", pure=True)
+        yaml.default_flow_style = False
+        yaml.dump(p.to_dict(), sys.stdout)
+        print()
 
-        print(yaml.safe_dump(p.to_dict(), default_flow_style=False))
-
-    def test_parse_njobs(self):
+    def test_parse_njobs(self) -> None:
         pbs = """
 tscc-mgr.sdsc.edu:
                                                                                   Req'd    Req'd       Elap
@@ -77,48 +78,44 @@ JobId   User    Queue     Jobname  Nodes  Procs  Mode    WallTime  State    RunT
 977824  sokawaii  prod-long            N2048-P8192                           2048   8192    c4      12:00:00  queued      N/A       SeaSurvey            None
 977850  wscullin  prod-capability      hello                                 8192   32768   c4      24:00:00  queued      N/A       UQ2014               None
 977859  wscullin  prod-long            goodbye                               8192   32768   c4      24:00:00  queued      N/A       UQ2014               None
-"""
+"""  # noqa: E501
 
         p = CommonAdapter(q_type="PBS", q_name="hello", queue="home-ong", hello="world")
-        self.assertEqual(p._parse_njobs(pbs, "ongsp"), 1)
+        assert p._parse_njobs(pbs, "ongsp") == 1
 
         p = CommonAdapter(q_type="Cobalt", q_name="hello", queue="prod-capability", hello="world")
-        self.assertEqual(p._parse_njobs(cobalt, "wscullin"), 1)
+        assert p._parse_njobs(cobalt, "wscullin") == 1
 
         p = CommonAdapter(q_type="SGE", q_name="hello", queue="all.q", hello="world")
-        self.assertEqual(p._parse_njobs(sge, "ongsp"), 3)
+        assert p._parse_njobs(sge, "ongsp") == 3
 
-    def test_parse_jobid(self):
+    def test_parse_jobid(self) -> None:
         p = CommonAdapter(q_type="SLURM", q_name="hello", queue="home-ong", hello="world")
         sbatch_output = """
 SOME PREAMBLE
 Submitted batch job 1234"""
-        self.assertEqual(p._parse_jobid(sbatch_output), "1234")
+        assert p._parse_jobid(sbatch_output) == "1234"
         p = CommonAdapter(q_type="Cobalt", q_name="hello", queue="home-ong", hello="world")
         qsub_output = """
 Project: JCESR2015
 12345"""
-        self.assertEqual(p._parse_jobid(qsub_output), "12345")
+        assert p._parse_jobid(qsub_output) == "12345"
         p = CommonAdapter(q_type="PBS", q_name="hello", queue="home-ong", hello="world")
         qsub_output = "2341.whatever"
-        self.assertEqual(p._parse_jobid(qsub_output), "2341")
+        assert p._parse_jobid(qsub_output) == "2341"
         p = CommonAdapter(q_type="SGE", q_name="hello", queue="home-ong", hello="world")
         qsub_output = 'Your job 44275 ("jobname") has been submitted'
-        self.assertEqual(p._parse_jobid(qsub_output), "44275")
+        assert p._parse_jobid(qsub_output) == "44275"
 
-    def test_status_cmd_pbs(self):
+    def test_status_cmd_pbs(self) -> None:
         p = load_object_from_file(
             os.path.join(os.path.dirname(__file__), "pbs_override.yaml")  # intentional red herring to test deepcopy
         )
         p = CommonAdapter(q_type="PBS")
-        self.assertEqual(p._get_status_cmd("my_name"), ["qstat", "-u", "my_name"])
+        assert p._get_status_cmd("my_name") == ["qstat", "-u", "my_name"]
 
-    def test_override(self):
+    def test_override(self) -> None:
         p = load_object_from_file(os.path.join(os.path.dirname(__file__), "pbs_override.yaml"))
 
-        self.assertEqual(p._get_status_cmd("my_name"), ["my_qstatus", "-u", "my_name"])
-        self.assertEqual(p.q_commands["PBS"]["submit_cmd"], "my_qsubmit")
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert p._get_status_cmd("my_name") == ["my_qstatus", "-u", "my_name"]
+        assert p.q_commands["PBS"]["submit_cmd"] == "my_qsubmit"

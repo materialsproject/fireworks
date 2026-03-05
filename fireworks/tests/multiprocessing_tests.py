@@ -17,18 +17,18 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 class TestLinks(TestCase):
-    def test_pickle(self):
+    def test_pickle(self) -> None:
         links1 = Workflow.Links({1: 2, 3: [5, 7, 8]})
         s = pickle.dumps(links1)
         links2 = pickle.loads(s)
-        self.assertEqual(str(links1), str(links2))
+        assert str(links1) == str(links2)
 
 
 class TestCheckoutFW(TestCase):
     lp = None
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
@@ -37,14 +37,14 @@ class TestCheckoutFW(TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost: 27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)
         if os.path.exists(os.path.join("FW.json")):
@@ -53,7 +53,7 @@ class TestCheckoutFW(TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    def test_checkout_fw(self):
+    def test_checkout_fw(self) -> None:
         os.chdir(MODULE_DIR)
         self.lp.add_wf(
             Firework(ScriptTask.from_str(shell_cmd='echo "hello 1"', parameters={"stdout_file": "task.out"}), fw_id=1)
@@ -64,19 +64,19 @@ class TestCheckoutFW(TestCase):
         launch_multiprocess(self.lp, FWorker(), "DEBUG", 0, 2, 10)
         fw1 = self.lp.get_fw_by_id(1)
         fw2 = self.lp.get_fw_by_id(2)
-        self.assertEqual(fw1.launches[0].state_history[-1]["state"], "COMPLETED")
-        self.assertEqual(fw2.launches[0].state_history[-1]["state"], "COMPLETED")
+        assert fw1.launches[0].state_history[-1]["state"] == "COMPLETED"
+        assert fw2.launches[0].state_history[-1]["state"] == "COMPLETED"
         with open(os.path.join(fw1.launches[0].launch_dir, "task.out")) as f:
-            self.assertEqual(f.readlines(), ["hello 1\n"])
+            assert f.readlines() == ["hello 1\n"]
         with open(os.path.join(fw2.launches[0].launch_dir, "task.out")) as f:
-            self.assertEqual(f.readlines(), ["hello 2\n"])
+            assert f.readlines() == ["hello 2\n"]
 
 
 class TestEarlyExit(TestCase):
     lp = None
 
     @classmethod
-    def setUpClass(cls):
+    def setUpClass(cls) -> None:
         cls.fworker = FWorker()
         try:
             cls.lp = LaunchPad(name=TESTDB_NAME, strm_lvl="ERROR")
@@ -85,14 +85,14 @@ class TestEarlyExit(TestCase):
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
-    def tearDownClass(cls):
+    def tearDownClass(cls) -> None:
         if cls.lp:
             cls.lp.connection.drop_database(TESTDB_NAME)
 
-    def setUp(self):
+    def setUp(self) -> None:
         self.old_wd = os.getcwd()
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         self.lp.reset(password=None, require_password=False)
         os.chdir(self.old_wd)
         if os.path.exists(os.path.join("FW.json")):
@@ -101,7 +101,7 @@ class TestEarlyExit(TestCase):
         for i in glob.glob(os.path.join(MODULE_DIR, "launcher*")):
             shutil.rmtree(i)
 
-    def test_early_exit(self):
+    def test_early_exit(self) -> None:
         os.chdir(MODULE_DIR)
         script_text = "echo hello from process $PPID; sleep 2"
         fw1 = Firework(ScriptTask.from_str(shell_cmd=script_text, parameters={"stdout_file": "task.out"}), fw_id=1)
@@ -117,8 +117,4 @@ class TestEarlyExit(TestCase):
             fw2_text = f.read()
         with open(os.path.join(fw3.launches[0].launch_dir, "task.out")) as f:
             fw3_text = f.read()
-        self.assertNotEqual(fw2_text, fw3_text)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert fw2_text != fw3_text

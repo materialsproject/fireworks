@@ -1,5 +1,4 @@
-"""
-This module contains the TemplateWriterTask, which writes files based on a template file and a
+"""This module contains the TemplateWriterTask, which writes files based on a template file and a
 Context using Jinja2's templating engine.
 """
 
@@ -18,20 +17,19 @@ __date__ = "Aug 08, 2013"
 
 
 class TemplateWriterTask(FiretaskBase):
-    """
-    Task to write templated files via Jinja2 library
+    """Task to write templated files via Jinja2 library
     Required parameters:
         - template_file: (str) - path to template file
         - context: (dict) - variable replacements for the template file
         - output_file: (str) - output file
     Optional parameters:
         - append: (bool) - append to output file (instead of overwrite)
-        - template_dir: (str) - directory in which to find the template file
+        - template_dir: (str) - directory in which to find the template file.
     """
 
     _fw_name = "TemplateWriterTask"
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         if self.get("use_global_spec"):
             self._load_params(fw_spec)
         else:
@@ -45,8 +43,7 @@ class TemplateWriterTask(FiretaskBase):
             with open(self.output_file, write_mode) as of:
                 of.write(output)
 
-    def _load_params(self, d):
-
+    def _load_params(self, d) -> None:
         self.context = d["context"]
         self.output_file = d["output_file"]
         self.append_file = d.get("append")  # append to output file?

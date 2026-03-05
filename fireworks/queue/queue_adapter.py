@@ -1,6 +1,4 @@
-"""
-This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE.
-"""
+"""This module contains contracts for defining adapters to various queueing systems, e.g. PBS/SLURM/SGE."""
 
 import abc
 import collections
@@ -24,11 +22,10 @@ __date__ = "Feb 28, 2013"
 
 
 class Command:
-    """
-    Helper class -  run subprocess commands in a different thread with TIMEOUT option.
+    """Helper class -  run subprocess commands in a different thread with TIMEOUT option.
     From https://gist.github.com/kirpit/1306188
     Based on jcollado's solution:
-    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933
+    http://stackoverflow.com/questions/1191374/subprocess-with-timeout/4825933#4825933.
     """
 
     command = None
@@ -36,9 +33,8 @@ class Command:
     status = None
     output, error = "", ""
 
-    def __init__(self, command):
-        """
-        initialize the object.
+    def __init__(self, command) -> None:
+        """Initialize the object.
 
         Args:
             command: command to run
@@ -48,8 +44,7 @@ class Command:
         self.command = command
 
     def run(self, timeout=None, **kwargs):
-        """
-        Run the command.
+        """Run the command.
 
         Args:
             timeout (float): timeout
@@ -59,7 +54,7 @@ class Command:
             (status, output, error)
         """
 
-        def target(**kwargs):
+        def target(**kwargs) -> None:
             try:
                 self.process = subprocess.Popen(self.command, **kwargs)
                 self.output, self.error = self.process.communicate()
@@ -90,8 +85,7 @@ class Command:
 
 
 class QueueAdapterBase(collections.defaultdict, FWSerializable):
-    """
-    The QueueAdapter is responsible for all interactions with a specific queue management system.
+    """The QueueAdapter is responsible for all interactions with a specific queue management system.
     This includes handling all details of queue script format as well as queue submission and
      management.
 
@@ -109,8 +103,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     defaults = {}  # default parameter values for template
 
     def get_script_str(self, launch_dir):
-        """
-        returns a (multi-line) String representing the queue script, e.g. PBS script.
+        """Returns a (multi-line) String representing the queue script, e.g. PBS script.
         Uses the template_file along with internal parameters to create the script.
 
         Args:
@@ -130,8 +123,8 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             subs_dict = {k: v for k, v in self.items() if v is not None}  # clean null values
 
             # warn user if they specify a key not present in template
-            for subs_key in subs_dict.keys():
-                if subs_key not in template_keys and not subs_key.startswith("_") and not subs_key == "logdir":
+            for subs_key in subs_dict:
+                if subs_key not in template_keys and not subs_key.startswith("_") and subs_key != "logdir":
                     warnings.warn(
                         f"Key {subs_key} has been specified in qadapter but it is not present in template, "
                         f"please check template ({self.template_file}) for supported keys."
@@ -148,14 +141,13 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
             # might contain unused parameters as leftover $$
             unclean_template = a.safe_substitute(subs_dict)
 
-            clean_template = filter(lambda l: "$$" not in l, unclean_template.split("\n"))
+            clean_template = filter(lambda line: "$$" not in line, unclean_template.split("\n"))
 
             return "\n".join(clean_template)
 
     @abc.abstractmethod
     def submit_to_queue(self, script_file):
-        """
-        Submits the job to the queue and returns the job id.
+        """Submits the job to the queue and returns the job id.
 
         Args:
             script_file: (str) name of the script file to use (String)
@@ -166,8 +158,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
 
     @abc.abstractmethod
     def get_njobs_in_queue(self, username=None):
-        """
-        Returns the number of jobs currently in the queue for the user.
+        """Returns the number of jobs currently in the queue for the user.
 
         Args:
             username (str): the username of the jobs to count (default is to autodetect)
@@ -187,8 +178,7 @@ class QueueAdapterBase(collections.defaultdict, FWSerializable):
     def get_qlogger(self, name):
         if "logdir" in self:
             return get_fw_logger(name, self["logdir"])
-        else:
-            return get_fw_logger(name, stream_level="CRITICAL")
+        return get_fw_logger(name, stream_level="CRITICAL")
 
 
 class QScriptTemplate(string.Template):

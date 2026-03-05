@@ -2,18 +2,7 @@ import json
 import os
 from functools import wraps
 
-from flask import (
-    Flask,
-    Response,
-    abort,
-    flash,
-    make_response,
-    redirect,
-    render_template,
-    request,
-    session,
-    url_for,
-)
+from flask import Flask, Response, abort, flash, make_response, redirect, render_template, request, session, url_for
 from flask_paginate import Pagination
 from pymongo import DESCENDING
 
@@ -40,8 +29,7 @@ STATES = sorted(Firework.STATE_RANKS, key=Firework.STATE_RANKS.get)
 
 
 def check_auth(username, password):
-    """
-    This function is called to check if a username /
+    """This function is called to check if a username /
     password combination is valid.
     """
     AUTH_USER = app.config.get("WEBGUI_USERNAME")
@@ -53,7 +41,7 @@ def check_auth(username, password):
 
 
 def authenticate():
-    """Sends a 401 response that enables basic auth"""
+    """Sends a 401 response that enables basic auth."""
     return Response(
         "Could not verify your access level for that URL. You have to login with proper credentials",
         401,
@@ -90,8 +78,10 @@ def _addq_WF(q):
 @app.template_filter("datetime")
 def datetime(value):
     import datetime as dt
-
-    date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
+    try:
+        date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z")
+    except ValueError: #backwards comptability
+        date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
     return date.strftime("%m/%d/%Y")
 
 
@@ -99,8 +89,7 @@ def datetime(value):
 def pluralize(number, singular="", plural="s"):
     if number == 1:
         return singular
-    else:
-        return plural
+    return plural
 
 
 @app.route("/")
@@ -108,8 +97,8 @@ def pluralize(number, singular="", plural="s"):
 def home():
     fw_querystr = request.args.get("fw_query")
     wf_querystr = request.args.get("wf_query")
-    fw_querystr = fw_querystr if fw_querystr else ""
-    wf_querystr = wf_querystr if wf_querystr else ""
+    fw_querystr = fw_querystr or ""
+    wf_querystr = wf_querystr or ""
 
     session["fw_filt"] = parse_querystr(fw_querystr, app.lp.fireworks) if fw_querystr else {}
     session["wf_filt"] = parse_querystr(wf_querystr, app.lp.workflows) if wf_querystr else {}
@@ -119,30 +108,29 @@ def home():
     for state in STATES:
         fw_nums.append(app.lp.get_fw_ids(query=_addq_FW({"state": state}), count_only=True))
         wf_nums.append(app.lp.get_wf_ids(query=_addq_WF({"state": state}), count_only=True))
-    state_nums = zip(STATES, fw_nums, wf_nums)
+    state_nums = zip(STATES, fw_nums, wf_nums, strict=True)
 
     tot_fws = sum(fw_nums)
     tot_wfs = sum(wf_nums)
 
     # Newest Workflows table data
     wfs_shown = app.lp.workflows.find(_addq_WF({}), limit=PER_PAGE, sort=[("_id", DESCENDING)])
-    wf_info = []
-    for item in wfs_shown:
-        wf_info.append(
-            {
-                "id": item["nodes"][0],
-                "name": item["name"],
-                "state": item["state"],
-                "fireworks": list(
-                    app.lp.fireworks.find(
-                        {"fw_id": {"$in": item["nodes"]}},
-                        limit=PER_PAGE,
-                        sort=[("fw_id", DESCENDING)],
-                        projection=["state", "name", "fw_id"],
-                    )
-                ),
-            }
-        )
+    wf_info = [
+        {
+            "id": item["nodes"][0],
+            "name": item["name"],
+            "state": item["state"],
+            "fireworks": list(
+                app.lp.fireworks.find(
+                    {"fw_id": {"$in": item["nodes"]}},
+                    limit=PER_PAGE,
+                    sort=[("fw_id", DESCENDING)],
+                    projection=["state", "name", "fw_id"],
+                )
+            ),
+        }
+        for item in wfs_shown
+    ]
 
     PLOTTING = False
     try:
@@ -156,11 +144,13 @@ def home():
 @app.route("/fw/<int:fw_id>/details")
 @requires_auth
 def get_fw_details(fw_id):
-    # just fill out whatever attributse you want to see per step, then edit the handlebars template in
+    # just fill out whatever attributes you want to see per step, then edit the handlebars template in
     # wf_details.html
     # to control their display
     fw = app.lp.get_fw_dict_by_id(fw_id)
     for launch in fw["launches"]:
+        launch.pop("_id", None)
+    for launch in fw["archived_launches"]:
         del launch["_id"]
     del fw["_id"]
     return jsonify(fw)
@@ -172,7 +162,7 @@ def fw_details(fw_id):
     try:
         int(fw_id)
     except Exception:
-        raise ValueError(f"Invalid fw_id: {fw_id}")
+        raise ValueError(f"Invalid {fw_id=}")
     fw = app.lp.get_fw_dict_by_id(fw_id)
     fw = json.loads(json.dumps(fw, default=DATETIME_HANDLER))  # formats ObjectIds
     return render_template("fw_details.html", **locals())
@@ -231,7 +221,7 @@ def fw_state(state, sorting_key="_id", sorting_order="DESCENDING"):
     elif sorting_order == "DESCENDING":
         sort_order = -1
     else:
-        raise RuntimeError()
+        raise RuntimeError
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
     db = app.lp.fireworks
@@ -263,7 +253,7 @@ def wf_state(state, sorting_key="_id", sorting_order="DESCENDING"):
     elif sorting_order == "DESCENDING":
         sort_order = -1
     else:
-        raise RuntimeError()
+        raise RuntimeError
     current_sorting_key = sorting_key
     current_sorting_order = sorting_order
     db = app.lp.workflows
@@ -297,21 +287,21 @@ def wf_metadata_find(key, value, state):
     wf_count = app.lp.get_wf_ids(query=q, count_only=True)
     if wf_count == 0:
         abort(404)
-    elif wf_count == 1:
+        return None
+    if wf_count == 1:
         doc = db.find_one(q, {"nodes": 1, "_id": 0})
         fw_id = doc["nodes"][0]
         return redirect(url_for("wf_details", wf_id=fw_id))
-    else:
-        try:
-            page = int(request.args.get("page", 1))
-        except ValueError:
-            page = 1
-        rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
-        for r in rows:
-            r["fw_id"] = r["nodes"][0]
-        pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
-        all_states = STATES
-        return render_template("wf_metadata.html", **locals())
+    try:
+        page = int(request.args.get("page", 1))
+    except ValueError:
+        page = 1
+    rows = list(db.find(q).sort([("_id", DESCENDING)]).skip(page - 1).limit(PER_PAGE))
+    for r in rows:
+        r["fw_id"] = r["nodes"][0]
+    pagination = Pagination(page=page, total=wf_count, record_name="workflows", per_page=PER_PAGE)
+    all_states = STATES
+    return render_template("wf_metadata.html", **locals())
 
 
 @app.route("/report/", defaults={"interval": "months", "num_intervals": 6})

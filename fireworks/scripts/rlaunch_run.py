@@ -1,26 +1,30 @@
-"""
-A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)
-"""
+"""A runnable script to launch a single Rocket (a command-line interface to rocket_launcher.py)."""
+
+from __future__ import annotations
 
 import os
 import signal
 import sys
 from argparse import ArgumentParser
-from typing import Optional, Sequence
+from importlib import metadata
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
 from fireworks.core.rocket_launcher import launch_rocket, rapidfire
 from fireworks.features.multi_launcher import launch_multiprocess
-from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, STREAM_LOGLEVEL
 from fireworks.utilities.fw_utilities import get_fw_logger, get_my_host, get_my_ip
 
 from ._helpers import _validate_config_file_paths
 
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
+if TYPE_CHECKING:
+    from collections.abc import Sequence
+
+try:
+    import argcomplete
+except ImportError:
+    argcomplete = None
 
 __author__ = "Anubhav Jain"
 __credits__ = "Xiaohui Qu, Shyam Dwaraknath"
@@ -30,12 +34,26 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Feb 7, 2013"
 
 
-def handle_interrupt(signum, frame):
+def handle_interrupt(signum, _frame) -> None:
+    """Handle interrupt signal and exit gracefully.
+
+    Args:
+        signum: Signal number
+        _frame: Frame object (unused)
+    """
     sys.stderr.write(f"Interrupted by signal {signum:d}\n")
     sys.exit(1)
 
 
-def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def rlaunch(argv: Sequence[str] | None = None) -> int:
+    """Launch one or more Rockets.
+
+    Args:
+        argv: Command line arguments (optional, defaults to sys.argv)
+
+    Returns:
+        int: Exit code (0 for success)
+    """
     m_description = (
         "This program launches one or more Rockets. A Rocket retrieves a job from the "
         'central database and runs it. The "single-shot" option launches a single Rocket, '
@@ -59,7 +77,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     single_parser.add_argument("--pdb", help="shortcut to invoke debugger on error", action="store_true")
 
     rapid_parser.add_argument(
-        "--nlaunches", help='num_launches (int or "infinite"; ' "default 0 is all jobs in DB)", default=0
+        "--nlaunches", help='num_launches (int or "infinite"; default 0 is all jobs in DB)', default=0
     )
     rapid_parser.add_argument(
         "--timeout", help="timeout (secs) after which to quit (default None)", default=None, type=int
@@ -78,9 +96,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     multi_parser.add_argument("num_jobs", help="the number of jobs to run in parallel", type=int)
     multi_parser.add_argument(
         "--nlaunches",
-        help="number of FireWorks to run in series per "
-        'parallel job (int or "infinite"; default 0 is '
-        "all jobs in DB)",
+        help='number of FireWorks to run in series per parallel job (int or "infinite"; default 0 is all jobs in DB)',
         default=0,
     )
     multi_parser.add_argument(
@@ -91,9 +107,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     )
     multi_parser.add_argument(
         "--nodefile",
-        help="nodefile name or environment variable name "
-        "containing the node file name (for populating"
-        " FWData only)",
+        help="nodefile name or environment variable name containing the node file name (for populating FWData only)",
         default=None,
         type=str,
     )
@@ -103,6 +117,12 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
     )
     multi_parser.add_argument(
         "--local_redirect", help="Redirect stdout and stderr to the launch directory", action="store_true"
+    )
+    multi_parser.add_argument(
+        "--max_loops",
+        help="after this many sleep loops, quit even in infinite nlaunches mode (default -1 is infinite loops)",
+        default=-1,
+        type=int,
     )
 
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
@@ -114,7 +134,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
         default=CONFIG_FILE_DIR,
     )
 
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
     parser.add_argument("--json", help="Pass launchpad and worker files as json-formatted string", action="store_true")
@@ -127,8 +147,6 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
         # argcomplete, activate global completion, or add
         #      eval "$(register-python-argcomplete rlaunch)"
         # into your .bash_profile or .bashrc
-    except ImportError:
-        pass
 
     args = parser.parse_args(argv)
 
@@ -161,7 +179,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
         fworker = FWorker()
 
     # prime addr lookups
-    _log = get_fw_logger("rlaunch", stream_level="INFO")
+    _log = get_fw_logger("rlaunch", stream_level=STREAM_LOGLEVEL)
     _log.info("Hostname/IP lookup (this will take a few seconds)")
     get_my_host()
     get_my_ip()
@@ -184,7 +202,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
             if args.nodefile in os.environ:
                 args.nodefile = os.environ[args.nodefile]
             with open(args.nodefile) as f:
-                total_node_list = [line.strip() for line in f.readlines()]
+                total_node_list = [line.strip() for line in f]
         launch_multiprocess(
             launchpad,
             fworker,
@@ -197,6 +215,7 @@ def rlaunch(argv: Optional[Sequence[str]] = None) -> int:
             timeout=args.timeout,
             exclude_current_node=args.exclude_current_node,
             local_redirect=args.local_redirect,
+            max_loops=args.max_loops,
         )
     else:
         launch_rocket(launchpad, fworker, args.fw_id, args.loglvl, pdb_on_exception=args.pdb)

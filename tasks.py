@@ -3,17 +3,12 @@
 
 import json
 import os
-import sys
 import webbrowser
+from importlib import metadata
 
 import requests
 from invoke import task
 from monty.os import cd
-
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
 
 """
 Deployment file to facilitate releases.
@@ -26,7 +21,7 @@ fw_version = f"v{metadata.version('fireworks')}"
 
 
 @task
-def make_doc(ctx):
+def make_doc(ctx) -> None:
     with cd("docs_rst"):
         ctx.run("sphinx-apidoc -o . -f ../fireworks")
         ctx.run("make html")
@@ -41,7 +36,7 @@ def make_doc(ctx):
 
 
 @task
-def update_doc(ctx):
+def update_doc(ctx) -> None:
     make_doc(ctx)
     with cd("docs"):
         ctx.run("git add .")
@@ -50,12 +45,25 @@ def update_doc(ctx):
 
 
 @task
-def publish(ctx):
-    ctx.run("python setup.py release")
+def publish(ctx) -> None:
+    """
+    Build and publish the package to PyPI.
+    """
+    # Clean up previous build artifacts
+    ctx.run("rm -rf dist/ build/ *.egg-info")
+
+    # Build source and wheel distributions
+    ctx.run("python -m build")
+
+    # Upload to PyPI using twine
+    ctx.run("twine upload dist/*")
 
 
 @task
-def release_github(ctx):
+def release_github(_ctx) -> None:
+    """
+    Create a new release on GitHub.
+    """
     payload = {
         "tag_name": fw_version,
         "target_commitish": "master",
@@ -76,13 +84,22 @@ def release_github(ctx):
 
 
 @task
-def release(ctx):
+def release(ctx) -> None:
+    """
+    Full release process:
+    - Publish the package to PyPI.
+    - Update the documentation.
+    - Create a GitHub release.
+    """
     publish(ctx)
     update_doc(ctx)
     release_github(ctx)
 
 
 @task
-def open_doc(ctx):
+def open_doc(_ctx) -> None:
+    """
+    Open the local documentation in a web browser.
+    """
     pth = os.path.abspath("docs/index.html")
     webbrowser.open("file://" + pth)

@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Creating Workflows &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Creating Workflows &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Dynamic Workflows" href="dynamic_wf_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="firetask_tutorial.html" title="Defining Jobs using Firetasks"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Creating Workflows</a></li> 
       </ul>
     </div>  
@@ -46,18 +44,19 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="creating-workflows">
-<h1>Creating Workflows<a class="headerlink" href="#creating-workflows" title="Permalink to this headline">¶</a></h1>
+  <section id="creating-workflows">
+<h1>Creating Workflows<a class="headerlink" href="#creating-workflows" title="Link to this heading">¶</a></h1>
 <p>In this tutorial, we’ll explore how to:</p>
 <ul class="simple">
 <li><p>connect together multiple FireWorks into Workflows</p></li>
 </ul>
 <p>This tutorial can be completed from the command line. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you’ve set one up.</p>
-<div class="section" id="the-simplest-workflow">
-<h2>The simplest workflow<a class="headerlink" href="#the-simplest-workflow" title="Permalink to this headline">¶</a></h2>
+<section id="the-simplest-workflow">
+<h2>The simplest workflow<a class="headerlink" href="#the-simplest-workflow" title="Link to this heading">¶</a></h2>
 <p>The simplest workflow consists of two jobs without any data dependency between them. The only constraint is that the second job should be executed after the first.</p>
 <p>For example, we might want print the first two lines of Hamlet’s soliloquy to the standard out (e.g., your Terminal window). We can represent the workflow with the following diagram:</p>
-<a class="reference internal image-reference" href="_images/hamlet_wf.png"><img alt="Hamlet WF" class="align-center" src="_images/hamlet_wf.png" style="width: 200px;" /></a>
+<a class="reference internal image-reference" href="_images/hamlet_wf.png"><img alt="Hamlet WF" class="align-center" src="_images/hamlet_wf.png" style="width: 200px;" />
+</a>
 <p>Basically, we just want to ensure that <em>“To be, or not to be,”</em> is printed out before <em>“that is the question:”</em>. Let’s define and execute this workflow.</p>
 <ol class="arabic">
 <li><p>Move to the <code class="docutils literal notranslate"><span class="pre">workflow</span></code> tutorial directory in your fireworks repository:</p>
@@ -126,11 +125,12 @@
 <p class="admonition-title">Note</p>
 <p>Shakespeare purists will undoubtedly notice that I have mangled the first line of this soliloquy by splitting it into two lines. But at least we printed them in the correct order!</p>
 </div>
-</div>
-<div class="section" id="a-diamond-workflow">
-<h2>A Diamond Workflow<a class="headerlink" href="#a-diamond-workflow" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="a-diamond-workflow">
+<h2>A Diamond Workflow<a class="headerlink" href="#a-diamond-workflow" title="Link to this heading">¶</a></h2>
 <p>Let’s continue with a very similar example, but make the workflow a little more intricate. We will now print the org chart of a company. Of course, CEOs should be printed before managers, and managers before interns:</p>
-<a class="reference internal image-reference" href="_images/org_wf.png"><img alt="Org chart WF" class="align-center" src="_images/org_wf.png" style="width: 400px;" /></a>
+<a class="reference internal image-reference" href="_images/org_wf.png"><img alt="Org chart WF" class="align-center" src="_images/org_wf.png" style="width: 400px;" />
+</a>
 <p>Let’s quickly define and execute this workflow.</p>
 <ol class="arabic">
 <li><p>Stay in the same <code class="docutils literal notranslate"><span class="pre">workflow</span></code> tutorial directory in your fireworks repository and clean it up:</p>
@@ -161,11 +161,11 @@
 </div>
 </li>
 </ol>
-<div class="section" id="python-example-optional">
-<h3>Python example (optional)<a class="headerlink" href="#python-example-optional" title="Permalink to this headline">¶</a></h3>
+<section id="python-example-optional">
+<h3>Python example (optional)<a class="headerlink" href="#python-example-optional" title="Link to this heading">¶</a></h3>
 <p>Here is a complete Python example that runs a Workflow:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
-<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="kn">import</span> <span class="n">rapidfire</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">Workflow</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.core.rocket_launcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">rapidfire</span>
 
 <span class="c1"># set up the LaunchPad and reset it</span>
 <span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
@@ -190,24 +190,25 @@
 <span class="n">rapidfire</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="next-steps">
-<h2>Next steps<a class="headerlink" href="#next-steps" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">¶</a></h2>
 <p>Neither our <em>Hamlet</em> workflow nor our diamond workflow were particularly interesting; you could have achieved the same result by <a class="reference internal" href="firetask_tutorial.html"><span class="doc">running multiple Firetasks within a single Firework</span></a>. Indeed, the single-Firework solution with multiple Firetasks is conceptually much simpler than defining workflows. The design choice of using Firetasks versus a Workflow in such scenarios is discussed another tutorial. For example, you might want to use a Workflow if each step requires a different type of computing resource.</p>
 <p>Meanwhile, you can continue on to the last step of this tutorial series, which better illustrates the power of workflows: <a class="reference internal" href="dynamic_wf_tutorial.html"><span class="doc">Dynamic workflows</span></a>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Creating Workflows</a><ul>
 <li><a class="reference internal" href="#the-simplest-workflow">The simplest workflow</a></li>
 <li><a class="reference internal" href="#a-diamond-workflow">A Diamond Workflow</a><ul>
@@ -219,12 +220,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="firetask_tutorial.html"
-                        title="previous chapter">Defining Jobs using Firetasks</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="dynamic_wf_tutorial.html"
-                        title="next chapter">Dynamic Workflows</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="firetask_tutorial.html"
+                          title="previous chapter">Defining Jobs using Firetasks</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="dynamic_wf_tutorial.html"
+                          title="next chapter">Dynamic Workflows</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -232,21 +238,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -261,14 +267,14 @@
         <li class="right" >
           <a href="firetask_tutorial.html" title="Defining Jobs using Firetasks"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Creating Workflows</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

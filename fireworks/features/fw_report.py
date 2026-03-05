@@ -1,5 +1,6 @@
-from datetime import datetime
-from typing import List
+from __future__ import annotations
+
+import datetime
 
 from dateutil.relativedelta import relativedelta
 
@@ -24,16 +25,15 @@ state_to_color = {
 
 
 class FWReport:
-    def __init__(self, lpad):
+    def __init__(self, lpad) -> None:
         """
         Args:
-        lpad (LaunchPad)
+            lpad (LaunchPad).
         """
         self.db = lpad.db
 
     def get_stats(self, coll="fireworks", interval="days", num_intervals=5, additional_query=None):
-        """
-        Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>,
+        """Compile statistics of completed Fireworks/Workflows for past <num_intervals> <interval>,
         e.g. past 5 days.
 
         Args:
@@ -45,17 +45,16 @@ class FWReport:
         Returns:
             list, with each item being a dictionary of statistics for a given interval
         """
-
         # confirm interval
-        if interval not in DATE_KEYS.keys():
-            raise ValueError(f"Specified interval ({interval}) is not in list of allowed intervals({DATE_KEYS.keys()})")
+        if interval not in DATE_KEYS:
+            raise ValueError(f"Specified interval ({interval}) is not in list of allowed intervals({[*DATE_KEYS]})")
         # used for querying later
         date_key_idx = DATE_KEYS[interval]
 
         # initialize collection
         if coll.lower() in ["fws", "fireworks"]:
             coll = "fireworks"
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             coll = "launches"
         elif coll.lower() in ["wflows", "workflows"]:
             coll = "workflows"
@@ -63,42 +62,40 @@ class FWReport:
             raise ValueError("Unrecognized collection!")
 
         # whether the collection uses String or Date time dates
-        string_type_dates = True if coll in ["fireworks", "launches"] else False
+        string_type_dates = coll in ["fireworks", "launches"]
         time_field = "updated_on" if coll in ["fireworks", "workflows"] else "time_end"
 
         coll = self.db[coll]
 
         pipeline = []
-        match_q = additional_query if additional_query else {}
+        match_q = additional_query or {}
         if num_intervals:
-            now_time = datetime.utcnow()
+            now_time = datetime.datetime.now(datetime.timezone.utc)
             start_time = now_time - relativedelta(**{interval: num_intervals})
             date_q = {"$gte": start_time.isoformat()} if string_type_dates else {"$gte": start_time}
             match_q.update({time_field: date_q})
 
-        pipeline.append({"$match": match_q})
-        pipeline.append(
-            {"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}}
+        pipeline.extend(
+            (
+                {"$match": match_q},
+                {"$project": {"state": 1, "_id": 0, "date_key": {"$substr": ["$" + time_field, 0, date_key_idx]}}},
+                {
+                    "$group": {
+                        "_id": {"state:": "$state", "date_key": "$date_key"},
+                        "count": {"$sum": 1},
+                        "state": {"$first": "$state"},
+                    }
+                },
+                {
+                    "$group": {
+                        "_id": {"_id_date_key": "$_id.date_key"},
+                        "date_key": {"$first": "$_id.date_key"},
+                        "states": {"$push": {"count": "$count", "state": "$state"}},
+                    }
+                },
+                {"$sort": {"date_key": -1}},
+            )
         )
-        pipeline.append(
-            {
-                "$group": {
-                    "_id": {"state:": "$state", "date_key": "$date_key"},
-                    "count": {"$sum": 1},
-                    "state": {"$first": "$state"},
-                }
-            }
-        )
-        pipeline.append(
-            {
-                "$group": {
-                    "_id": {"_id_date_key": "$_id.date_key"},
-                    "date_key": {"$first": "$_id.date_key"},
-                    "states": {"$push": {"count": "$count", "state": "$state"}},
-                }
-            }
-        )
-        pipeline.append({"$sort": {"date_key": -1}})
 
         # add in missing states and more fields
         decorated_list = []
@@ -133,8 +130,7 @@ class FWReport:
         return decorated_list
 
     def plot_stats(self, coll="fireworks", interval="days", num_intervals=5, states=None, style="bar", **kwargs):
-        """
-        Makes a chart with the summary data
+        """Makes a chart with the summary data.
 
         Args:
             coll (str): collection, either "fireworks", "workflows", or "launches"
@@ -148,7 +144,7 @@ class FWReport:
             matplotlib plot module
         """
         results = self.get_stats(coll, interval, num_intervals, **kwargs)
-        states = states or state_to_color.keys()
+        states = states or [*state_to_color]
 
         from matplotlib.figure import Figure
         from matplotlib.ticker import MaxNLocator
@@ -166,11 +162,11 @@ class FWReport:
                     ax.fill_between(
                         range(len(bottom)),
                         bottom,
-                        [x + y for x, y in zip(bottom, data[state])],
+                        [x + y for x, y in zip(bottom, data[state], strict=True)],
                         color=state_to_color[state],
                         label=state,
                     )
-                bottom = [x + y for x, y in zip(bottom, data[state])]
+                bottom = [x + y for x, y in zip(bottom, data[state], strict=True)]
 
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.xaxis.set_major_locator(MaxNLocator(integer=True))
@@ -184,9 +180,8 @@ class FWReport:
         return fig
 
     @staticmethod
-    def get_stats_str(decorated_stat_list: List[dict]) -> str:
-        """
-        Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
+    def get_stats_str(decorated_stat_list: list[dict]) -> str:
+        """Convert the list of stats from FWReport.get_stats() to a string representation for viewing.
 
         Args:
             decorated_stat_list (list[dict]): List of completed/failed/... statistics for

@@ -1,3 +1,5 @@
+"""Helper functions to update the FireWorks database. Should be used infrequently and with caution."""
+
 import datetime
 
 from bson.json_util import dumps, loads
@@ -8,9 +10,8 @@ __email__ = "alireza.faghaninia@gmail.com, ajain@lbl.gov"
 __date__ = "Dec 08, 2016"
 
 
-def update_launchpad_data(lp, replacements, **kwargs):
-    """
-    If you want to update a text string in your entire FireWorks database with a replacement, use this method.
+def update_launchpad_data(lp, replacements, **kwargs) -> None:
+    """If you want to update a text string in your entire FireWorks database with a replacement, use this method.
     For example, you might want to update a directory name preamble like "/scratch/user1" to "/project/user2".
     The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
     the database with extension "_xiv_{Date}".
@@ -26,9 +27,8 @@ def update_launchpad_data(lp, replacements, **kwargs):
     print("Update launchpad data complete.")
 
 
-def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=False, force_clear=False):
-    """
-    updates the text specified in replacements for the documents in a MongoDB collection.
+def update_path_in_collection(db, collection_name, replacements, query=None, dry_run=False, force_clear=False) -> None:
+    """Updates the text specified in replacements for the documents in a MongoDB collection.
     This can be used to mass-update an outdated value (e.g., a directory path or tag) in that collection.
     The algorithm does a text replacement over the *entire* BSON document. The original collection is backed up within
     the database with extension "_xiv_{Date}".
@@ -44,7 +44,6 @@ def update_path_in_collection(db, collection_name, replacements, query=None, dry
     Returns:
          None, but if dry_run==False it replaces the collection with the updated one
     """
-
     extension_name = "_tmp_refactor"
     tmp_collname = f"{collection_name}{extension_name}"
 

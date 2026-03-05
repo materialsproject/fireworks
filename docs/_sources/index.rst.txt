@@ -115,6 +115,14 @@ To get a first glimpse of FireWorks, we suggest that you follow our installation
    installation
    quickstart
 
+Quickstart (tutorial mode)
+==========================
+
+.. toctree::
+   :maxdepth: 1
+
+   quickstart_tutorial
+
 Basic usage
 ===========
 

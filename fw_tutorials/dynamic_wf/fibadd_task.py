@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from fireworks.core.firework import FiretaskBase, Firework, FWAction
 
 __author__ = "Anubhav Jain"
@@ -10,7 +8,6 @@ __date__ = "Feb 25, 2013"
 
 
 class FibonacciAdderTask(FiretaskBase):
-
     _fw_name = "Fibonacci Adder Task"
 
     def run_task(self, fw_spec):
@@ -25,6 +22,5 @@ class FibonacciAdderTask(FiretaskBase):
             new_fw = Firework(FibonacciAdderTask(), {"smaller": larger, "larger": m_sum, "stop_point": stop_point})
             return FWAction(stored_data={"next_fibnum": m_sum}, additions=new_fw)
 
-        else:
-            print(f"We have now exceeded our limit; (the next Fibonacci number would have been: {m_sum})")
-            return FWAction()
+        print(f"We have now exceeded our limit; (the next Fibonacci number would have been: {m_sum})")
+        return FWAction()

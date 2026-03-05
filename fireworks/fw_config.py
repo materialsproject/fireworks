@@ -1,10 +1,12 @@
-"""
-A set of global constants for FireWorks (Python code as a config file).
-"""
+"""A set of global constants for FireWorks (Python code as a config file)."""
 
+from __future__ import annotations
+
+import importlib
 import os
-from typing import Any, Dict
+from typing import Any
 
+import pymongo
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
 
@@ -43,7 +45,7 @@ PRINT_FW_JSON = True
 PRINT_FW_YAML = False
 
 JSON_SCHEMA_VALIDATE = False
-JSON_SCHEMA_VALIDATE_LIST = None
+JSON_SCHEMA_VALIDATE_LIST = []
 
 PING_TIME_SECS = 3600  # while Running a job, how often to ping back the server that we're still alive
 RUN_EXPIRATION_SECS = PING_TIME_SECS * 4  # mark job as FIZZLED if not pinged in this time
@@ -64,6 +66,7 @@ QUEUEADAPTER_LOC = None  # where to find the my_qadapter.yaml file
 
 CONFIG_FILE_DIR = "."  # directory containing config files (if not individually set)
 
+STREAM_LOGLEVEL = "INFO"  # the default streaming log level used for various loggers
 ROCKET_STREAM_LOGLEVEL = "INFO"  # the streaming log level of the rocket.launcher logger
 
 QSTAT_FREQUENCY = 50  # set this higher to avoid qstats, lower to always
@@ -103,6 +106,12 @@ MONGO_SOCKET_TIMEOUT_MS = 5 * 60 * 1000
 # name of the collection that will be used to store information in case the size of
 # a dynamically generated document exceeds the 16MB limit. Functionality disabled if None.
 GRIDFS_FALLBACK_COLLECTION = "fw_gridfs"
+
+# path to a database file to use with mongomock, do not use mongomock if None
+MONGOMOCK_SERVERSTORE_FILE = None
+
+# default mongoclient class
+MongoClient = pymongo.MongoClient
 
 
 def override_user_settings() -> None:
@@ -155,19 +164,33 @@ def override_user_settings() -> None:
             if len(m_paths) > 0:
                 globals()[k] = m_paths[0]
 
+    if "MONGOMOCK_SERVERSTORE_FILE" in os.environ:
+        globals()["MONGOMOCK_SERVERSTORE_FILE"] = os.environ["MONGOMOCK_SERVERSTORE_FILE"]
+    if globals()["MONGOMOCK_SERVERSTORE_FILE"]:
+        try:
+            mongomock_persistence = importlib.import_module("mongomock_persistence")
+            mongomock_gridfs = importlib.import_module("mongomock.gridfs")
+        except (ModuleNotFoundError, ImportError) as err:
+            msg = (
+                "\nTo use mongomock instead of mongodb the extra mongomock must"
+                " be installed, for example like this:\npip install fireworks[mongomock]"
+            )
+            raise RuntimeError(msg) from err
+        if not os.environ.get("MONGOMOCK_SERVERSTORE_FILE"):
+            os.environ["MONGOMOCK_SERVERSTORE_FILE"] = globals()["MONGOMOCK_SERVERSTORE_FILE"]
+        globals()["MongoClient"] = mongomock_persistence.MongoClient
+        if globals()["GRIDFS_FALLBACK_COLLECTION"]:
+            mongomock_gridfs.enable_gridfs_integration()
+
 
 override_user_settings()
 
 
-def config_to_dict() -> Dict[str, Any]:
-    d = {}
-    for k, v in globals().items():
-        if k.upper() == k and k != "NEGATIVE_FWID_CTR":
-            d[k] = v
-    return d
+def config_to_dict() -> dict[str, Any]:
+    return {k: v for k, v in globals().items() if k.upper() == k and k != "NEGATIVE_FWID_CTR"}
 
 
-def write_config(path: str = None) -> None:
+def write_config(path: str | None = None) -> None:
     if path is None:
         path = os.path.join(os.path.expanduser("~"), ".fireworks", "FW_config.yaml")
     dumpfn(config_to_dict(), path)
@@ -175,11 +198,9 @@ def write_config(path: str = None) -> None:
 
 @singleton
 class FWData:
-    """
-    This class stores data that a Firetask might want to access, e.g. to see the runtime params
-    """
+    """This class stores data that a Firetask might want to access, e.g. to see the runtime params."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.MULTIPROCESSING = None  # default single process framework
         self.NODE_LIST = None  # the node list for sub jobs
         self.SUB_NPROCS = None  # the number of process of the sub job

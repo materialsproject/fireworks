@@ -1,5 +1,4 @@
-"""
-This module allows you to modify a dict (a spec) using another dict (an instruction).
+"""This module allows you to modify a dict (a spec) using another dict (an instruction).
 The main method of interest is apply_dictmod().
 
 This code is based heavily on the Ansible class of custodian <https://pypi.python.org/pypi/custodian>,
@@ -7,6 +6,7 @@ but simplifies it considerably for the limited use cases required by FireWorks.
 """
 
 import re
+from typing import Any
 
 from monty.design_patterns import singleton
 
@@ -19,6 +19,7 @@ __date__ = "Jun 1, 2012"
 
 
 def get_nested_dict(input_dict, key):
+    """Get a nested dictionary value using arrow notation (e.g., 'key1->key2')."""
     current = input_dict
     toks = key.split("->")
     n = len(toks)
@@ -28,29 +29,27 @@ def get_nested_dict(input_dict, key):
         elif i == n - 1:
             return current, toks[-1]
         current = current[tok]
+    return None
 
 
-def arrow_to_dot(input_dict):
-    """
-    Converts arrows ('->') in dict keys to dots '.' recursively.
-    Allows for storing MongoDB neseted document queries in MongoDB.
+def arrow_to_dot(input_dict: dict[str, Any]) -> dict[str, Any]:
+    """Converts arrows ('->') in dict keys to dots '.' recursively.
+    Allows for storing MongoDB nested document queries in MongoDB.
 
     Args:
-      input_dict (dict)
+      input_dict (dict): Data to convert.
 
     Returns:
       dict
     """
     if not isinstance(input_dict, dict):
         return input_dict
-    else:
-        return {k.replace("->", "."): arrow_to_dot(v) for k, v in input_dict.items()}
+    return {k.replace("->", "."): arrow_to_dot(v) for k, v in input_dict.items()}
 
 
 @singleton
 class DictMods:
-    """
-    Class to implement the supported mongo-like modifications on a dict.
+    """Class to implement the supported mongo-like modifications on a dict.
     Supported keywords include the following Mongo-based keywords, with the
     usual meanings (refer to Mongo documentation for information):
         _inc
@@ -62,7 +61,7 @@ class DictMods:
         _pop
         _pull
         _pull_all
-        _rename
+        _rename.
 
     However, note that "_set" does not support modification of nested dicts
     using the mongo {"a.b":1} notation. This is because mongo does not allow
@@ -70,26 +69,26 @@ class DictMods:
     supported using a special "->" keyword, e.g. {"a->b": 1}
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.supported_actions = {}
         for i in dir(self):
             if (not re.match(r"__\w+__", i)) and callable(getattr(self, i)):
                 self.supported_actions["_" + i] = getattr(self, i)
 
     @staticmethod
-    def set(input_dict, settings):
+    def set(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             d[key] = v
 
     @staticmethod
-    def unset(input_dict, settings):
-        for k in settings.keys():
+    def unset(input_dict, settings) -> None:
+        for k in settings:
             (d, key) = get_nested_dict(input_dict, k)
             del d[key]
 
     @staticmethod
-    def push(input_dict, settings):
+    def push(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d:
@@ -98,7 +97,7 @@ class DictMods:
                 d[key] = [v]
 
     @staticmethod
-    def push_all(input_dict, settings):
+    def push_all(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d:
@@ -107,7 +106,7 @@ class DictMods:
                 d[key] = v
 
     @staticmethod
-    def inc(input_dict, settings):
+    def inc(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d:
@@ -116,14 +115,14 @@ class DictMods:
                 d[key] = v
 
     @staticmethod
-    def rename(input_dict, settings):
+    def rename(input_dict, settings) -> None:
         for k, v in settings.items():
             if k in input_dict:
                 input_dict[v] = input_dict[k]
                 del input_dict[k]
 
     @staticmethod
-    def add_to_set(input_dict, settings):
+    def add_to_set(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
@@ -134,7 +133,7 @@ class DictMods:
                 d[key] = v
 
     @staticmethod
-    def pull(input_dict, settings):
+    def pull(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
@@ -143,7 +142,7 @@ class DictMods:
                 d[key] = [i for i in d[key] if i != v]
 
     @staticmethod
-    def pull_all(input_dict, settings):
+    def pull_all(input_dict, settings) -> None:
         for k, v in settings.items():
             if k in input_dict and (not isinstance(input_dict[k], (list, tuple))):
                 raise ValueError(f"Keyword {k} does not refer to an array.")
@@ -151,7 +150,7 @@ class DictMods:
                 DictMods.pull(input_dict, {k: i})
 
     @staticmethod
-    def pop(input_dict, settings):
+    def pop(input_dict, settings) -> None:
         for k, v in settings.items():
             (d, key) = get_nested_dict(input_dict, k)
             if key in d and (not isinstance(d[key], (list, tuple))):
@@ -162,9 +161,8 @@ class DictMods:
                 d[key].pop(0)
 
 
-def apply_mod(modification, obj):
-    """
-    Note that modify makes actual in-place modifications. It does not
+def apply_mod(modification, obj) -> None:
+    """Note that modify makes actual in-place modifications. It does not
     return a copy.
 
     Args:

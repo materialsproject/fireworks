@@ -1,8 +1,8 @@
 import os
 from argparse import Namespace
-from typing import Sequence, Tuple, Union
+from collections.abc import Sequence
 
-cfg_file_vldtor = Tuple[str, str, bool, Union[str, None]]
+cfg_file_vldtor = tuple[str, str, bool, str | None]
 
 
 def _validate_config_file_paths(args: Namespace, cfg_files_to_validate: Sequence[cfg_file_vldtor]) -> None:
@@ -18,7 +18,6 @@ def _validate_config_file_paths(args: Namespace, cfg_files_to_validate: Sequence
         FileNotFoundError: If a config file is provided but does not exist.
     """
     for filename, cli_flag, required, default_loc in cfg_files_to_validate:
-
         attr_name = f"{filename}_file"
         file_path = getattr(args, attr_name)
 

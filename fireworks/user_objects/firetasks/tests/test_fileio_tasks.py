@@ -7,6 +7,8 @@ __date__ = "1/6/14"
 import os
 import unittest
 
+import pytest
+
 from fireworks.user_objects.firetasks.fileio_tasks import (
     ArchiveDirTask,
     CompressDirTask,
@@ -19,48 +21,45 @@ module_dir = os.path.abspath(os.path.dirname(__file__))
 
 
 class FileWriteDeleteTest(unittest.TestCase):
-    def test_init(self):
-        t = FileWriteTask(files_to_write="hello")
-        t = FileWriteTask({"files_to_write": "hello"})
-        self.assertRaises(RuntimeError, FileWriteTask)
+    def test_init(self) -> None:
+        FileWriteTask(files_to_write="hello")
+        FileWriteTask({"files_to_write": "hello"})
+        with pytest.raises(RuntimeError):
+            FileWriteTask()
 
-    def test_run(self):
+    def test_run(self) -> None:
         t = load_object_from_file(os.path.join(module_dir, "write.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertTrue(os.path.exists(f"myfile{i + 1}"))
+            assert os.path.exists(f"myfile{i + 1}")
 
         # Use delete task to remove the files created.
         t = load_object_from_file(os.path.join(module_dir, "delete.yaml"))
         t.run_task({})
         for i in range(2):
-            self.assertFalse(os.path.exists(f"myfile{i + 1}"))
+            assert not os.path.exists(f"myfile{i + 1}")
 
 
 class CompressDecompressArchiveDirTest(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.cwd = os.getcwd()
         os.chdir(module_dir)
 
-    def test_compress_dir(self):
+    def test_compress_dir(self) -> None:
         c = CompressDirTask(compression="gz")
         c.run_task({})
-        self.assertTrue(os.path.exists("delete.yaml.gz"))
-        self.assertFalse(os.path.exists("delete.yaml"))
+        assert os.path.exists("delete.yaml.gz")
+        assert not os.path.exists("delete.yaml")
         c = DecompressDirTask()
         c.run_task({})
-        self.assertFalse(os.path.exists("delete.yaml.gz"))
-        self.assertTrue(os.path.exists("delete.yaml"))
+        assert not os.path.exists("delete.yaml.gz")
+        assert os.path.exists("delete.yaml")
 
-    def test_archive_dir(self):
+    def test_archive_dir(self) -> None:
         a = ArchiveDirTask(base_name="archive", format="gztar")
         a.run_task({})
-        self.assertTrue(os.path.exists("archive.tar.gz"))
+        assert os.path.exists("archive.tar.gz")
         os.remove("archive.tar.gz")
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         os.chdir(self.cwd)
-
-
-if __name__ == "__main__":
-    unittest.main()

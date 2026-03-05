@@ -1,3 +1,5 @@
+"""Fireworks install script."""
+
 from setuptools import find_packages, setup
 
 __author__ = "Anubhav Jain"
@@ -10,9 +12,10 @@ __date__ = "Jan 9, 2013"
 if __name__ == "__main__":
     setup(
         name="FireWorks",
-        version="2.0.3",
+        version="2.0.8",
         description="FireWorks workflow software",
-        long_description=open("README.md").read(),
+        long_description=open("README.md", encoding="utf-8").read(),  # noqa: SIM115
+        long_description_content_type="text/markdown",
         url="https://github.com/materialsproject/fireworks",
         author="Anubhav Jain",
         author_email="anubhavster@gmail.com",
@@ -25,12 +28,11 @@ if __name__ == "__main__":
             "fireworks.flask_site.static.font-awesome-4.0.3": ["css/*", "fonts/*", "less/*", "scss/*"],
         },
         zip_safe=False,
-        python_requires=">=3.7",
+        python_requires=">=3.10",
         install_requires=[
             "ruamel.yaml>=0.15.35",
-            "pymongo>=3.3.0",
+            "pymongo>=4.0.0",
             "Jinja2>=2.8.0",
-            "six>=1.10.0",
             "monty>=1.0.1",
             "python-dateutil>=2.5.3",
             "tabulate>=0.7.5",
@@ -46,8 +48,10 @@ if __name__ == "__main__":
             "newt": ["requests>=2.01"],
             "daemon_mode": ["fabric>=2.3.1"],
             "flask-plotting": ["matplotlib>=2.0.1"],
-            "workflow-checks": ["python-igraph>=0.7.1"],
+            "workflow-checks": ["igraph>=0.7.1"],
             "graph-plotting": ["graphviz"],
+            "mongomock": ["mongomock-persistence>=0.0.3"],
+            "dev": ["pytest"],
         },
         classifiers=[
             "Programming Language :: Python",
@@ -59,7 +63,6 @@ if __name__ == "__main__":
             "Topic :: Other/Nonlisted Topic",
             "Topic :: Scientific/Engineering",
         ],
-        tests_require=["pytest"],
         entry_points={
             "console_scripts": [
                 "lpad = fireworks.scripts.lpad_run:lpad",

@@ -9,8 +9,7 @@ separator_str = ":%%:"
 
 
 def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
-    """
-    Converts a dictionary into a list of keys, with string values "key1.key2:val"
+    """Converts a dictionary into a list of keys, with string values "key1.key2:val".
 
     Args:
         curr_doc
@@ -31,10 +30,10 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
         return my_list
 
-    elif isinstance(curr_doc, list) or isinstance(curr_doc, tuple):
+    if isinstance(curr_doc, (list, tuple)):
         my_list = []
         for k in curr_doc:
-            if isinstance(k, dict) or isinstance(k, list) or isinstance(k, tuple):
+            if isinstance(k, (dict, list, tuple)):
                 return [f"{separator_str}<TRUNCATED_OBJECT>"]
             my_list.append(separator_str + str(k))
         return my_list
@@ -43,8 +42,7 @@ def flatten_to_keys(curr_doc, curr_recurs=1, max_recurs=2):
 
 
 def collect_stats(list_keys, filter_truncated=True):
-    """
-    Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the
+    """Turns a list of keys (from flatten_to_keys) into a dict of <str>:count, i.e. counts the
     number of times each key appears.
 
     Args:
@@ -61,17 +59,17 @@ def collect_stats(list_keys, filter_truncated=True):
     return d
 
 
-def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5):
+def compare_stats(stats_dict1, n_samples1, stats_dict2, n_samples2, threshold=5):
     diff_dict = defaultdict(float)
-    all_keys = list(statsdict1.keys())
-    all_keys.extend(statsdict2.keys())
+    all_keys = list(stats_dict1)
+    all_keys.extend(stats_dict2)
     all_keys = set(all_keys)
     for k in all_keys:
-        if k in statsdict1:
-            diff_dict[k] += (statsdict1[k] / numsamples1) * 100
+        if k in stats_dict1:
+            diff_dict[k] += (stats_dict1[k] / n_samples1) * 100
 
-        if k in statsdict2:
-            diff_dict[k] -= (statsdict2[k] / numsamples2) * 100
+        if k in stats_dict2:
+            diff_dict[k] -= (stats_dict2[k] / n_samples2) * 100
 
         if abs(diff_dict[k]) < threshold:
             del diff_dict[k]
@@ -80,10 +78,10 @@ def compare_stats(statsdict1, numsamples1, statsdict2, numsamples2, threshold=5)
 
 
 class Introspector:
-    def __init__(self, lpad):
+    def __init__(self, lpad) -> None:
         """
         Args:
-            lpad (LaunchPad)
+            lpad (LaunchPad).
         """
         self.lpad = lpad
         self.db = lpad.db
@@ -94,7 +92,7 @@ class Introspector:
             coll = "fireworks"
             state_key = "spec"
 
-        elif coll.lower() in ["tasks"]:
+        elif coll.lower() == "tasks":
             coll = "fireworks"
             state_key = "spec._tasks"
 
@@ -102,7 +100,7 @@ class Introspector:
             coll = "workflows"
             state_key = "metadata"
 
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             coll = "launches"
             state_key = "action.stored_data._exception._stacktrace"
 
@@ -110,14 +108,11 @@ class Introspector:
             raise ValueError("Unrecognized collection!")
 
         sort_field = "time_end" if coll == "launches" else "updated_on"
-        if rsort:
-            sort_key = [(sort_field, DESCENDING)]
-        else:
-            sort_key = None
+        sort_key = [(sort_field, DESCENDING)] if rsort else None
 
         # get stats on fizzled docs
         fizzled_keys = []
-        nsamples_fizzled = 0
+        n_samples_fizzled = 0
 
         q = {"state": "FIZZLED"}
         if coll == "launches":
@@ -125,10 +120,9 @@ class Introspector:
             q["launch_id"] = {"$in": all_launch_ids}
 
         for doc in self.db[coll].find(q, {state_key: 1}, sort=sort_key).limit(limit):
-            nsamples_fizzled += 1
+            n_samples_fizzled += 1
             if state_key == "spec._tasks":
-                for t in doc["spec"]["_tasks"]:
-                    fizzled_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
+                fizzled_keys.extend(f"_fw_name{separator_str}{t['_fw_name']}" for t in doc["spec"]["_tasks"])
             elif state_key == "action.stored_data._exception._stacktrace":
                 stacktrace = (
                     doc.get("action", {})
@@ -143,46 +137,41 @@ class Introspector:
         fizzled_d = collect_stats(fizzled_keys)
 
         # get stats on completed docs
-        completed_keys = []
-        nsamples_completed = 0
+        completed_keys: list[str] = []
+        n_samples_completed = 0
 
         if coll != "launches":
             for doc in self.db[coll].find({"state": "COMPLETED"}, {state_key: 1}, sort=sort_key).limit(limit):
-                nsamples_completed += 1
+                n_samples_completed += 1
                 if state_key == "spec._tasks":
-                    for t in doc["spec"]["_tasks"]:
-                        completed_keys.append(f"_fw_name{separator_str}{t['_fw_name']}")
+                    completed_keys.extend(f"_fw_name{separator_str}{t['_fw_name']}" for t in doc["spec"]["_tasks"])
                 else:
                     completed_keys.extend(flatten_to_keys(doc[state_key]))
 
         completed_d = collect_stats(completed_keys)
 
-        diff_d = compare_stats(completed_d, nsamples_completed, fizzled_d, nsamples_fizzled, threshold=threshold)
+        diff_d = compare_stats(completed_d, n_samples_completed, fizzled_d, n_samples_fizzled, threshold=threshold)
 
-        table = []
-        for w in sorted(diff_d, key=diff_d.get, reverse=True):
-            table.append(
-                [
-                    w.split(separator_str)[0],
-                    w.split(separator_str)[1],
-                    completed_d.get(w, 0),
-                    fizzled_d.get(w, 0),
-                    diff_d[w],
-                ]
-            )
-
-        return table
+        return [
+            [
+                w.split(separator_str)[0],
+                w.split(separator_str)[1],
+                completed_d.get(w, 0),
+                fizzled_d.get(w, 0),
+                diff_d[w],
+            ]
+            for w in sorted(diff_d, key=diff_d.get, reverse=True)
+        ]
 
     @staticmethod
-    def print_report(table, coll):
-
+    def print_report(table, coll) -> None:
         if coll.lower() in ["fws", "fireworks"]:
             header_txt = "fireworks.spec"
-        elif coll.lower() in ["tasks"]:
+        elif coll.lower() == "tasks":
             header_txt = "fireworks.spec._tasks"
         elif coll.lower() in ["wflows", "workflows"]:
             header_txt = "workflows.metadata"
-        elif coll.lower() in ["launches"]:
+        elif coll.lower() == "launches":
             header_txt = "launches.actions.stored_data._exception._stacktrace"
 
         header_txt = f"Introspection report for {header_txt}"
@@ -196,4 +185,4 @@ class Introspector:
             for row in table:
                 print(f"----{row[3]} Failures have the following stack trace--------------")
                 print(row[1])
-                print("")
+                print()

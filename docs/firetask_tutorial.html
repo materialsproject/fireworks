@@ -1,18 +1,16 @@
-
 <!DOCTYPE html>
 
-<html>
+<html lang="en" data-content_root="./">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Defining Jobs using Firetasks &#8212; FireWorks 2.0.3 documentation</title>
-    <link rel="stylesheet" href="_static/nature.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/language_data.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Defining Jobs using Firetasks &#8212; FireWorks 2.0.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
+    <script src="_static/documentation_options.js?v=adc66a14"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Creating Workflows" href="workflow_tutorial.html" />
@@ -21,7 +19,7 @@
 <link href='https://fonts.googleapis.com/css?family=Lato:400,700' rel='stylesheet' type='text/css'>
 
   </head><body>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -36,7 +34,7 @@
         <li class="right" >
           <a href="introduction.html" title="Introductory Tutorial"
              accesskey="P">previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Defining Jobs using Firetasks</a></li> 
       </ul>
     </div>  
@@ -46,16 +44,16 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="defining-jobs-using-firetasks">
-<h1>Defining Jobs using Firetasks<a class="headerlink" href="#defining-jobs-using-firetasks" title="Permalink to this headline">¶</a></h1>
+  <section id="defining-jobs-using-firetasks">
+<h1>Defining Jobs using Firetasks<a class="headerlink" href="#defining-jobs-using-firetasks" title="Link to this heading">¶</a></h1>
 <p>This tutorial shows you how to:</p>
 <ul class="simple">
 <li><p>Run multiple tasks within a single Firework</p></li>
 <li><p>Run tasks that are defined within a Python function, rather than a shell script</p></li>
 </ul>
 <p>This tutorial can be completed from the command line, but some knowledge of Python is helpful. In this tutorial, we will run examples on the central server for simplicity. One could just as easily run them on a FireWorker if you’ve set one up.</p>
-<div class="section" id="introduction-to-firetasks">
-<h2>Introduction to Firetasks<a class="headerlink" href="#introduction-to-firetasks" title="Permalink to this headline">¶</a></h2>
+<section id="introduction-to-firetasks">
+<h2>Introduction to Firetasks<a class="headerlink" href="#introduction-to-firetasks" title="Link to this heading">¶</a></h2>
 <p>In the <a class="reference internal" href="introduction.html"><span class="doc">Introductory tutorial</span></a>, we ran a simple script that performed <code class="docutils literal notranslate"><span class="pre">echo</span> <span class="pre">&quot;howdy,</span> <span class="pre">your</span> <span class="pre">job</span> <span class="pre">launched</span> <span class="pre">successfully!&quot;</span> <span class="pre">&gt;&gt;</span> <span class="pre">howdy.txt&quot;</span></code>. Looking inside <code class="docutils literal notranslate"><span class="pre">fw_test.yaml</span></code>, recall that the command was defined within a task labeled <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code>:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">spec</span><span class="p">:</span>
   <span class="n">_tasks</span><span class="p">:</span>
@@ -64,9 +62,9 @@
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> is one type of <em>Firetask</em>, which is a predefined job template written in Python. The <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> in particular refers Python code inside FireWorks that runs an arbitrary shell script that you give it. You can use the <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> to run almost any job (without worrying that it’s all done within a Python layer). However, you might want to set up jobs that are more powerful than shell scripts using Python programming. Later in this section, we’ll demonstrate how to accomplish this with custom <em>Firetasks</em>. However, first we’ll demonstrate the simplest version to linearly run multiple tasks.</p>
-</div>
-<div class="section" id="running-multiple-firetasks">
-<h2>Running multiple Firetasks<a class="headerlink" href="#running-multiple-firetasks" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="running-multiple-firetasks">
+<h2>Running multiple Firetasks<a class="headerlink" href="#running-multiple-firetasks" title="Link to this heading">¶</a></h2>
 <p>You can run multiple tasks within the same Firework (it might be helpful to review the <a class="reference internal" href="index.html#wfmodel-label"><span class="std std-ref">Workflow Model</span></a> diagram). For example, the first step of your Firework might write an input file that the second step reads and processes. Finally, a third step might move the entire output directory somewhere else on your filesystem (or a remote server).</p>
 <p>Let’s create a Firework that:</p>
 <ol class="arabic simple">
@@ -75,7 +73,8 @@
 <li><p>Copies all your outputs to your home directory using <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code>.</p></li>
 </ol>
 <p>The three-step Firework thus looks like this:</p>
-<a class="reference internal image-reference" href="_images/templatetask.png"><img alt="Template Firework" class="align-center" src="_images/templatetask.png" style="width: 300px;" /></a>
+<a class="reference internal image-reference" href="_images/templatetask.png"><img alt="Template Firework" class="align-center" src="_images/templatetask.png" style="width: 300px;" />
+</a>
 <ol class="arabic">
 <li><p>Navigate to the tasks tutorial directory in your installation directory:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">&lt;</span><span class="n">INSTALL_DIR</span><span class="o">&gt;/</span><span class="n">fw_tutorials</span><span class="o">/</span><span class="n">firetask</span>
@@ -125,11 +124,11 @@
 <p class="admonition-title">Note</p>
 <p>The only way to communicate information between Firetasks within the same Firework is by writing and reading files, such as in our example. If you want to perform more complicated information transfer, you might consider <a class="reference internal" href="workflow_tutorial.html"><span class="doc">defining a workflow</span></a> that connects FireWorks instead. You can pass information easily between different FireWorks in a Workflow through the <em>FWAction</em> object, but not between Firetasks within the same Firework (<a class="reference internal" href="index.html#wfmodel-label"><span class="std std-ref">Workflow Model</span></a>).</p>
 </div>
-<div class="section" id="python-example-optional">
-<h3>Python Example (optional)<a class="headerlink" href="#python-example-optional" title="Permalink to this headline">¶</a></h3>
+<section id="python-example-optional">
+<h3>Python Example (optional)<a class="headerlink" href="#python-example-optional" title="Link to this heading">¶</a></h3>
 <p>Here is a complete Python example that runs multiple Firetasks within a single Firework:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span><span class="p">,</span> <span class="n">TemplateWriterTask</span><span class="p">,</span> <span class="n">FileTransferTask</span>
-<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="kn">import</span> <span class="n">launch_rocket</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span><span class="p">,</span> <span class="n">ScriptTask</span><span class="p">,</span> <span class="n">TemplateWriterTask</span><span class="p">,</span> <span class="n">FileTransferTask</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.core.rocket_launcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">launch_rocket</span>
 
 <span class="c1"># set up the LaunchPad and reset it</span>
 <span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
@@ -146,26 +145,27 @@
 <span class="n">launch_rocket</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="creating-a-custom-firetask">
-<span id="customtask-label"></span><h2>Creating a custom Firetask<a class="headerlink" href="#creating-a-custom-firetask" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="creating-a-custom-firetask">
+<span id="customtask-label"></span><h2>Creating a custom Firetask<a class="headerlink" href="#creating-a-custom-firetask" title="Link to this heading">¶</a></h2>
 <p>The <code class="docutils literal notranslate"><span class="pre">TemplateWriterTask</span></code>, <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code>, <code class="docutils literal notranslate"><span class="pre">FileTransferTask</span></code> are built-into FireWorks and can be used to perform useful operations. In fact, they might be all you need! In particular, because the <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> can run arbitrary shell scripts, it can in theory run any type of computation and is an ‘all-encompassing’ Firetask. ScriptTask also has many additional features that are covered in the <a class="reference internal" href="scripttask.html"><span class="doc">ScriptTask tutorial</span></a>.</p>
 <p>However, if you are comfortable with some basic Python, you can define your own custom Firetasks for the codes you run. A custom Firetask gives you more control over your jobs, clarifies the usage of your code, and guards against unintended behavior by restricting the commands that can be executed.</p>
 <p>Even if you plan to only use the built-in tasks, we suggest that you still read through the next portion before continuing with the tutorial. We’ll be creating a custom Firetask that adds one or more numbers using Python’s <code class="docutils literal notranslate"><span class="pre">sum()</span></code> function, and later building workflows using this (and similar) Firetasks.</p>
-<div class="section" id="how-fireworks-bootstraps-a-job">
-<h3>How FireWorks bootstraps a job<a class="headerlink" href="#how-fireworks-bootstraps-a-job" title="Permalink to this headline">¶</a></h3>
+<section id="how-fireworks-bootstraps-a-job">
+<h3>How FireWorks bootstraps a job<a class="headerlink" href="#how-fireworks-bootstraps-a-job" title="Link to this heading">¶</a></h3>
 <p>Before diving into an example of custom Firetask, it is worth understanding how FireWorks is bootstrapping jobs based on your specification. The basic process looks like this:</p>
-<a class="reference internal image-reference" href="_images/spec_sketch.png"><img alt="FireWorks Bootstrap" class="align-center" src="_images/spec_sketch.png" style="width: 500px;" /></a>
+<a class="reference internal image-reference" href="_images/spec_sketch.png"><img alt="FireWorks Bootstrap" class="align-center" src="_images/spec_sketch.png" style="width: 500px;" />
+</a>
 <ol class="arabic simple">
 <li><p>The first step of the image just shows how the <strong>spec</strong> section of the Firework is structured. There is a section that contains your Firetasks (one or many), as we saw in the previous examples. The <strong>spec</strong> also allows you to define arbitrary JSON data (labeled <em>input</em> in the diagram) to pass into your Firetasks as input. So far, we haven’t seen an example of this; the only information we gave in the spec in the previous examples was within the <strong>_tasks</strong> section.</p></li>
 <li><p>In the second step, FireWorks dynamically loads Python objects based on your specified <strong>_tasks</strong>. It does this by searching a list of Python packages for Python objects that have a value of <em>_fw_name</em> that match your setting. When we set a <em>_fw_name</em> of <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> in the previous examples, FireWorks was loading a Python object with a <em>_fw_name</em> class variable set to <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> (and passing the <code class="docutils literal notranslate"><span class="pre">script</span></code> parameter to its constructor). The <code class="docutils literal notranslate"><span class="pre">ScriptTask</span></code> is just one type of Firetask that’s built into FireWorks to help you run scripts easily. You can write code for custom Firetasks anywhere in the <strong>user_packages</strong> directory of FireWorks, and it will automatically be discovered. If you want to place your Firetasks in a package outside of FireWorks, please read the <a class="reference internal" href="config_tutorial.html"><span class="doc">FireWorks configuration tutorial</span></a>. You will just need to define what Python packages to search for your custom Firetasks, or use a special format that allows for direct loading of classes.</p></li>
 <li><p>In the third step, we execute the code of the Firetask we loaded. Specifically, we execute the <code class="docutils literal notranslate"><span class="pre">run_task</span></code> method which must be implemented for every Firetask. FireWorks passes in the <em>entire</em> spec to the <code class="docutils literal notranslate"><span class="pre">run_task</span></code> method; the <code class="docutils literal notranslate"><span class="pre">run_task</span></code> method can therefore modify its behavior based on any input data present in the spec, or by detecting previous or future tasks in the spec.</p></li>
 <li><p>When the Firetask is done executing, it returns a <em>FWAction</em> object that can modify the workflow (or continue as usual) and pass information to downstream FireWorks.</p></li>
 </ol>
-</div>
-<div class="section" id="custom-firetask-example-addition-task">
-<h3>Custom Firetask example: Addition Task<a class="headerlink" href="#custom-firetask-example-addition-task" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="custom-firetask-example-addition-task">
+<h3>Custom Firetask example: Addition Task<a class="headerlink" href="#custom-firetask-example-addition-task" title="Link to this heading">¶</a></h3>
 <p>Let’s explore custom Firetasks with an example: a custom Python script for adding two numbers specified in the <strong>spec</strong>.</p>
 <ol class="arabic">
 <li><p>Staying in the firetasks tutorial directory, remove any output from the previous step:</p>
@@ -174,15 +174,15 @@
 </div>
 </li>
 <li><p>Let’s first look at what a custom Firetask looks like in Python. Look inside the file <code class="docutils literal notranslate"><span class="pre">addition_task.py</span></code> which defines the <code class="docutils literal notranslate"><span class="pre">Addition</span> <span class="pre">Task</span></code>:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">AdditionTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">AdditionTask</span><span class="p">(</span><span class="n">FiretaskBase</span><span class="p">):</span>
 
    <span class="n">_fw_name</span> <span class="o">=</span> <span class="s2">&quot;Addition Task&quot;</span>
 
-   <span class="k">def</span> <span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fw_spec</span><span class="p">):</span>
+   <span class="k">def</span><span class="w"> </span><span class="nf">run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fw_spec</span><span class="p">):</span>
        <span class="n">input_array</span> <span class="o">=</span> <span class="n">fw_spec</span><span class="p">[</span><span class="s1">&#39;input_array&#39;</span><span class="p">]</span>
        <span class="n">m_sum</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">input_array</span><span class="p">)</span>
 
-       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The sum of </span><span class="si">{</span><span class="n">input_array</span><span class="si">}</span><span class="s2"> is: </span><span class="si">{</span><span class="n">m_sum</span><span class="si">}</span><span class="s2">&quot;</span>
+       <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;The sum of </span><span class="si">{</span><span class="n">input_array</span><span class="si">}</span><span class="s2"> is: </span><span class="si">{</span><span class="n">m_sum</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
        <span class="k">return</span> <span class="n">FWAction</span><span class="p">(</span><span class="n">stored_data</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;sum&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">},</span> <span class="n">mod_spec</span><span class="o">=</span><span class="p">[{</span><span class="s1">&#39;_push&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;input_array&#39;</span><span class="p">:</span> <span class="n">m_sum</span><span class="p">}}])</span>
 </pre></div>
@@ -242,18 +242,18 @@
 <span class="o">...</span>
 </pre></div>
 </div>
-</div>
-</div>
-<div class="section" id="writing-your-own-custom-firetasks">
-<h2>Writing your own custom Firetasks<a class="headerlink" href="#writing-your-own-custom-firetasks" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="writing-your-own-custom-firetasks">
+<h2>Writing your own custom Firetasks<a class="headerlink" href="#writing-your-own-custom-firetasks" title="Link to this heading">¶</a></h2>
 <p>If you’d like to attempt writing your own Firetask, a guide to doing so can be found <a class="reference internal" href="guide_to_writing_firetasks.html"><span class="doc">here</span></a>.</p>
-</div>
-<div class="section" id="id1">
-<h2>Python example (optional)<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="id1">
+<h2>Python example (optional)<a class="headerlink" href="#id1" title="Link to this heading">¶</a></h2>
 <p>Here is a complete Python example that runs a custom Firetask:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">fireworks</span> <span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span>
-<span class="kn">from</span> <span class="nn">fireworks.core.rocket_launcher</span> <span class="kn">import</span> <span class="n">launch_rocket</span>
-<span class="kn">from</span> <span class="nn">fw_tutorials.firetask.addition_task</span> <span class="kn">import</span> <span class="n">AdditionTask</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">fireworks</span><span class="w"> </span><span class="kn">import</span> <span class="n">Firework</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">,</span> <span class="n">LaunchPad</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fireworks.core.rocket_launcher</span><span class="w"> </span><span class="kn">import</span> <span class="n">launch_rocket</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fw_tutorials.firetask.addition_task</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdditionTask</span>
 
 <span class="c1"># set up the LaunchPad and reset it</span>
 <span class="n">launchpad</span> <span class="o">=</span> <span class="n">LaunchPad</span><span class="p">()</span>
@@ -267,23 +267,24 @@
 <span class="n">launch_rocket</span><span class="p">(</span><span class="n">launchpad</span><span class="p">,</span> <span class="n">FWorker</span><span class="p">())</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="next-up-workflows">
-<h2>Next up: Workflows!<a class="headerlink" href="#next-up-workflows" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="next-up-workflows">
+<h2>Next up: Workflows!<a class="headerlink" href="#next-up-workflows" title="Link to this heading">¶</a></h2>
 <p>With custom Firetasks, you can go beyond the limitations of running shell commands and execute arbitrary Python code templates. Furthermore, these templates can operate on data from the <strong>spec</strong> of the Firework. For example, the <code class="docutils literal notranslate"><span class="pre">Addition</span> <span class="pre">Task</span></code> used the <code class="docutils literal notranslate"><span class="pre">input_array</span></code> from the <strong>spec</strong> to decide what numbers to add. By using the same Firework with different values in the <strong>spec</strong> (try it!), one could execute a data-parallel application.</p>
 <p>While one could construct an entire workflow by chaining together multiple Firetasks within a single Firework, this is often not ideal. For example, we might want to switch between different FireWorkers for different parts of the workflow depending on the computing requirements for each step. Or, we might have a restriction on walltime that necessitates breaking up the workflow into more atomic steps. Finally, we might want to employ complex branching logic or error-correction that would be cumbersome to employ within a single Firework. The next step in the tutorial is to explore <a class="reference internal" href="workflow_tutorial.html"><span class="doc">connecting together FireWorks into a workflow</span></a>.</p>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+      <div class="sphinxsidebar" role="navigation" aria-label="Main">
         <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table of Contents</a></h3>
-  <ul>
+  <div>
+    <h3><a href="index.html">Table of Contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Defining Jobs using Firetasks</a><ul>
 <li><a class="reference internal" href="#introduction-to-firetasks">Introduction to Firetasks</a></li>
 <li><a class="reference internal" href="#running-multiple-firetasks">Running multiple Firetasks</a><ul>
@@ -302,12 +303,17 @@
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="introduction.html"
-                        title="previous chapter">Introductory Tutorial</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="workflow_tutorial.html"
-                        title="next chapter">Creating Workflows</a></p>
+  </div>
+  <div>
+    <h4>Previous topic</h4>
+    <p class="topless"><a href="introduction.html"
+                          title="previous chapter">Introductory Tutorial</a></p>
+  </div>
+  <div>
+    <h4>Next topic</h4>
+    <p class="topless"><a href="workflow_tutorial.html"
+                          title="next chapter">Creating Workflows</a></p>
+  </div>
   <div role="note" aria-label="source link">
     <h3>This Page</h3>
     <ul class="this-page-menu">
@@ -315,21 +321,21 @@
             rel="nofollow">Show Source</a></li>
     </ul>
    </div>
-<div id="searchbox" style="display: none" role="search">
+<search id="searchbox" style="display: none" role="search">
   <h3 id="searchlabel">Quick search</h3>
     <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
     </form>
     </div>
-</div>
-<script>$('#searchbox').show(0);</script>
+</search>
+<script>document.getElementById('searchbox').style.display = "block"</script>
         </div>
       </div>
       <div class="clearer"></div>
     </div>
-    <div class="related" role="navigation" aria-label="related navigation">
+    <div class="related" role="navigation" aria-label="Related">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -344,14 +350,14 @@
         <li class="right" >
           <a href="introduction.html" title="Introductory Tutorial"
              >previous</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.3 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">Defining Jobs using Firetasks</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.2.1.
+    &#169; Copyright 2013, Anubhav Jain.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

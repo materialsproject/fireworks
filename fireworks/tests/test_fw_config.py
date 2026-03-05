@@ -6,14 +6,10 @@ __date__ = "2/3/14"
 
 import unittest
 
-from fireworks.fw_config import *
+from fireworks.fw_config import config_to_dict
 
 
 class ConfigTest(unittest.TestCase):
-    def test_config(self):
+    def test_config(self) -> None:
         d = config_to_dict()
-        self.assertNotIn("NEGATIVE_FWID_CTR", d)
-
-
-if __name__ == "__main__":
-    unittest.main()
+        assert "NEGATIVE_FWID_CTR" not in d

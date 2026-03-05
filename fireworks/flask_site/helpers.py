@@ -16,13 +16,12 @@ def fw_filt_given_wf_filt(filt, lp):
 
 def wf_filt_given_fw_filt(filt, lp):
     wf_ids = set()
-    for doc in lp.fireworks.find(filt, {"_id": 0, "fw_id": 1}):
-        wf_ids.add(doc["fw_id"])
+    wf_ids.update(doc["fw_id"] for doc in lp.fireworks.find(filt, {"_id": 0, "fw_id": 1}))
     return {"nodes": {"$in": list(wf_ids)}}
 
 
 def uses_index(filt, coll):
     ii = coll.index_information()
-    fields_filtered = set(filt.keys())
+    fields_filtered = set(filt)
     fields_indexed = {v["key"][0][0] for v in ii.values()}
     return len(fields_filtered & fields_indexed) > 0

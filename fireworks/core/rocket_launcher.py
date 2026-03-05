@@ -1,20 +1,19 @@
-"""
-This module contains methods for launching Rockets, both singly and in rapid-fire mode.
-"""
+"""This module contains methods for launching Rockets, both singly and in rapid-fire mode."""
+
+from __future__ import annotations
 
 import os
 import time
 from datetime import datetime
+from typing import TYPE_CHECKING
 
 from fireworks.core.fworker import FWorker
 from fireworks.core.rocket import Rocket
-from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS
-from fireworks.utilities.fw_utilities import (
-    create_datestamp_dir,
-    get_fw_logger,
-    log_multi,
-    redirect_local,
-)
+from fireworks.fw_config import FWORKER_LOC, RAPIDFIRE_SLEEP_SECS, STREAM_LOGLEVEL
+from fireworks.utilities.fw_utilities import create_datestamp_dir, get_fw_logger, log_multi, redirect_local
+
+if TYPE_CHECKING:
+    from fireworks.core.launchpad import LaunchPad
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -33,17 +32,17 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_exception=False):
-    """
-    Run a single rocket in the current directory.
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL,
+                  pdb_on_exception=False, err_file=None):
+    """Run a single rocket in the current directory.
 
     Args:
         launchpad (LaunchPad)
         fworker (FWorker)
         fw_id (int): if set, a particular Firework to run
         strm_lvl (str): level at which to output logs to stdout
-        pdb_on_exception (bool): if set to True, python will start
-            the debugger on a firework exception
+        pdb_on_exception (bool): if True, Python will start the debugger on a firework exception
+        err_file (file object): file to which stderr is redirected; None for no redirect
 
     Returns:
         bool
@@ -54,25 +53,24 @@ def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl="INFO", pdb_on_e
 
     log_multi(l_logger, "Launching Rocket")
     rocket = Rocket(launchpad, fworker, fw_id)
-    rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception)
+    rocket_ran = rocket.run(pdb_on_exception=pdb_on_exception, err_file=err_file)
     log_multi(l_logger, "Rocket finished")
     return rocket_ran
 
 
 def rapidfire(
-    launchpad,
-    fworker=None,
-    m_dir=None,
-    nlaunches=0,
-    max_loops=-1,
-    sleep_time=None,
-    strm_lvl="INFO",
-    timeout=None,
-    local_redirect=False,
-    pdb_on_exception=False,
-):
-    """
-    Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
+    launchpad: LaunchPad,
+    fworker: FWorker = None,
+    m_dir: str | None = None,
+    nlaunches: int = 0,
+    max_loops: int = -1,
+    sleep_time: int | None = None,
+    strm_lvl: str = STREAM_LOGLEVEL,
+    timeout: int | None = None,
+    local_redirect: bool = False,
+    pdb_on_exception: bool = False,
+) -> None:
+    """Keeps running Rockets in m_dir until we reach an error. Automatically creates subdirectories
     for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.
 
     Args:
@@ -84,11 +82,11 @@ def rapidfire(
         sleep_time (int): secs to sleep between rapidfire loop iterations
         strm_lvl (str): level at which to output logs to stdout
         timeout (int): of seconds after which to stop the rapidfire process
-        local_redirect (bool): redirect standard input and output to local file
+        local_redirect (bool): redirect standard output and standard error to local files
+        pdb_on_exception (bool): if True, python will start the debugger on a firework exception
     """
-
-    sleep_time = sleep_time if sleep_time else RAPIDFIRE_SLEEP_SECS
-    curdir = m_dir if m_dir else os.getcwd()
+    sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
+    curdir = m_dir or os.getcwd()
     l_logger = get_fw_logger("rocket.launcher", l_dir=launchpad.get_logdir(), stream_level=strm_lvl)
     nlaunches = -1 if nlaunches == "infinite" else int(nlaunches)
     fworker = get_fworker(fworker)
@@ -108,8 +106,10 @@ def rapidfire(
             launcher_dir = create_datestamp_dir(curdir, l_logger, prefix="launcher_")
             os.chdir(launcher_dir)
             if local_redirect:
-                with redirect_local():
-                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
+                with redirect_local() as err_file:
+                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
+                                               pdb_on_exception=pdb_on_exception,
+                                               err_file=err_file[1])
             else:
                 rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
 

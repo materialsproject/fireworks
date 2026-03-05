@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from fireworks.core.firework import FiretaskBase, FWAction
 
 __author__ = "Anubhav Jain"
@@ -12,7 +10,7 @@ __date__ = "Feb 17, 2013"
 class AdditionTask(FiretaskBase):
     _fw_name = "Addition Task"
 
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> FWAction:
         input_array = fw_spec["input_array"]
         m_sum = sum(input_array)
 

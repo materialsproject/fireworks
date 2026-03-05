@@ -1,7 +1,4 @@
-"""
-TODO: Modify unittest doc.
-"""
-
+"""TODO: Modify unittest doc."""
 
 __author__ = "Bharat Medasani"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -16,7 +13,7 @@ from fireworks.user_objects.firetasks.templatewriter_task import TemplateWriterT
 
 
 class TemplateWriterTaskTest(unittest.TestCase):
-    def test_task(self):
+    def test_task(self) -> None:
         with open("test_template.txt", "w") as fp:
             fp.write("option1 = {{opt1}}\noption2 = {{opt2}}")
         t = TemplateWriterTask(
@@ -28,17 +25,13 @@ class TemplateWriterTaskTest(unittest.TestCase):
             }
         )
         t.run_task({})
-        self.assertTrue(os.path.exists("out_template.txt"))
+        assert os.path.exists("out_template.txt")
         with open("out_template.txt") as fp:
             for line in fp:
                 if "option1" in line:
-                    self.assertTrue("5.0" in line)
+                    assert "5.0" in line
                 if "option2" in line:
-                    self.assertTrue("fast method" in line)
+                    assert "fast method" in line
         os.remove("out_template.txt")
         if os.path.exists("test_template.txt"):
             os.remove("test_template.txt")
-
-
-if __name__ == "__main__":
-    unittest.main()

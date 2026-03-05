@@ -1,15 +1,12 @@
-""" This module includes tasks to integrate scripts and python functions """
+"""This module includes tasks to integrate scripts and python functions."""
+
+from __future__ import annotations
 
 import builtins
 import shlex
 import subprocess
-import sys
-from typing import Dict, List, Optional, Union
 
 from fireworks.core.firework import FiretaskBase, FWAction
-
-if sys.version_info[0] > 2:
-    basestring = str
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -19,7 +16,7 @@ __date__ = "Feb 18, 2013"
 
 
 class ScriptTask(FiretaskBase):
-    """Runs a user-defined script"""
+    """Runs a user-defined script."""
 
     required_params = ["script"]
     _fw_name = "ScriptTask"
@@ -86,19 +83,19 @@ class ScriptTask(FiretaskBase):
         if self.defuse_bad_rc and sum(returncodes) != 0:
             return FWAction(stored_data=output, defuse_children=True)
 
-        elif self.fizzle_bad_rc and sum(returncodes) != 0:
+        if self.fizzle_bad_rc and sum(returncodes) != 0:
             raise RuntimeError(f"ScriptTask fizzled! Return code: {returncodes}")
 
         return FWAction(stored_data=output)
 
-    def _load_params(self, d):
+    def _load_params(self, d) -> None:
         if d.get("stdin_file") and d.get("stdin_key"):
             raise ValueError("ScriptTask cannot process both a key and file as the standard in!")
 
         self.use_shell = d.get("use_shell", True)
 
         m_script = d["script"]
-        if isinstance(m_script, basestring):
+        if isinstance(m_script, str):
             m_script = [m_script]
 
         if not self.use_shell:
@@ -121,15 +118,14 @@ class ScriptTask(FiretaskBase):
 
     @classmethod
     def from_str(cls, shell_cmd, parameters=None):
-        parameters = parameters if parameters else {}
+        parameters = parameters or {}
         parameters["script"] = [shell_cmd]
         parameters["use_shell"] = True
         return cls(parameters)
 
 
 class PyTask(FiretaskBase):
-    """
-    Runs any python function! Extremely powerful, which allows you to
+    """Runs any python function! Extremely powerful, which allows you to
     essentially run any accessible method on the system. The optional inputs
     and outputs lists may contain spec keys to add to args list and to make
     the function output available in the current and in children fireworks.
@@ -163,11 +159,11 @@ class PyTask(FiretaskBase):
     # note that we are not using "optional_params" because we do not want to do
     # strict parameter checking in FiretaskBase due to "auto_kwargs" option
 
-    def run_task(self, fw_spec: Dict[str, Union[List[int], int]]) -> Optional[FWAction]:
+    def run_task(self, fw_spec: dict[str, list[int] | int]) -> FWAction | None:
         toks = self["func"].rsplit(".", 1)
         if len(toks) == 2:
-            modname, funcname = toks
-            mod = __import__(modname, globals(), locals(), [str(funcname)], 0)
+            mod_name, funcname = toks
+            mod = __import__(mod_name, globals(), locals(), [str(funcname)], 0)
             func = getattr(mod, funcname)
         else:
             # Handle built in functions.
@@ -177,8 +173,7 @@ class PyTask(FiretaskBase):
 
         inputs = self.get("inputs", [])
         assert isinstance(inputs, list)
-        for item in inputs:
-            args.append(fw_spec[item])
+        args += [fw_spec[item] for item in inputs]
 
         if self.get("auto_kwargs"):
             kwargs = {
@@ -208,8 +203,9 @@ class PyTask(FiretaskBase):
         elif len(outputs) > 1:
             assert isinstance(output, (list, tuple, set))
             assert len(output) == len(outputs)
-            actions["update_spec"] = dict(zip(outputs, output))
+            actions["update_spec"] = dict(zip(outputs, output, strict=True))
         if self.get("stored_data_varname"):
             actions["stored_data"] = {self["stored_data_varname"]: output}
         if len(actions) > 0:
             return FWAction(**actions)
+        return None

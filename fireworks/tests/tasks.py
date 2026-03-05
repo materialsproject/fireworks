@@ -1,7 +1,4 @@
-"""
-TODO: Modify module doc.
-"""
-
+"""TODO: Modify module doc."""
 
 __author__ = "Shyue Ping Ong"
 __copyright__ = "Copyright 2012, The Materials Project"

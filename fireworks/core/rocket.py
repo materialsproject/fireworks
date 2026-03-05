@@ -1,9 +1,10 @@
-"""
-A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
-completes the Launch
+"""A Rocket fetches a Firework from the database, runs the sequence of Firetasks inside, and then
+completes the Launch.
 """
 
-import distutils.dir_util
+from __future__ import annotations
+
+import datetime
 import errno
 import glob
 import json
@@ -13,15 +14,13 @@ import os
 import pdb
 import shutil
 import traceback
-from datetime import datetime
 from threading import Event, Thread, current_thread
-from typing import Dict, Union
+from typing import TYPE_CHECKING, IO
 
 from monty.io import zopen
 from monty.os.path import zpath
 
 from fireworks.core.firework import Firework, FWAction
-from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad, LockedWorkflowError
 from fireworks.fw_config import (
     PING_TIME_SECS,
@@ -35,6 +34,9 @@ from fireworks.fw_config import (
 from fireworks.utilities.dict_mods import apply_mod
 from fireworks.utilities.fw_utilities import get_fw_logger
 
+if TYPE_CHECKING:
+    from fireworks.core.fworker import FWorker
+
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
 __maintainer__ = "Anubhav Jain"
@@ -47,7 +49,7 @@ def do_ping(launchpad: LaunchPad, launch_id: int) -> None:
         launchpad.ping_launch(launch_id)
     else:
         with open("FW_ping.json", "w") as f:
-            f.write('{"ping_time": "%s"}' % datetime.utcnow().isoformat())
+            f.write(f'{{"ping_time": "{datetime.datetime.now(datetime.timezone.utc).isoformat()}"}}')
 
 
 def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_thread: Thread) -> None:
@@ -56,21 +58,20 @@ def ping_launch(launchpad: LaunchPad, launch_id: int, stop_event: Event, master_
         stop_event.wait(PING_TIME_SECS)
 
 
-def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Union[Event, None]:
+def start_ping_launch(launchpad: LaunchPad, launch_id: int) -> Event | None:
     fd = FWData()
     if fd.MULTIPROCESSING:
         if not launch_id:
             raise ValueError("Multiprocessing cannot be run in offline mode!")
         fd.Running_IDs[os.getpid()] = launch_id
         return None
-    else:
-        ping_stop = Event()
-        ping_thread = Thread(target=ping_launch, args=(launchpad, launch_id, ping_stop, current_thread()))
-        ping_thread.start()
-        return ping_stop
+    ping_stop = Event()
+    ping_thread = Thread(target=ping_launch, args=(launchpad, launch_id, ping_stop, current_thread()))
+    ping_thread.start()
+    return ping_stop
 
 
-def stop_backgrounds(ping_stop, btask_stops):
+def stop_backgrounds(ping_stop, btask_stops) -> None:
     fd = FWData()
     if fd.MULTIPROCESSING:
         fd.Running_IDs[os.getpid()] = None
@@ -81,7 +82,7 @@ def stop_backgrounds(ping_stop, btask_stops):
         b.set()
 
 
-def background_task(btask, spec, stop_event, master_thread):
+def background_task(btask, spec, stop_event, master_thread) -> None:
     num_launched = 0
     while not stop_event.is_set() and master_thread.is_alive():
         for task in btask.tasks:
@@ -101,28 +102,26 @@ def start_background_task(btask, spec):
 
 
 class Rocket:
-    """
-    The Rocket fetches a workflow step from the FireWorks database and executes it.
-    """
+    """The Rocket fetches a workflow step from the FireWorks database and executes it."""
 
     def __init__(self, launchpad: LaunchPad, fworker: FWorker, fw_id: int) -> None:
         """
         Args:
-        launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
-            If none, reads FireWorks from FW.json and writes to FWAction.json
-        fworker (FWorker): A FWorker object describing the computing resource
-        fw_id (int): id of a specific Firework to run (quit if it cannot be found)
+            launchpad (LaunchPad): A LaunchPad object for interacting with the FW database.
+                If none, reads FireWorks from FW.json and writes to FWAction.json
+            fworker (FWorker): A FWorker object describing the computing resource
+            fw_id (int): id of a specific Firework to run (quit if it cannot be found).
         """
         self.launchpad = launchpad
         self.fworker = fworker
         self.fw_id = fw_id
 
-    def run(self, pdb_on_exception: bool = False) -> bool:
-        """
-        Run the rocket (check out a job from the database and execute it)
+    def run(self, pdb_on_exception: bool = False, err_file: IO = None) -> bool:
+        """Run the rocket (check out a job from the database and execute it).
 
         Args:
             pdb_on_exception (bool): whether to invoke the debugger on a caught exception. Default to False.
+            err_file (typing.IO): file to which stderr is redirected; None for no redirect
 
         Returns:
             bool: True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.
@@ -146,14 +145,15 @@ class Rocket:
             fpath = zpath("FW_offline.json")
             with zopen(fpath) as f_in:
                 d = json.loads(f_in.read())
-                d["started_on"] = datetime.utcnow().isoformat()
+                d["started_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                 with zopen(fpath, "wt") as f_out:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
             launch_id = None  # we don't need this in offline mode...
 
         if not m_fw:
-            print(f"No FireWorks are ready to run and match query! {self.fworker.query}")
+            msg = f"No FireWorks are ready to run and match query! {self.fworker.query}"
+            l_logger.log(logging.INFO, msg)
             return False
 
         final_state = None
@@ -199,13 +199,13 @@ class Rocket:
                             logging.INFO,
                             f"Copying data from recovery folder {recovery_dir} to folder {launch_dir}.",
                         )
-                    distutils.dir_util.copy_tree(recovery_dir, launch_dir, update=1)
+                    shutil.copytree(recovery_dir, launch_dir, dirs_exist_ok=True)
 
             else:
                 starting_task = 0
                 files_in = m_fw.spec.get("_files_in", {})
                 prev_files = m_fw.spec.get("_files_prev", {})
-                for f in set(files_in.keys()).intersection(prev_files.keys()):
+                for f in set(files_in).intersection(prev_files):
                     # We use zopen for the file objects for transparent handling
                     # of zipped files. shutil.copyfileobj does the actual copy
                     # in chunks that avoid memory issues.
@@ -231,7 +231,7 @@ class Rocket:
             # start background tasks
             if "_background_tasks" in my_spec:
                 for bt in my_spec["_background_tasks"]:
-                    btask_stops.append(start_background_task(bt, m_fw.spec))
+                    btask_stops.append(start_background_task(bt, m_fw.spec))  # noqa: PERF401
 
             # execute the Firetasks!
             for t_counter, t in enumerate(m_fw.tasks[starting_task:], start=starting_task):
@@ -260,7 +260,7 @@ class Rocket:
                 try:
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
-                    traceback.print_exc()
+                    traceback.print_exc(file=err_file)
                     tb = traceback.format_exc()
                     stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
@@ -300,7 +300,7 @@ class Rocket:
                             d = json.loads(f_in.read())
                             d["fwaction"] = m_action.to_dict()
                             d["state"] = "FIZZLED"
-                            d["completed_on"] = datetime.utcnow().isoformat()
+                            d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                             with zopen(fpath, "wt") as f_out:
                                 f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -357,13 +357,12 @@ class Rocket:
                 final_state = "COMPLETED"
                 lp.complete_launch(launch_id, m_action, final_state)
             else:
-
                 fpath = zpath("FW_offline.json")
                 with zopen(fpath) as f_in:
                     d = json.loads(f_in.read())
                     d["fwaction"] = m_action.to_dict()
                     d["state"] = "COMPLETED"
-                    d["completed_on"] = datetime.utcnow().isoformat()
+                    d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
@@ -419,16 +418,15 @@ class Rocket:
                     d = json.loads(f_in.read())
                     d["fwaction"] = m_action.to_dict()
                     d["state"] = "FIZZLED"
-                    d["completed_on"] = datetime.utcnow().isoformat()
+                    d["completed_on"] = datetime.datetime.now(datetime.timezone.utc).isoformat()
                     with zopen(fpath, "wt") as f_out:
                         f_out.write(json.dumps(d, ensure_ascii=False))
 
             return True
 
     @staticmethod
-    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: Dict[str, any]) -> None:
-        """
-        Helper function to update checkpoint
+    def update_checkpoint(launchpad: LaunchPad, launch_dir: str, launch_id: int, checkpoint: dict[str, any]) -> None:
+        """Helper function to update checkpoint.
 
         Args:
             launchpad (LaunchPad): LaunchPad to ping with checkpoint data
@@ -447,9 +445,8 @@ class Rocket:
                     f_out.write(json.dumps(d, ensure_ascii=False))
 
     def decorate_fwaction(
-        self, fwaction: FWAction, my_spec: Dict[str, any], m_fw: Firework, launch_dir: str
+        self, fwaction: FWAction, my_spec: dict[str, any], m_fw: Firework, launch_dir: str
     ) -> FWAction:
-
         if my_spec.get("_pass_job_info"):
             job_info = list(my_spec.get("_job_info", []))
             this_job_info = {"fw_id": m_fw.fw_id, "name": m_fw.name, "launch_dir": launch_dir, "state": m_fw.state}
@@ -468,7 +465,7 @@ class Rocket:
             for k, v in my_spec.get("_files_out").items():
                 files = glob.glob(os.path.join(launch_dir, v))
                 if files:
-                    filepath = sorted(files)[-1]
+                    filepath = max(files)
                     fwaction.mod_spec.append({"_set": {f"_files_prev->{k:s}": filepath}})
 
         return fwaction

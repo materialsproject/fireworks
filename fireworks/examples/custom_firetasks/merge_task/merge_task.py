@@ -1,11 +1,4 @@
-from fireworks import (
-    FiretaskBase,
-    Firework,
-    FWAction,
-    LaunchPad,
-    Workflow,
-    explicit_serialize,
-)
+from fireworks import FiretaskBase, Firework, FWAction, LaunchPad, Workflow, explicit_serialize
 from fireworks.core.rocket_launcher import rapidfire
 
 __author__ = "Anubhav Jain <ajain@lbl.gov>"
@@ -31,7 +24,7 @@ class TaskB(FiretaskBase):
 
 @explicit_serialize
 class TaskC(FiretaskBase):
-    def run_task(self, fw_spec):
+    def run_task(self, fw_spec) -> None:
         print("This is task C.")
         print(f"Task A gave me: {fw_spec['param_A']}")
         print(f"Task B gave me: {fw_spec['param_B']}")

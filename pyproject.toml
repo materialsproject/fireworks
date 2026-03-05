@@ -1,2 +1,56 @@
-[tool.black]
+[tool.ruff]
+target-version = "py310"
 line-length = 120
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+  "B023",    # Function definition does not bind loop variable
+  "B028",    # No explicit stacklevel keyword argument found
+  "B904",    # Within an except clause, raise exceptions with ...
+  "C408",    # unnecessary-collection-call
+  "D102",    # missing-docstring-in-public-method (temp ignore, re-enable later once we have docstrings)
+  "D205",    # 1 blank line required between summary line and description
+  "D212",    # Multi-line docstring summary should start at the first line
+  "PERF203", # try-except-in-loop
+  # "PERF401", # manual-list-comprehension (TODO fix these or wait for autofix)
+  "ANN",
+  "C901",    # function too complex
+  "COM812",  # missing trailing comma
+  "DTZ011",  # datetime.today() used
+  "EM101",
+  "EM102",
+  "FBT",
+  "G004",
+  "ISC001",
+  "PLR",     # pylint refactor
+  "PLW2901", # Outer for loop variable overwritten by inner assignment target
+  "PT013",   # pytest-incorrect-pytest-import
+  "PTH",     # prefer pathlib over os.path
+  "PYI024",  # collections-named-tuple (TODO should maybe fix these)
+  "RUF012",  # Disable checks for mutable class args. This is a non-problem.
+  "S113",    # requests call without timeout
+  "SIM105",  # Use contextlib.suppress(OSError) instead of try-except-pass
+  "T201",    # print statement found
+  "TRY003",
+]
+pydocstyle.convention = "google"
+isort.split-on-trailing-comma = false
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["F401"]
+"**/tests/*" = [
+  "D100", # missing-module-docstring
+  "D101", # missing-class-docstring
+  "D102", # missing-docstring-in-public-method
+  "D103", # missing-function-docstring
+  "D107", # missing-init-docstring
+  "S101", # use of assert detected
+]
+"tasks.py" = ["D"]
+"fw_tutorials/*" = ["D"]
+
+[tool.pytest.ini_options]
+markers = [
+  "mongodb: marks tests that need mongodb (deselect with '-m \"not mongodb\"')",
+]

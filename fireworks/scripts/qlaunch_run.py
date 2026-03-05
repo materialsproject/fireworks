@@ -1,11 +1,10 @@
-"""
-A runnable script for launching rockets (a command-line interface to queue_launcher.py)
-"""
+"""A runnable script for launching rockets (a command-line interface to queue_launcher.py)."""
+
+from __future__ import annotations
+
 import os
-import sys
 import time
 from argparse import ArgumentParser
-from typing import Optional, Sequence
 
 try:
     import fabric
@@ -17,23 +16,19 @@ except ImportError:
 else:
     HAS_FABRIC = True
 
+from importlib import metadata
+from typing import TYPE_CHECKING
+
 from fireworks.core.fworker import FWorker
 from fireworks.core.launchpad import LaunchPad
-from fireworks.fw_config import (
-    CONFIG_FILE_DIR,
-    FWORKER_LOC,
-    LAUNCHPAD_LOC,
-    QUEUEADAPTER_LOC,
-)
+from fireworks.fw_config import CONFIG_FILE_DIR, FWORKER_LOC, LAUNCHPAD_LOC, QUEUEADAPTER_LOC, STREAM_LOGLEVEL
 from fireworks.queue.queue_launcher import launch_rocket_to_queue, rapidfire
 from fireworks.utilities.fw_serializers import load_object_from_file
 
 from ._helpers import _validate_config_file_paths
 
-if sys.version_info < (3, 8):
-    import importlib_metadata as metadata
-else:
-    from importlib import metadata
+if TYPE_CHECKING:
+    from collections.abc import Sequence
 
 __authors__ = "Anubhav Jain, Shyue Ping Ong"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -42,8 +37,7 @@ __email__ = "ajain@lbl.gov"
 __date__ = "Jan 14, 2013"
 
 
-def do_launch(args):
-
+def do_launch(args) -> None:
     cfg_files_to_check = [
         ("launchpad", "-l", False, LAUNCHPAD_LOC),
         ("fworker", "-w", False, FWORKER_LOC),
@@ -86,7 +80,7 @@ def do_launch(args):
         )
 
 
-def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
+def qlaunch(argv: Sequence[str] | None = None) -> int:
     m_description = (
         "This program is used to submit jobs to a queueing system. "
         "Details of the job and queue interaction are handled by the "
@@ -164,7 +158,7 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
         "--block_dir", help="directory to use as block dir. Can be a new or existing block. Must start with 'block_'"
     )
     parser.add_argument("--logdir", help="path to a directory for logging", default=None)
-    parser.add_argument("--loglvl", help="level to print log messages", default="INFO")
+    parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
     parser.add_argument("-r", "--reserve", help="reserve a fw", action="store_true")
     parser.add_argument("-l", "--launchpad_file", help="path to launchpad file")
@@ -228,12 +222,12 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
                 config=fabric.Config({"run": {"shell": args.remote_shell}}),
                 connect_kwargs=connect_kwargs,
             ) as conn:
-                for r in args.remote_config_dir:
-                    r = os.path.expanduser(r)
-                    conn.run(f"mkdir -p {r}")
+                for remote_dir in args.remote_config_dir:
+                    remote_dir = os.path.expanduser(remote_dir)
+                    conn.run(f"mkdir -p {remote_dir}")
                     for f in os.listdir(args.config_dir):
                         if os.path.isfile(f):
-                            conn.put(f, os.path.join(r, f))
+                            conn.put(f, os.path.join(remote_dir, f))
     non_default = []
     for k in ["maxjobs_queue", "maxjobs_block", "nlaunches", "sleep"]:
         v = getattr(args, k, None)
@@ -261,9 +255,9 @@ def qlaunch(argv: Optional[Sequence[str]] = None) -> int:
                     config=fabric.Config({"run": {"shell": args.remote_shell}}),
                     connect_kwargs=connect_kwargs,
                 ) as conn:
-                    for r in args.remote_config_dir:
-                        r = os.path.expanduser(r)
-                        with conn.cd(r):
+                    for remote_dir in args.remote_config_dir:
+                        remote_dir = os.path.expanduser(remote_dir)
+                        with conn.cd(remote_dir):
                             conn.run(f"qlaunch {pre_non_default} {args.command} {non_default}")
         else:
             do_launch(args)
