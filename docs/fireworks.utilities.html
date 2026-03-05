@@ -198,6 +198,30 @@ working only with text files between Windows and Unix systems.</p></li>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="fireworks.utilities.filepad.FilePad.add_contents">
+<span class="sig-name descname"><span class="pre">add_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_contents" title="Link to this definition">¶</a></dt>
+<dd><p>Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>contents</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.14)"><em>bytes</em></a>) – bytes object to insert</p></li>
+<li><p><strong>identifier</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – file identifier. If identifier = None then the identifier is set to the object id
+returned by gridfs insertion.</p></li>
+<li><p><strong>compress</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – compress or not</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – file metadata</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the id returned by gridfs, identifier</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)">str</a>)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="fireworks.utilities.filepad.FilePad.add_file">
 <span class="sig-name descname"><span class="pre">add_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">identifier</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.filepad.FilePad.add_file" title="Link to this definition">¶</a></dt>
 <dd><p>Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
@@ -808,7 +832,8 @@ as a unit.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.utilities.fw_utilities.redirect_local">
 <span class="sig-prename descclassname"><span class="pre">fireworks.utilities.fw_utilities.</span></span><span class="sig-name descname"><span class="pre">redirect_local</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">out_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'FW_job.out'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'FW_job.error'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.fw_utilities.redirect_local" title="Link to this definition">¶</a></dt>
-<dd><p>Temporarily redirect stdout or stderr to fws.error and fws.out.</p>
+<dd><p>Temporarily redirect stdout and stderr to files with names
+out_file and err_file, respectively.</p>
 </dd></dl>
 
 </section>
@@ -940,6 +965,7 @@ control flow of the firework, while Fireworks are rendered as a sequence of Fire
 <li><a class="reference internal" href="#module-fireworks.utilities.filepad">fireworks.utilities.filepad module</a><ul>
 <li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad"><code class="docutils literal notranslate"><span class="pre">FilePad</span></code></a><ul>
 <li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad.__init__"><code class="docutils literal notranslate"><span class="pre">FilePad.__init__()</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad.add_contents"><code class="docutils literal notranslate"><span class="pre">FilePad.add_contents()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad.add_file"><code class="docutils literal notranslate"><span class="pre">FilePad.add_file()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad.auto_load"><code class="docutils literal notranslate"><span class="pre">FilePad.auto_load()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.utilities.filepad.FilePad.build_indexes"><code class="docutils literal notranslate"><span class="pre">FilePad.build_indexes()</span></code></a></li>

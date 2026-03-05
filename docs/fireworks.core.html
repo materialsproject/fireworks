@@ -196,9 +196,15 @@
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDown"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.tearDown()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.tearDownClass"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.tearDownClass()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_except_details_on_rerun"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_except_details_on_rerun()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_get_recovery_wrong_launch_id"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_get_recovery_wrong_launch_id()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_cp"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_cp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_no_recovery_info"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_no_recovery_info()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_prev_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_recover_launch_id"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_recover_launch_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_fw_id"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_fw_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_launch_id"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_launch_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_state"><code class="docutils literal notranslate"><span class="pre">LaunchPadRerunExceptionTest.test_task_level_rerun_wrong_state()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="fireworks.core.tests.html#fireworks.core.tests.test_launchpad.LaunchPadTest"><code class="docutils literal notranslate"><span class="pre">LaunchPadTest</span></code></a><ul>
@@ -1455,15 +1461,21 @@ this then returns the <em>first</em> fw_id in that range</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.core.launchpad.LaunchPad.get_recovery">
-<span class="sig-name descname"><span class="pre">get_recovery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fw_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">launch_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'last'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_recovery" title="Link to this definition">¶</a></dt>
-<dd><p>Function to get recovery data for a given fw and launch
-:param fw_id: fw id to get recovery data for
-:type fw_id: int
-:param launch_id: launch_id to get recovery data for, if ‘last’</p>
-<blockquote>
-<div><p>recovery data is generated from last launch.</p>
-</div></blockquote>
+<span class="sig-name descname"><span class="pre">get_recovery</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launch_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.launchpad.LaunchPad.get_recovery" title="Link to this definition">¶</a></dt>
+<dd><p>Function to get recovery data for a given launch.</p>
 <dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>launch_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – launch_id to get recovery data for</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>recovery metadata, None when no recovery retrieved</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>recovery (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a>)</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – raised when no launch under the the launch_id is found</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1703,6 +1715,9 @@ or run recovery fw in previous directory</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – raised in case of firework, recover_launch or recovery info not found</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2039,11 +2054,14 @@ If none, reads FireWorks from FW.json and writes to FWAction.json</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.core.rocket.Rocket.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdb_on_exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pdb_on_exception</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.IO" title="(in Python v3.14)"><span class="pre">IO</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="headerlink" href="#fireworks.core.rocket.Rocket.run" title="Link to this definition">¶</a></dt>
 <dd><p>Run the rocket (check out a job from the database and execute it).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – whether to invoke the debugger on a caught exception. Default to False.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – whether to invoke the debugger on a caught exception. Default to False.</p></li>
+<li><p><strong>err_file</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.IO" title="(in Python v3.14)"><em>IO</em></a>) – file to which stderr is redirected; None for no redirect</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.</p>
@@ -2113,7 +2131,7 @@ If none, reads FireWorks from FW.json and writes to FWAction.json</p></li>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="fireworks.core.rocket_launcher.launch_rocket">
-<span class="sig-prename descclassname"><span class="pre">fireworks.core.rocket_launcher.</span></span><span class="sig-name descname"><span class="pre">launch_rocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fworker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strm_lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdb_on_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Link to this definition">¶</a></dt>
+<span class="sig-prename descclassname"><span class="pre">fireworks.core.rocket_launcher.</span></span><span class="sig-name descname"><span class="pre">launch_rocket</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">launchpad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fworker</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fw_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strm_lvl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'INFO'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pdb_on_exception</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">err_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.core.rocket_launcher.launch_rocket" title="Link to this definition">¶</a></dt>
 <dd><p>Run a single rocket in the current directory.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -2123,6 +2141,7 @@ If none, reads FireWorks from FW.json and writes to FWAction.json</p></li>
 <li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – if set, a particular Firework to run</p></li>
 <li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
 <li><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if True, Python will start the debugger on a firework exception</p></li>
+<li><p><strong>err_file</strong> (<em>file object</em>) – file to which stderr is redirected; None for no redirect</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -2147,7 +2166,7 @@ for each Rocket. Usually stops when we run out of FireWorks from the LaunchPad.<
 <li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – secs to sleep between rapidfire loop iterations</p></li>
 <li><p><strong>strm_lvl</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – level at which to output logs to stdout</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – of seconds after which to stop the rapidfire process</p></li>
-<li><p><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – redirect standard input and output to local file</p></li>
+<li><p><strong>local_redirect</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – redirect standard output and standard error to local files</p></li>
 <li><p><strong>pdb_on_exception</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – if True, python will start the debugger on a firework exception</p></li>
 </ul>
 </dd>
