@@ -6,6 +6,7 @@ import os
 import zlib
 from typing import TYPE_CHECKING
 
+from uuid import uuid4
 import gridfs
 from bson.objectid import ObjectId
 from monty.json import MSONable
@@ -153,6 +154,34 @@ class FilePad(MSONable):
         with open(path, read_mode) as f:
             contents = f.read()
             return self._insert_contents(contents, identifier, root_data, compress)
+
+    def add_contents(self, contents, identifier=None, compress=True, metadata=None):
+        """Insert the file specified by the path into gridfs. The gridfs id and identifier are returned.
+        Note: identifier must be unique, i.e, no insertion if the identifier already exists in the db.
+
+        Args:
+            contents (bytes): bytes object to insert
+            identifier (str): file identifier. If identifier = None then the identifier is set to the object id
+                returned by gridfs insertion.
+            compress (bool): compress or not
+            metadata (dict): file metadata
+
+        Returns:
+            (str, str): the id returned by gridfs, identifier
+        """
+        if identifier is not None:
+            _, doc = self.get_file(identifier)
+            if doc is not None:
+                self.logger.warning(f"{identifier=} exists. Skipping insertion")
+                return doc["gfs_id"], doc["identifier"]
+
+        root_data = {
+            "identifier": identifier,
+            "metadata": metadata,
+            "compressed": compress,
+        }
+
+        return self._insert_contents(contents, identifier, root_data, compress)
 
     def get_file(self, identifier):
         """Get file by identifier.
