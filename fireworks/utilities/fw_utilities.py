@@ -261,7 +261,9 @@ def explicit_serialize(o):
 
 @contextlib.contextmanager
 def redirect_local(out_file: str = "FW_job.out", err_file: str = "FW_job.error"):
-    """Temporarily redirect stdout or stderr to fws.error and fws.out."""
+    """Temporarily redirect stdout and stderr to files with names
+    out_file and err_file, respectively.
+    """
     try:
         old_err = os.dup(sys.stderr.fileno())
         old_out = os.dup(sys.stdout.fileno())
@@ -271,7 +273,7 @@ def redirect_local(out_file: str = "FW_job.out", err_file: str = "FW_job.error")
 
         os.dup2(new_err.fileno(), sys.stderr.fileno())
         os.dup2(new_out.fileno(), sys.stdout.fileno())
-        yield
+        yield new_out, new_err
 
     finally:
         os.dup2(old_err, sys.stderr.fileno())

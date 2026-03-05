@@ -15,7 +15,7 @@ import pdb
 import shutil
 import traceback
 from threading import Event, Thread, current_thread
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, IO
 
 from monty.io import zopen
 from monty.os.path import zpath
@@ -116,11 +116,12 @@ class Rocket:
         self.fworker = fworker
         self.fw_id = fw_id
 
-    def run(self, pdb_on_exception: bool = False) -> bool:
+    def run(self, pdb_on_exception: bool = False, err_file: IO = None) -> bool:
         """Run the rocket (check out a job from the database and execute it).
 
         Args:
             pdb_on_exception (bool): whether to invoke the debugger on a caught exception. Default to False.
+            err_file (typing.IO): file to which stderr is redirected; None for no redirect
 
         Returns:
             bool: True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.
@@ -259,7 +260,7 @@ class Rocket:
                 try:
                     m_action = t.run_task(my_spec)
                 except BaseException as e:
-                    traceback.print_exc()
+                    traceback.print_exc(file=err_file)
                     tb = traceback.format_exc()
                     stop_backgrounds(ping_stop, btask_stops)
                     do_ping(lp, launch_id)  # one last ping, esp if there is a monitor
