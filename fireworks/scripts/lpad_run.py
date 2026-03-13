@@ -15,6 +15,7 @@ from importlib import metadata
 from typing import TYPE_CHECKING, Any
 
 from pymongo import ASCENDING, DESCENDING
+from pymongo.errors import PyMongoError
 from ruamel.yaml import YAML
 
 from fireworks import FW_INSTALL_DIR
@@ -124,7 +125,7 @@ def get_lp(args: Namespace) -> LaunchPad:
         lp.connection.admin.command("ping")
         return lp
 
-    except Exception:
+    except PyMongoError:
         err_message = (
             f"FireWorks was not able to connect to MongoDB at {lp.host}:{lp.port}. Is the server running? "
             f"The database file specified was {args.launchpad_file}."

@@ -50,6 +50,7 @@ from fireworks.fw_config import (
     YAML_STYLE,
 )
 from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.exceptions import FireworksSerializationError
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -263,6 +264,8 @@ class FWSerializable(abc.ABC):
             dct = YAML(typ="safe", pure=True).load(f_str)
         else:
             raise ValueError(f"Unsupported format {f_format}")
+        if not isinstance(dct, dict):
+            raise FireworksSerializationError(f"Serialized object must be a dict but is {type(dct)}")
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
@@ -404,6 +407,8 @@ def load_object_from_file(filename, f_format=None):
             raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
 
     classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
+    if not isinstance(dct, dict):
+        raise FireworksSerializationError(f"Serialized object must be a dict but is {type(dct)}")
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
         fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
@@ -438,12 +443,12 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, str):
 
         for method, args in [
-            (datetime.datetime.fromisoformat,tuple()),
+            (datetime.datetime.fromisoformat, tuple()),
             (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S.%f",)),
             (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S", )),
         ]:
             try:
-                return method(obj_dict,*args)
+                return method(obj_dict, *args)
             except Exception:
                 pass
     return obj_dict
