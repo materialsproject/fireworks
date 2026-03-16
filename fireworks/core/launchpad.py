@@ -33,6 +33,7 @@ from fireworks.fw_config import (
     WFLOCK_EXPIRATION_SECS,
     MongoClient,
 )
+from fireworks.utilities.exceptions import FWValueError
 from fireworks.utilities.fw_serializers import FWSerializable, reconstitute_dates, recursive_dict
 from fireworks.utilities.fw_utilities import get_fw_logger
 
@@ -312,6 +313,9 @@ class LaunchPad(FWSerializable):
                 max_reset_wo_password to minimize risk.
             max_reset_wo_password (int): A failsafe; when require_password is set to False,
                 FWS will not clear DBs that contain more workflows than this parameter
+
+        Raises:
+            ValueError: in case of invalid password or failed password override
         """
         m_password = datetime.datetime.now().strftime("%Y-%m-%d")
 
@@ -461,6 +465,9 @@ class LaunchPad(FWSerializable):
 
         Returns:
             Launch object
+
+        Raises:
+            ValueError: in case of invalid launch_id
         """
         m_launch = self.launches.find_one({"launch_id": launch_id})
         if m_launch:
@@ -476,6 +483,9 @@ class LaunchPad(FWSerializable):
 
         Returns:
             dict
+
+        Raises:
+            ValueError: in case of invalid fw_ids
         """
         fw_dict = self.fireworks.find_one({"fw_id": fw_id})
         if not fw_dict:
@@ -514,6 +524,9 @@ class LaunchPad(FWSerializable):
 
         Returns:
             A Workflow object
+
+        Raises:
+            ValueError: in case of invalid fw_id
         """
         links_dict = self.workflows.find_one({"nodes": fw_id})
         if not links_dict:
@@ -536,6 +549,9 @@ class LaunchPad(FWSerializable):
 
         Returns:
             A Workflow object
+
+        Raises:
+            ValueError: in case of invalid fw_id
         """
         links_dict = self.workflows.find_one({"nodes": fw_id})
         if not links_dict:
@@ -1561,6 +1577,9 @@ class LaunchPad(FWSerializable):
 
         Returns:
             dict: updated launch
+
+        Raises:
+            DocumentTooLarge: in some cases when the document size limit is exceeded
         """
         # update the launch data to COMPLETED, set end time, etc
         m_launch = self.get_launch_by_id(launch_id)
@@ -1628,6 +1647,9 @@ class LaunchPad(FWSerializable):
         Args:
             quantity (int): optionally ask for many ids, otherwise defaults to 1
                             this then returns the *first* fw_id in that range
+
+        Raises:
+            ValueError: if next Firework id cannot be found
         """
         try:
             return self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_fw_id": quantity}})["next_fw_id"]
@@ -1799,6 +1821,10 @@ class LaunchPad(FWSerializable):
 
         Args:
             fw_id (int): the parent fw_id - children will be refreshed
+
+        Raises:
+            RuntimeError: in case of an error when refreshing the workflow
+                different from LockedWorkflowError
         """
         # TODO: time how long it took to refresh the WF!
         # TODO: need a try-except here, high probability of failure if incorrect action supplied
@@ -1827,6 +1853,9 @@ class LaunchPad(FWSerializable):
         Args:
             wf (Workflow)
             updated_ids ([int]): list of firework ids
+
+        Raises:
+            FWValueError: when the query finds no matching workflow
         """
         updated_fws = [wf.id_fw[fid] for fid in updated_ids]
         old_new = self._upsert_fws(updated_fws)
@@ -1841,7 +1870,7 @@ class LaunchPad(FWSerializable):
 
         assert query_node is not None
         if not self.workflows.find_one({"nodes": query_node}):
-            raise ValueError(f"BAD QUERY_NODE! {query_node}")
+            raise FWValueError(f"BAD QUERY_NODE! {query_node}")
         # redo the links and fw_states
         wf = wf.to_db_dict()
         wf["locked"] = True  # preserve the lock!

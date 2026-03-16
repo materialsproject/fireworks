@@ -782,6 +782,10 @@ class Workflow(FWSerializable):
             created_on (datetime): time of creation
             updated_on (datetime): time of update
             fw_states (dict): leave this alone unless you are purposefully creating a Lazy-style WF.
+
+        Raises:
+            ValueError: when Firework IDs are duplicated or inconsistent,
+                or links dictionary is invalid
         """
         name = name or "unnamed WF"  # prevent None names
 
@@ -894,6 +898,9 @@ class Workflow(FWSerializable):
 
         Returns:
             list[int]: list of Firework ids that were updated or new.
+
+        Raises:
+            ValueError: when duplicated Firework IDs are found in additions or detours
         """
         updated_ids = []
 
@@ -1021,6 +1028,10 @@ class Workflow(FWSerializable):
 
         Returns:
             list[int]: list of Firework ids that were updated or new.
+
+        Raises:
+            TypeError: when detour is not boolean
+            ValueError: when detour or fw_ids inputs are invalid
         """
         updated_ids = []
 

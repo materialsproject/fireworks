@@ -126,6 +126,9 @@ class Rocket:
 
         Returns:
             bool: True if the rocket ran successfully, False is if it failed or no job in the DB was ready to run.
+
+        Raises:
+            OSError: when creation of launch directory fails
         """
         all_stored_data = {}  # combined stored data for *all* the Tasks
         all_update_spec = {}  # combined update_spec for *all* the Tasks
