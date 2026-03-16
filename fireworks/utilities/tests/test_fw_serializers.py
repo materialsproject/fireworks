@@ -4,12 +4,15 @@ import datetime
 import json
 import os
 import unittest
+from tempfile import mkdtemp
 from typing import Any
 
 import numpy as np
+import pytest
 
 from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, UnitTestSerializer
-from fireworks.utilities.fw_serializers import FWSerializable, load_object, recursive_dict
+from fireworks.utilities.exceptions import FWFormatError, FWSerializationError
+from fireworks.utilities.fw_serializers import FWSerializable, load_object, load_object_from_file, recursive_dict
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 __author__ = "Anubhav Jain"
@@ -147,3 +150,70 @@ class ExplicitSerializationTest(unittest.TestCase):
 
     def test_explicit_serialization(self) -> None:
         assert load_object(self.s_dict) == self.s_obj
+
+
+class FWSerializationErrorTest(unittest.TestCase):
+    """Test FWSerializationError exception."""
+
+    def setUp(self):
+        self.init_dir = os.getcwd()
+        self.lpad_dir = mkdtemp()
+        os.chdir(self.lpad_dir)
+        self.lpad_file = os.path.join(self.lpad_dir, "launchpad.yaml")
+        with open(self.lpad_file, "w", encoding="utf-8"):
+            pass
+        self.msg = "Serialized object must be a dict but is <class 'NoneType'>"
+
+    def tearDown(self):
+        os.chdir(self.init_dir)
+        os.unlink(self.lpad_file)
+        os.rmdir(self.lpad_dir)
+
+    def test_load_object_from_file_empty_file(self) -> None:
+        """Test load_object_from_file with empty file."""
+        with pytest.raises(FWSerializationError, match=self.msg):
+            load_object_from_file(self.lpad_file)
+
+    def test_explicit_serializer_from_file_empty_file(self) -> None:
+        """Test ExplicitTestSerializer with empty file."""
+        with pytest.raises(FWSerializationError, match=self.msg):
+            ExplicitTestSerializer.from_file(self.lpad_file)
+
+
+class FWFormatErrorTest(unittest.TestCase):
+    """Test FWFormatError exception."""
+
+    def setUp(self):
+        self.init_dir = os.getcwd()
+        self.lpad_dir = mkdtemp()
+        os.chdir(self.lpad_dir)
+        self.lpad_file = os.path.join(self.lpad_dir, "launchpad.txt")
+        with open(self.lpad_file, "w", encoding="utf-8"):
+            pass
+        self.msg1 = "Unsupported format txt"
+        self.msg2 = "Unknown file format txt cannot be loaded!"
+
+    def tearDown(self):
+        os.chdir(self.init_dir)
+        os.unlink(self.lpad_file)
+        os.rmdir(self.lpad_dir)
+
+    def test_explicit_serializer_from_file(self) -> None:
+        """Test ExplicitTestSerializer from txt file."""
+        with pytest.raises(FWFormatError, match=self.msg1):
+            ExplicitTestSerializer.from_file(self.lpad_file)
+
+    def test_explicit_serializer_to_file(self) -> None:
+        """Test ExplicitTestSerializer to txt file."""
+        with pytest.raises(FWFormatError, match=self.msg1):
+            ExplicitTestSerializer(a=1).to_file(self.lpad_file)
+
+    def test_explicit_serializer_to_format(self) -> None:
+        """Test ExplicitTestSerializer to txt file."""
+        with pytest.raises(FWFormatError, match=self.msg1):
+            ExplicitTestSerializer(a=1).to_format("txt")
+
+    def test_load_object_from_file(self) -> None:
+        """Test load_object_from_file with txt file."""
+        with pytest.raises(FWFormatError, match=self.msg2):
+            load_object_from_file(self.lpad_file)

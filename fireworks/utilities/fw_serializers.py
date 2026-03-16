@@ -417,9 +417,9 @@ def load_object_from_file(filename, f_format=None):
         else:
             raise FWFormatError(f"Unknown file format {f_format} cannot be loaded!")
 
-    classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
     if not isinstance(dct, dict):
         raise FWSerializationError(f"Serialized object must be a dict but is {type(dct)}")
+    classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
         fireworks_schema.validate(dct, classname)
     return load_object(reconstitute_dates(dct))
