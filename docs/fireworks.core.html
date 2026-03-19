@@ -706,6 +706,10 @@ update parent_links</p>
 <li><p><strong>fw_states</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – leave this alone unless you are purposefully creating a Lazy-style WF.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – when Firework IDs are duplicated or inconsistent,
+    or links dictionary is invalid</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -729,6 +733,12 @@ Note: detours must have children that have STATE_RANK that is WAITING or below.<
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.14)"><strong>TypeError</strong></a> – when detour is not boolean</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – when detour or fw_ids inputs are invalid</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -748,6 +758,9 @@ Note: detours must have children that have STATE_RANK that is WAITING or below.<
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)">list</a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)">int</a>]</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – when duplicated Firework IDs are found in additions or detours</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1167,6 +1180,9 @@ return it to the caller. The caller is responsible for running the Firework.</p>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)">dict</a></p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>DocumentTooLarge</strong> – in some cases when the document size limit is exceeded</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1345,6 +1361,9 @@ large databases.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>dict</p>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid fw_ids</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1423,6 +1442,9 @@ large databases.</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Launch object</p>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid launch_id</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1449,6 +1471,9 @@ large databases.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>quantity</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – optionally ask for many ids, otherwise defaults to 1
 this then returns the <em>first</em> fw_id in that range</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – if next Firework id cannot be found</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1512,6 +1537,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A Workflow object</p>
 </dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid fw_id</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -1525,6 +1553,9 @@ this then returns the <em>first</em> fw_id in that range</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>A Workflow object</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid fw_id</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1760,6 +1791,9 @@ max_reset_wo_password to minimize risk.</p></li>
 <li><p><strong>max_reset_wo_password</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – A failsafe; when require_password is set to False,
 FWS will not clear DBs that contain more workflows than this parameter</p></li>
 </ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid password or failed password override</p>
 </dd>
 </dl>
 </dd></dl>
@@ -2068,6 +2102,9 @@ If none, reads FireWorks from FW.json and writes to FWAction.json</p></li>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)">bool</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#OSError" title="(in Python v3.14)"><strong>OSError</strong></a> – when creation of launch directory fails</p>
 </dd>
 </dl>
 </dd></dl>

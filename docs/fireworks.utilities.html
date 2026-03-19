@@ -71,6 +71,22 @@
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.ExplicitTestSerializer.to_dict"><code class="docutils literal notranslate"><span class="pre">ExplicitTestSerializer.to_dict()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.setUp"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.setUp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.tearDown"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.tearDown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.test_explicit_serializer_from_file"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.test_explicit_serializer_from_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.test_explicit_serializer_to_file"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.test_explicit_serializer_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.test_explicit_serializer_to_format"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.test_explicit_serializer_to_format()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWFormatErrorTest.test_load_object_from_file"><code class="docutils literal notranslate"><span class="pre">FWFormatErrorTest.test_load_object_from_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWSerializationErrorTest"><code class="docutils literal notranslate"><span class="pre">FWSerializationErrorTest</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWSerializationErrorTest.setUp"><code class="docutils literal notranslate"><span class="pre">FWSerializationErrorTest.setUp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWSerializationErrorTest.tearDown"><code class="docutils literal notranslate"><span class="pre">FWSerializationErrorTest.tearDown()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWSerializationErrorTest.test_explicit_serializer_from_file_empty_file"><code class="docutils literal notranslate"><span class="pre">FWSerializationErrorTest.test_explicit_serializer_from_file_empty_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.FWSerializationErrorTest.test_load_object_from_file_empty_file"><code class="docutils literal notranslate"><span class="pre">FWSerializationErrorTest.test_load_object_from_file_empty_file()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest"><code class="docutils literal notranslate"><span class="pre">SerializationTest</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.setUp"><code class="docutils literal notranslate"><span class="pre">SerializationTest.setUp()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="fireworks.utilities.tests.html#fireworks.utilities.tests.test_fw_serializers.SerializationTest.tearDown"><code class="docutils literal notranslate"><span class="pre">SerializationTest.tearDown()</span></code></a></li>
@@ -159,6 +175,45 @@ Allows for storing MongoDB nested document queries in MongoDB.</p>
 <dt class="sig sig-object py" id="fireworks.utilities.dict_mods.get_nested_dict">
 <span class="sig-prename descclassname"><span class="pre">fireworks.utilities.dict_mods.</span></span><span class="sig-name descname"><span class="pre">get_nested_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.utilities.dict_mods.get_nested_dict" title="Link to this definition">¶</a></dt>
 <dd><p>Get a nested dictionary value using arrow notation (e.g., ‘key1-&gt;key2’).</p>
+</dd></dl>
+
+</section>
+<section id="module-fireworks.utilities.exceptions">
+<span id="fireworks-utilities-exceptions-module"></span><h2>fireworks.utilities.exceptions module<a class="headerlink" href="#module-fireworks.utilities.exceptions" title="Link to this heading">¶</a></h2>
+<p>FireWorks exceptions.</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="fireworks.utilities.exceptions.FWConfigurationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.exceptions.</span></span><span class="sig-name descname"><span class="pre">FWConfigurationError</span></span><a class="headerlink" href="#fireworks.utilities.exceptions.FWConfigurationError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.exceptions.FWError" title="fireworks.utilities.exceptions.FWError"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWError</span></code></a></p>
+<p>Raise for errors related to fw_config.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fireworks.utilities.exceptions.FWError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.exceptions.</span></span><span class="sig-name descname"><span class="pre">FWError</span></span><a class="headerlink" href="#fireworks.utilities.exceptions.FWError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Base exception for all other FireWorks exceptions.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fireworks.utilities.exceptions.FWFormatError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.exceptions.</span></span><span class="sig-name descname"><span class="pre">FWFormatError</span></span><a class="headerlink" href="#fireworks.utilities.exceptions.FWFormatError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.exceptions.FWError" title="fireworks.utilities.exceptions.FWError"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWError</span></code></a></p>
+<p>Raise for errors related to file format.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fireworks.utilities.exceptions.FWSerializationError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.exceptions.</span></span><span class="sig-name descname"><span class="pre">FWSerializationError</span></span><a class="headerlink" href="#fireworks.utilities.exceptions.FWSerializationError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.exceptions.FWError" title="fireworks.utilities.exceptions.FWError"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWError</span></code></a></p>
+<p>Raise for errors related to serialization/deserialization.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="fireworks.utilities.exceptions.FWValueError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.utilities.exceptions.</span></span><span class="sig-name descname"><span class="pre">FWValueError</span></span><a class="headerlink" href="#fireworks.utilities.exceptions.FWValueError" title="Link to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#fireworks.utilities.exceptions.FWError" title="fireworks.utilities.exceptions.FWError"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWError</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>FireWorks specialization of ValueError.</p>
 </dd></dl>
 
 </section>
@@ -588,6 +643,9 @@ that implements the to_dict() and from_dict() for all its subclasses.</p>
 <li><p><strong>**kwargs</strong> – additional keyword arguments passed to the serializer</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#fireworks.utilities.exceptions.FWFormatError" title="fireworks.utilities.exceptions.FWFormatError"><strong>FWFormatError</strong></a> – when f_format is not supported</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -621,6 +679,9 @@ ii) If you want to put a refactored module in a new place add an entry to USER_P
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>obj_dict</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><em>dict</em></a>) – the dict representation of the class</p>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#fireworks.utilities.exceptions.FWSerializationError" title="fireworks.utilities.exceptions.FWSerializationError"><strong>FWSerializationError</strong></a> – in case none or multiple classes match _fw_name</p>
+</dd>
 </dl>
 </dd></dl>
 
@@ -635,6 +696,12 @@ load_object().</p>
 <li><p><strong>filename</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the filename to load an object from</p></li>
 <li><p><strong>f_format</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><em>str</em></a>) – the serialization format (default is auto-detect based on
 filename extension)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#fireworks.utilities.exceptions.FWFormatError" title="fireworks.utilities.exceptions.FWFormatError"><strong>FWFormatError</strong></a> – when file with filename has unsupported format or f_format is invalid</p></li>
+<li><p><a class="reference internal" href="#fireworks.utilities.exceptions.FWSerializationError" title="fireworks.utilities.exceptions.FWSerializationError"><strong>FWSerializationError</strong></a> – when the data read is not a dictionary</p></li>
 </ul>
 </dd>
 </dl>
@@ -960,6 +1027,14 @@ control flow of the firework, while Fireworks are rendered as a sequence of Fire
 <li><a class="reference internal" href="#fireworks.utilities.dict_mods.apply_mod"><code class="docutils literal notranslate"><span class="pre">apply_mod()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.utilities.dict_mods.arrow_to_dot"><code class="docutils literal notranslate"><span class="pre">arrow_to_dot()</span></code></a></li>
 <li><a class="reference internal" href="#fireworks.utilities.dict_mods.get_nested_dict"><code class="docutils literal notranslate"><span class="pre">get_nested_dict()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-fireworks.utilities.exceptions">fireworks.utilities.exceptions module</a><ul>
+<li><a class="reference internal" href="#fireworks.utilities.exceptions.FWConfigurationError"><code class="docutils literal notranslate"><span class="pre">FWConfigurationError</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.utilities.exceptions.FWError"><code class="docutils literal notranslate"><span class="pre">FWError</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.utilities.exceptions.FWFormatError"><code class="docutils literal notranslate"><span class="pre">FWFormatError</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.utilities.exceptions.FWSerializationError"><code class="docutils literal notranslate"><span class="pre">FWSerializationError</span></code></a></li>
+<li><a class="reference internal" href="#fireworks.utilities.exceptions.FWValueError"><code class="docutils literal notranslate"><span class="pre">FWValueError</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#module-fireworks.utilities.filepad">fireworks.utilities.filepad module</a><ul>

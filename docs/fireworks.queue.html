@@ -242,6 +242,12 @@ which specifies a QueueAdapter as well as desired properties of the submit scrip
 <li><p><strong>fw_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – specific fw_id to reserve (reservation mode only)</p></li>
 </ul>
 </dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – in case of invalid or inconsistent parameters</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – when job script submission fails</p></li>
+</ul>
+</dd>
 </dl>
 </dd></dl>
 
@@ -268,6 +274,12 @@ If 0 skips the check on the number of jobs in the queue.</p></li>
 <li><p><strong>timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – Number of seconds after which to stop the rapidfire process</p></li>
 <li><p><strong>fill_mode</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – Whether to submit jobs even when there is nothing to run (only in
 non-reservation mode)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – when launch_dir does not exist or block_dir has invalid name</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#RuntimeError" title="(in Python v3.14)"><strong>RuntimeError</strong></a> – when launch fails</p></li>
 </ul>
 </dd>
 </dl>

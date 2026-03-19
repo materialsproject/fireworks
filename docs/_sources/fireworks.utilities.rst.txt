@@ -28,6 +28,14 @@ fireworks.utilities.dict\_mods module
    :undoc-members:
    :show-inheritance:
 
+fireworks.utilities.exceptions module
+-------------------------------------
+
+.. automodule:: fireworks.utilities.exceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 fireworks.utilities.filepad module
 ----------------------------------
 
