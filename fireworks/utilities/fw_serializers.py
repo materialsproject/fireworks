@@ -50,6 +50,7 @@ from fireworks.fw_config import (
     YAML_STYLE,
 )
 from fireworks.utilities.fw_utilities import get_fw_logger
+from fireworks.utilities.exceptions import FWSerializationError, FWFormatError
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -73,7 +74,7 @@ try:
     import numpy as np
 
     NUMPY_INSTALLED = True
-except Exception:
+except ModuleNotFoundError:
     NUMPY_INSTALLED = False
 
 if JSON_SCHEMA_VALIDATE:
@@ -234,6 +235,9 @@ class FWSerializable(abc.ABC):
         Args:
             f_format (str): the format to output to (default json)
             **kwargs: additional keyword arguments passed to the serializer
+
+        Raises:
+            FWFormatError: when f_format is not supported
         """
         if f_format == "json":
             return json.dumps(self.to_dict(), default=DATETIME_HANDLER, **kwargs)
@@ -244,7 +248,7 @@ class FWSerializable(abc.ABC):
             strm = StringIO()
             yaml.dump(self.to_dict(), strm)
             return strm.getvalue()
-        raise ValueError(f"Unsupported format {f_format}")
+        raise FWFormatError(f"Unsupported format {f_format}")
 
     @classmethod
     def from_format(cls, f_str, f_format="json"):
@@ -262,7 +266,9 @@ class FWSerializable(abc.ABC):
         elif f_format == "yaml":
             dct = YAML(typ="safe", pure=True).load(f_str)
         else:
-            raise ValueError(f"Unsupported format {f_format}")
+            raise FWFormatError(f"Unsupported format {f_format}")
+        if not isinstance(dct, dict):
+            raise FWSerializationError(f"Serialized object must be a dict but is {type(dct)}")
         if JSON_SCHEMA_VALIDATE and cls.__name__ in JSON_SCHEMA_VALIDATE_LIST:
             fireworks_schema.validate(dct, cls.__name__)
         return cls.from_dict(reconstitute_dates(dct))
@@ -279,7 +285,7 @@ class FWSerializable(abc.ABC):
         if f_format is None:
             f_format = filename.split(".")[-1]
         if f_format not in ("json", "yaml"):
-            raise ValueError(f"Unsupported format {f_format}")
+            raise FWFormatError(f"Unsupported format {f_format}")
         with open(filename, "w", **ENCODING_PARAMS) as f_out:
             if f_format == "json":
                 json.dump(dct, f_out, default=DATETIME_HANDLER, **kwargs)
@@ -338,6 +344,9 @@ def load_object(obj_dict):
 
     Args:
         obj_dict (dict): the dict representation of the class
+
+    Raises:
+        FWSerializationError: in case none or multiple classes match _fw_name
     """
     # override the name in the obj_dict if there's an entry in FW_NAME_UPDATES
     fw_name = FW_NAME_UPDATES.get(obj_dict["_fw_name"], obj_dict["_fw_name"])
@@ -378,9 +387,10 @@ def load_object(obj_dict):
         SAVED_FW_MODULES[fw_name] = found_objects[0][1]
         return found_objects[0][0]
     if len(found_objects) > 0:
-        raise ValueError(f"load_object() found multiple objects with cls._fw_name {fw_name} -- {found_objects}")
+        msg = f"load_object() found multiple objects with cls._fw_name {fw_name} -- {found_objects}"
+        raise FWSerializationError(msg)
 
-    raise ValueError(f"load_object() could not find a class with cls._fw_name {fw_name}")
+    raise FWSerializationError(f"load_object() could not find a class with cls._fw_name {fw_name}")
 
 
 def load_object_from_file(filename, f_format=None):
@@ -391,6 +401,10 @@ def load_object_from_file(filename, f_format=None):
         filename (str): the filename to load an object from
         f_format (str): the serialization format (default is auto-detect based on
             filename extension)
+
+    Raises:
+        FWFormatError: when file with filename has unsupported format or f_format is invalid
+        FWSerializationError: when the data read is not a dictionary
     """
     if f_format is None:
         f_format = filename.split(".")[-1]
@@ -401,8 +415,10 @@ def load_object_from_file(filename, f_format=None):
         elif f_format == "yaml":
             dct = YAML(typ="safe", pure=True).load(f.read())
         else:
-            raise ValueError(f"Unknown file format {f_format} cannot be loaded!")
+            raise FWFormatError(f"Unknown file format {f_format} cannot be loaded!")
 
+    if not isinstance(dct, dict):
+        raise FWSerializationError(f"Serialized object must be a dict but is {type(dct)}")
     classname = FW_NAME_UPDATES.get(dct["_fw_name"], dct["_fw_name"])
     if JSON_SCHEMA_VALIDATE and classname in JSON_SCHEMA_VALIDATE_LIST:
         fireworks_schema.validate(dct, classname)
@@ -438,12 +454,12 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, str):
 
         for method, args in [
-            (datetime.datetime.fromisoformat,tuple()),
+            (datetime.datetime.fromisoformat, tuple()),
             (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S.%f",)),
             (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S", )),
         ]:
             try:
-                return method(obj_dict,*args)
+                return method(obj_dict, *args)
             except Exception:
                 pass
     return obj_dict
@@ -453,7 +469,7 @@ def get_default_serialization(cls):
     """Get the default serialization string for a class."""
     root_mod = cls.__module__.split(".")[0]
     if root_mod == "__main__":
-        raise ValueError(
+        raise FWSerializationError(
             "Cannot get default serialization; try "
             "instantiating your object from a different module "
             "from which it is defined rather than defining your "

@@ -9,6 +9,7 @@ from typing import Any
 import pymongo
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
+from fireworks.utilities.exceptions import FWConfigurationError
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -137,13 +138,15 @@ def override_user_settings() -> None:
 
     if os.path.exists(config_paths[0]):
         overrides = loadfn(config_paths[0])
+        if not isinstance(overrides, dict):
+            raise FWConfigurationError(f"Invalid FW_config file, type must be dict but is {type(overrides)}")
         for key, v in overrides.items():
             if key == "ADD_USER_PACKAGES":
                 USER_PACKAGES.extend(v)
             elif key == "ECHO_TEST":
                 print(v)
             elif key not in globals():
-                raise ValueError(f"Invalid FW_config file has unknown parameter: {key}")
+                raise FWConfigurationError(f"Invalid FW_config file has unknown parameter: {key}")
             else:
                 globals()[key] = v
 

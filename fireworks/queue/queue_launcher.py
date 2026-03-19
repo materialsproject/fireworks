@@ -62,6 +62,10 @@ def launch_rocket_to_queue(
         fill_mode (bool): whether to submit jobs even when there is nothing to run
             (only in non-reservation mode)
         fw_id (int): specific fw_id to reserve (reservation mode only)
+
+    Raises:
+        ValueError: in case of invalid or inconsistent parameters
+        RuntimeError: when job script submission fails
     """
     fworker = fworker or FWorker()
     launcher_dir = os.path.abspath(launcher_dir)
@@ -204,6 +208,9 @@ def rapidfire(
         timeout (int): Number of seconds after which to stop the rapidfire process
         fill_mode (bool): Whether to submit jobs even when there is nothing to run (only in
             non-reservation mode)
+    Raises:
+        ValueError: when launch_dir does not exist or block_dir has invalid name
+        RuntimeError: when launch fails
     """
     sleep_time = sleep_time or RAPIDFIRE_SLEEP_SECS
     launch_dir = os.path.abspath(launch_dir)
@@ -315,6 +322,9 @@ def _get_number_of_jobs_in_queue(qadapter: "QueueAdapterBase", njobs_queue: int,
 
     Return:
         (int)
+
+    Raises:
+        RuntimeError: if determination of number of jobs fails
     """
     RETRY_INTERVAL = 30  # initial retry in 30 sec upon failure
 
