@@ -49,8 +49,8 @@ from fireworks.fw_config import (
     USER_PACKAGES,
     YAML_STYLE,
 )
+from fireworks.utilities.exceptions import FWFormatError, FWSerializationError
 from fireworks.utilities.fw_utilities import get_fw_logger
-from fireworks.utilities.exceptions import FWSerializationError, FWFormatError
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2012, The Materials Project"
@@ -451,17 +451,19 @@ def reconstitute_dates(obj_dict):
     if isinstance(obj_dict, (list, tuple)):
         return [reconstitute_dates(v) for v in obj_dict]
 
-    if isinstance(obj_dict, str):
-
+    if isinstance(obj_dict, str) and "T" in obj_dict:
+        # only attempt datetime parsing for strings containing 'T' (ISO 8601
+        # date-time separator) to avoid converting date-only or version-like
+        # strings such as '2000-02-01' into datetime objects (see #570)
         for method, args in [
-            (datetime.datetime.fromisoformat, tuple()),
+            (datetime.datetime.fromisoformat, ()),
             (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S.%f",)),
-            (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S", )),
+            (datetime.datetime.strptime, ("%Y-%m-%dT%H:%M:%S",)),
         ]:
             try:
                 return method(obj_dict, *args)
-            except Exception:
-                pass
+            except (ValueError, TypeError):
+                continue
     return obj_dict
 
 

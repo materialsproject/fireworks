@@ -33,6 +33,11 @@ ignore = [
   "SIM105",  # Use contextlib.suppress(OSError) instead of try-except-pass
   "T201",    # print statement found
   "TRY003",
+  "BLE001",  # Do not catch blind exception: Exception
+  "FIX002",  # Line contains TODO
+  "N802",    # Function name should be lowercase
+  "TD002",   # Missing author in TODO
+  "TD003",   # Missing issue link in TODO
 ]
 pydocstyle.convention = "google"
 isort.split-on-trailing-comma = false

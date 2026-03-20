@@ -2,6 +2,7 @@
 completed properly.
 """
 
+import datetime
 import unittest
 
 import pytest
@@ -10,7 +11,7 @@ from fireworks import Firework, FWAction
 from fireworks.core.firework import Workflow
 from fireworks.user_objects.firetasks.script_task import ScriptTask
 from fireworks.user_objects.queue_adapters.common_adapter import CommonAdapter
-from fireworks.utilities.fw_serializers import load_object
+from fireworks.utilities.fw_serializers import load_object, reconstitute_dates
 
 __author__ = "Anubhav Jain"
 __copyright__ = "Copyright 2013, The Materials Project"
@@ -99,3 +100,25 @@ class SerializationTests(unittest.TestCase):
             "defuse_children": False,
         }
         FWAction.from_dict(my_dict)
+
+
+@pytest.mark.parametrize(
+    ("input_str", "expected_type"),
+    [
+        ("2000-02-01", str),
+        ("2024-01-15", str),
+        ("1970-01-01", str),
+        ("2000-02", str),
+        ("not-a-date", str),
+        ("2014-10-14T00:56:27.758673", datetime.datetime),
+        ("2024-03-15T08:30:00", datetime.datetime),
+    ],
+)
+def test_reconstitute_dates_preserves_date_only_strings(input_str: str, expected_type: type) -> None:
+    """Regression test for #570: date-only strings must not become datetime objects."""
+    result = reconstitute_dates(input_str)
+    assert isinstance(result, expected_type), (
+        f"reconstitute_dates({input_str!r}) returned {type(result).__name__}, expected {expected_type.__name__}"
+    )
+    if expected_type is str:
+        assert result == input_str
