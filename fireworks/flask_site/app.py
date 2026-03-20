@@ -78,9 +78,10 @@ def _addq_WF(q):
 @app.template_filter("datetime")
 def datetime(value):
     import datetime as dt
+
     try:
         date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f%z")
-    except ValueError: #backwards comptability
+    except ValueError:  # backwards compatibility
         date = dt.datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
     return date.strftime("%m/%d/%Y")
 

@@ -2026,14 +2026,16 @@ class LaunchPad(FWSerializable):
                 )
                 fw_id = launch["fw_id"]
                 f = self.fireworks.find_one_and_update(
-                    {"fw_id": fw_id}, {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.now(datetime.timezone.utc)}}
+                    {"fw_id": fw_id},
+                    {"$set": {"state": "RUNNING", "updated_on": datetime.datetime.now(datetime.timezone.utc)}},
                 )
                 if f:
                     self._refresh_wf(fw_id)
 
             # update the updated_on
             self.offline_runs.update_one(
-                {"launch_id": launch_id}, {"$set": {"updated_on": datetime.datetime.now(datetime.timezone.utc).isoformat()}}
+                {"launch_id": launch_id},
+                {"$set": {"updated_on": datetime.datetime.now(datetime.timezone.utc).isoformat()}},
             )
             return None
 

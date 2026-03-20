@@ -64,7 +64,7 @@ class FiretaskPickleTest(unittest.TestCase):
     def setUp(self) -> None:
         self.task = PickleTask(test=0)
         self.pkl_task = pickle.dumps(self.task)
-        self.upkl_task = pickle.loads(self.pkl_task)  # noqa: S301
+        self.upkl_task = pickle.loads(self.pkl_task)
 
     def test_init(self) -> None:
         assert isinstance(self.upkl_task, PickleTask)

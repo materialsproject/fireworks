@@ -15,7 +15,7 @@ import pdb
 import shutil
 import traceback
 from threading import Event, Thread, current_thread
-from typing import TYPE_CHECKING, IO
+from typing import IO, TYPE_CHECKING
 
 from monty.io import zopen
 from monty.os.path import zpath

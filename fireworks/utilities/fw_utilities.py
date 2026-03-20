@@ -145,7 +145,7 @@ def create_datestamp_dir(root_dir, l_logger, prefix="block_"):
         full_path = get_path()
         if os.path.exists(full_path):
             full_path = None
-            time.sleep(random.random() / 3 + 0.1)  # noqa: S311 (pseudo-random sufficient for retry timing)
+            time.sleep(random.random() / 3 + 0.1)
             continue
         try:
             os.mkdir(full_path)
@@ -252,10 +252,10 @@ def explicit_serialize(o):
     """Mark a class for explicit serialization by adding _fw_name attribute."""
     module_name = o.__module__
     if module_name == "__main__":
-        import __main__  # noqa: PLC0415
+        import __main__
 
         module_name = os.path.splitext(os.path.basename(__main__.__file__))[0]
-    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"  # noqa: SLF001
+    o._fw_name = f"{{{{{module_name}.{o.__name__}}}}}"
     return o
 
 

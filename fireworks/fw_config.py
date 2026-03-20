@@ -9,6 +9,7 @@ from typing import Any
 import pymongo
 from monty.design_patterns import singleton
 from monty.serialization import dumpfn, loadfn
+
 from fireworks.utilities.exceptions import FWConfigurationError
 
 __author__ = "Anubhav Jain"

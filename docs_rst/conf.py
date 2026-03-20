@@ -302,6 +302,7 @@ intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
 }
 
+
 # AJ: a hack found online to get __init__ to show up in docs
 def skip(app, what, name, obj, skip, options):
     if name == "__init__":

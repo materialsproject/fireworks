@@ -223,7 +223,7 @@ def split_node_lists(num_jobs, total_node_list=None, ppn=24):
     return node_lists, sub_nproc_list
 
 
-# TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??  # noqa: E501, FIX002, TD002, TD003
+# TODO: why is loglvl a required parameter??? Also nlaunches and sleep_time could have a sensible default??  # noqa: E501
 def launch_multiprocess(
     launchpad,
     fworker,
