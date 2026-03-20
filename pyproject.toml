@@ -16,13 +16,7 @@ ignore = [
   "C408",    # unnecessary-collection-call
   "C901",    # function too complex
   "COM812",  # missing trailing comma
-  "D100",    # missing-module-docstring
-  "D101",    # missing-class-docstring
-  "D102",    # missing-docstring-in-public-method
-  "D103",    # missing-function-docstring
-  "D104",    # missing-docstring-in-public-package
-  "D105",    # missing-docstring-in-magic-method
-  "D107",    # missing-docstring-in-init
+  "D1",      # missing docstrings (module, class, method, function, package, magic, init)
   "D205",    # 1 blank line required between summary line and description
   "D212",    # Multi-line docstring summary should start at the first line
   "D410",    # missing blank line after section

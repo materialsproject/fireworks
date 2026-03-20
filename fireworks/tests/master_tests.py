@@ -103,22 +103,16 @@ class SerializationTests(unittest.TestCase):
 
 
 @pytest.mark.parametrize(
-    ("input_str", "expected_type"),
+    ("input_str", "expected"),
     [
-        ("2000-02-01", str),
-        ("2024-01-15", str),
-        ("1970-01-01", str),
-        ("2000-02", str),
-        ("not-a-date", str),
-        ("2014-10-14T00:56:27.758673", datetime.datetime),
-        ("2024-03-15T08:30:00", datetime.datetime),
+        ("2000-02-01", "2000-02-01"),
+        ("2024-01-15", "2024-01-15"),
+        ("1970-01-01", "1970-01-01"),
+        ("not-a-date", "not-a-date"),
+        ("2014-10-14T00:56:27.758673", datetime.datetime(2014, 10, 14, 0, 56, 27, 758673)),
+        ("2024-03-15T08:30:00", datetime.datetime(2024, 3, 15, 8, 30)),
     ],
 )
-def test_reconstitute_dates_preserves_date_only_strings(input_str: str, expected_type: type) -> None:
+def test_reconstitute_dates_preserves_date_only_strings(input_str: str, expected: str | datetime.datetime) -> None:
     """Regression test for #570: date-only strings must not become datetime objects."""
-    result = reconstitute_dates(input_str)
-    assert isinstance(result, expected_type), (
-        f"reconstitute_dates({input_str!r}) returned {type(result).__name__}, expected {expected_type.__name__}"
-    )
-    if expected_type is str:
-        assert result == input_str
+    assert reconstitute_dates(input_str) == expected

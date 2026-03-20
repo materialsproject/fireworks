@@ -134,13 +134,7 @@ def _recursive_load(obj):
         return [_recursive_load(v) for v in obj]
 
     if isinstance(obj, str):
-        try:
-            # convert String to datetime if really datetime
-            return reconstitute_dates(obj)
-        except Exception:
-            # convert unicode to ASCII if not really unicode
-            if obj == obj.encode("ascii", "ignore"):
-                return str(obj)
+        return reconstitute_dates(obj)
 
     return obj
 
