@@ -5,53 +5,77 @@ line-length = 120
 [tool.ruff.lint]
 select = ["ALL"]
 ignore = [
+  "A001",    # variable shadowing a Python builtin
+  "A002",    # argument shadowing a Python builtin
+  "ANN",
+  "ARG",     # unused function/method arguments
   "B023",    # Function definition does not bind loop variable
   "B028",    # No explicit stacklevel keyword argument found
   "B904",    # Within an except clause, raise exceptions with ...
+  "BLE001",  # Do not catch blind exception: Exception
   "C408",    # unnecessary-collection-call
-  "D102",    # missing-docstring-in-public-method (temp ignore, re-enable later once we have docstrings)
-  "D205",    # 1 blank line required between summary line and description
-  "D212",    # Multi-line docstring summary should start at the first line
-  "PERF203", # try-except-in-loop
-  # "PERF401", # manual-list-comprehension (TODO fix these or wait for autofix)
-  "ANN",
   "C901",    # function too complex
   "COM812",  # missing trailing comma
-  "DTZ011",  # datetime.today() used
+  "D100",    # missing-module-docstring
+  "D101",    # missing-class-docstring
+  "D102",    # missing-docstring-in-public-method
+  "D103",    # missing-function-docstring
+  "D104",    # missing-docstring-in-public-package
+  "D105",    # missing-docstring-in-magic-method
+  "D107",    # missing-docstring-in-init
+  "D205",    # 1 blank line required between summary line and description
+  "D212",    # Multi-line docstring summary should start at the first line
+  "D410",    # missing blank line after section
+  "D411",    # missing blank line before section
+  "D417",    # missing argument descriptions in docstring
+  "DTZ",     # datetime timezone-related warnings
   "EM101",
   "EM102",
+  "ERA001",  # found commented-out code
   "FBT",
+  "FIX002",  # Line contains TODO
+  "FIX004",  # Line contains HACK
   "G004",
+  "INP001",  # implicit namespace package
   "ISC001",
+  "N802",    # Function name should be lowercase
+  "N806",    # variable in function should be lowercase
+  "N816",    # mixed case variable in global scope
+  "N818",    # exception name should end in Error
+  "PERF203", # try-except-in-loop
+  "PLC0415", # import not at top of file
   "PLR",     # pylint refactor
   "PLW2901", # Outer for loop variable overwritten by inner assignment target
   "PT013",   # pytest-incorrect-pytest-import
   "PTH",     # prefer pathlib over os.path
-  "PYI024",  # collections-named-tuple (TODO should maybe fix these)
+  "PYI024",  # collections-named-tuple
   "RUF012",  # Disable checks for mutable class args. This is a non-problem.
+  "RUF013",  # implicit Optional
+  "S101",    # use of assert detected
+  "S103",    # permissive file permissions
+  "S106",    # possible hardcoded password
+  "S108",    # probable insecure temp file usage
+  "S110",    # try-except-pass detected
   "S113",    # requests call without timeout
+  "S201",    # use of Flask debug mode
+  "S301",    # suspicious pickle usage
+  "S311",    # suspicious non-cryptographic random usage
+  "S603",    # subprocess call with shell=True
   "SIM105",  # Use contextlib.suppress(OSError) instead of try-except-pass
+  "SLF001",  # private member access
+  "T100",    # debugger breakpoint
   "T201",    # print statement found
-  "TRY003",
-  "BLE001",  # Do not catch blind exception: Exception
-  "FIX002",  # Line contains TODO
-  "N802",    # Function name should be lowercase
   "TD002",   # Missing author in TODO
   "TD003",   # Missing issue link in TODO
+  "TRY003",
+  "TRY300",  # consider using else block
+  "TRY301",  # raise within try
 ]
 pydocstyle.convention = "google"
 isort.split-on-trailing-comma = false
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
-"**/tests/*" = [
-  "D100", # missing-module-docstring
-  "D101", # missing-class-docstring
-  "D102", # missing-docstring-in-public-method
-  "D103", # missing-function-docstring
-  "D107", # missing-init-docstring
-  "S101", # use of assert detected
-]
 "tasks.py" = ["D"]
 "fw_tutorials/*" = ["D"]
 

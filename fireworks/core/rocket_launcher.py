@@ -32,8 +32,7 @@ def get_fworker(fworker):
     return my_fwkr
 
 
-def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL,
-                  pdb_on_exception=False, err_file=None):
+def launch_rocket(launchpad, fworker=None, fw_id=None, strm_lvl=STREAM_LOGLEVEL, pdb_on_exception=False, err_file=None):
     """Run a single rocket in the current directory.
 
     Args:
@@ -107,9 +106,9 @@ def rapidfire(
             os.chdir(launcher_dir)
             if local_redirect:
                 with redirect_local() as err_file:
-                    rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl,
-                                               pdb_on_exception=pdb_on_exception,
-                                               err_file=err_file[1])
+                    rocket_ran = launch_rocket(
+                        launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception, err_file=err_file[1]
+                    )
             else:
                 rocket_ran = launch_rocket(launchpad, fworker, strm_lvl=strm_lvl, pdb_on_exception=pdb_on_exception)
 

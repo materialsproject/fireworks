@@ -46,7 +46,7 @@ def plot_wf(
         fontsize (int): font size for the node label.
     """
     try:
-        import matplotlib.pyplot as plt  # noqa: PLC0415
+        import matplotlib.pyplot as plt
     except ImportError:
         raise SystemExit("Install matplotlib. Exiting.")
 

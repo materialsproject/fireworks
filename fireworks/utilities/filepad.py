@@ -6,7 +6,6 @@ import os
 import zlib
 from typing import TYPE_CHECKING
 
-from uuid import uuid4
 import gridfs
 from bson.objectid import ObjectId
 from monty.json import MSONable

@@ -54,7 +54,7 @@ def _is_mongomock() -> bool:
         client = fireworks.fw_config.MongoClient()
         # Check if the client is from mongomock
         return "mongomock" in str(type(client).__module__)
-    except Exception:  # noqa: BLE001
+    except Exception:
         return False
 
 
@@ -72,7 +72,7 @@ class AuthenticationTest(unittest.TestCase):
             except OperationFailure:
                 pass  # User doesn't exist, that's fine
             client.not_the_admin_db.command({"createUser": "my-user", "pwd": "my-password", "roles": ["dbOwner"]})
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running or authentication not available")
 
     @classmethod
@@ -81,12 +81,12 @@ class AuthenticationTest(unittest.TestCase):
         try:
             client = fireworks.fw_config.MongoClient()
             client.drop_database("not_the_admin_db")
-        except Exception:  # noqa: BLE001, S110
+        except Exception:
             pass  # Database cleanup - OK to silently fail
 
     def test_no_admin_privileges_for_plebs(self) -> None:
         """Normal users can not authenticate against the admin db."""
-        lp = LaunchPad(name="admin", username="my-user", password="my-password", authsource="admin")  # noqa: S106
+        lp = LaunchPad(name="admin", username="my-user", password="my-password", authsource="admin")
         with pytest.raises(OperationFailure):
             lp.db.collection.count_documents({})
 
@@ -97,7 +97,7 @@ class AuthenticationTest(unittest.TestCase):
         lp = LaunchPad(
             name="not_the_admin_db",
             username="my-user",
-            password="my-password",  # noqa: S106
+            password="my-password",
             authsource="not_the_admin_db",
         )
         lp.db.collection.count_documents({})
@@ -106,7 +106,7 @@ class AuthenticationTest(unittest.TestCase):
         """The default behavior is to authenticate against the db that the user
         is trying to access.
         """
-        lp = LaunchPad(name="not_the_admin_db", username="my-user", password="my-password")  # noqa: S106
+        lp = LaunchPad(name="not_the_admin_db", username="my-user", password="my-password")
         lp.db.collection.count_documents({})
 
 
@@ -117,7 +117,7 @@ class LaunchPadTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -222,7 +222,7 @@ class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -606,7 +606,7 @@ class LaunchPadLostRunsDetectTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -719,7 +719,7 @@ class WorkflowFireworkStatesTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1018,7 +1018,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1125,7 +1125,7 @@ class LaunchPadRerunExceptionTest(unittest.TestCase):
             self.lp.rerun_fw(1, recover_launch="last")
 
     def test_task_level_rerun_no_recovery_info(self) -> None:
-        self.lp.add_wf(Firework(ScriptTask.from_str('echo')))
+        self.lp.add_wf(Firework(ScriptTask.from_str("echo")))
         launch_rocket(self.lp, self.fworker, fw_id=2)
         with pytest.raises(ValueError, match="No recovery info found in launch 1"):
             self.lp.rerun_fw(2, recover_launch="last")
@@ -1143,7 +1143,7 @@ class WFLockTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1208,7 +1208,7 @@ class WFLockTest(unittest.TestCase):
         assert "SlowAdditionTask" in child_fw.spec
         assert "WaitWFLockTask" not in child_fw.spec
 
-        self.lp._refresh_wf(fw_id=2)  # noqa: SLF001
+        self.lp._refresh_wf(fw_id=2)
 
         child_fw = self.lp.get_fw_by_id(3)
 
@@ -1247,7 +1247,7 @@ class WFLockTest(unittest.TestCase):
         assert "SlowAdditionTask" in child_fw.spec
         assert "WaitWFLockTask" not in child_fw.spec
 
-        self.lp._refresh_wf(fw_id=2)  # noqa: SLF001
+        self.lp._refresh_wf(fw_id=2)
 
         fast_fw = self.lp.get_fw_by_id(2)
 
@@ -1262,7 +1262,7 @@ class LaunchPadOfflineTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
@@ -1343,7 +1343,7 @@ class GridfsStoredDataTest(unittest.TestCase):
         try:
             cls.lp = LaunchPad(name=TEST_DB_NAME, strm_lvl="ERROR")
             cls.lp.reset(password=None, require_password=False)
-        except Exception:  # noqa: BLE001
+        except Exception:
             raise unittest.SkipTest("MongoDB is not running in localhost:27017! Skipping tests.")
 
     @classmethod
