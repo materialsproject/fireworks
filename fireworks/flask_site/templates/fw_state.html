@@ -37,6 +37,43 @@
     {% endfor %}
 </table>
 
-{{ pagination.links|safe }}
+<div style="margin-top: 15px;">
+    {{ pagination.links|safe }}
+</div>
+
+<form method="get" style="margin-top: 10px;" onsubmit="return gotoPage(this);">
+    <label for="page-input-fw">Go to page:</label>
+    <input
+        type="number"
+        id="page-input-fw"
+        name="page"
+        min="1"
+        max="{{ pagination.pages }}"
+        required
+        style="width: 100px;"
+    >
+    <button type="submit">Go</button>
+    <span style="margin-left: 8px; color: #666;">
+        of {{ pagination.pages }}
+    </span>
+</form>
+
+<script>
+function gotoPage(form) {
+    const input = form.page;
+    const page = parseInt(input.value, 10);
+    const maxPage = {{ pagination.pages }};
+
+    if (isNaN(page) || page < 1 || page > maxPage) {
+        alert("Please enter a page number between 1 and " + maxPage + ".");
+        return false;
+    }
+
+    const url = new URL(window.location.href);
+    url.searchParams.set("page", page);
+    window.location.href = url.toString();
+    return false;
+}
+</script>
 
 {% endblock %}
