@@ -12,7 +12,7 @@ __date__ = "Jan 9, 2013"
 if __name__ == "__main__":
     setup(
         name="FireWorks",
-        version="2.1.2",
+        version="2.1.3",
         description="FireWorks workflow software",
         long_description=open("README.md", encoding="utf-8").read(),  # noqa: SIM115
         long_description_content_type="text/markdown",
