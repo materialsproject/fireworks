@@ -232,7 +232,7 @@ def rapidfire(
             if not block_dir.startswith("block_"):
                 raise ValueError(f"Invalid name {block_dir}, block dirs must start with 'block_")
             block_dir = os.path.abspath(os.path.join(launch_dir, block_dir))
-            os.mkdir(block_dir, exist_ok=True)
+            os.makedirs(block_dir, exist_ok=True)
         elif prev_blocks and not ALWAYS_CREATE_NEW_BLOCK:
             block_dir = os.path.abspath(os.path.join(launch_dir, prev_blocks[0]))
             l_logger.info(f"Found previous block, using {block_dir}")
