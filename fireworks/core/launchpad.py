@@ -1653,7 +1653,7 @@ class LaunchPad(FWSerializable):
         """
         try:
             return self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_fw_id": quantity}})["next_fw_id"]
-        except Exception:
+        except TypeError:
             raise ValueError(
                 "Could not get next FW id! If you have not yet initialized the database,"
                 " please do so by performing a database reset (e.g., lpad reset)"
@@ -1663,7 +1663,7 @@ class LaunchPad(FWSerializable):
         """Checkout the next Launch id."""
         try:
             return self.fw_id_assigner.find_one_and_update({}, {"$inc": {"next_launch_id": 1}})["next_launch_id"]
-        except Exception:
+        except TypeError:
             raise ValueError(
                 "Could not get next launch id! If you have not yet initialized the "
                 "database, please do so by performing a database reset (e.g., lpad reset)"
