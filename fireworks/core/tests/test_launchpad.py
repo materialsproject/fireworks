@@ -213,6 +213,27 @@ class LaunchPadTest(unittest.TestCase):
         num_wfs_in_db = len(self.lp.get_wf_ids({"name": "lorem wf"}))
         assert num_wfs_in_db == len(wfs)
 
+    def test_uninitialized_database(self) -> None:
+        # Simulate uninitialized db by making find_one_and_update return None
+        import unittest.mock
+        with unittest.mock.patch.object(self.lp.fw_id_assigner, "find_one_and_update", return_value=None):
+            with pytest.raises(ValueError, match="Could not get next FW id"):
+                self.lp.get_new_fw_id()
+
+            with pytest.raises(ValueError, match="Could not get next launch id"):
+                self.lp.get_new_launch_id()
+
+    def test_database_operation_failure(self) -> None:
+        # Simulate db permission error
+        import unittest.mock
+        from pymongo.errors import OperationFailure
+        with unittest.mock.patch.object(self.lp.fw_id_assigner, "find_one_and_update", side_effect=OperationFailure("not authorized")):
+            with pytest.raises(OperationFailure, match="not authorized"):
+                self.lp.get_new_fw_id()
+
+            with pytest.raises(OperationFailure, match="not authorized"):
+                self.lp.get_new_launch_id()
+
 
 class LaunchPadDefuseReigniteRerunArchiveDeleteTest(unittest.TestCase):
     @classmethod
@@ -1409,3 +1430,4 @@ class GridfsStoredDataTest(unittest.TestCase):
 
         launch_full = self.lp.get_launch_by_id(1)
         assert len(launch_full.action.detours) == 2000
+
