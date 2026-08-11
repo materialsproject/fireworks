@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>fireworks.features package &#8212; FireWorks 2.0.4 documentation</title>
+    <title>fireworks.features package &#8212; FireWorks 2.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
-    <script src="_static/documentation_options.js?v=adc66a14"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/documentation_options.js?v=dc13204d"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.features package</a></li> 
       </ul>
     </div>  
@@ -64,7 +64,7 @@
 <span id="fireworks-features-background-task-module"></span><h2>fireworks.features.background_task module<a class="headerlink" href="#module-fireworks.features.background_task" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.features.background_task.BackgroundTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.features.background_task.</span></span><span class="sig-name descname"><span class="pre">BackgroundTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tasks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_launches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_on_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.features.background_task.</span></span><span class="sig-name descname"><span class="pre">BackgroundTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tasks</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_launches</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sleep_time</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">run_on_finish</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.background_task.BackgroundTask.__init__">
@@ -72,7 +72,7 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>[</strong><strong>Firetask</strong><strong>]</strong> (<em>tasks</em>) – a list of Firetasks to perform</p></li>
+<li><p><strong>[</strong><strong>Firetask</strong><strong>]</strong> (<a class="reference internal" href="fireworks.core.html#fireworks.core.launchpad.LazyFirework.tasks" title="fireworks.core.launchpad.LazyFirework.tasks"><em>tasks</em></a>) – a list of Firetasks to perform</p></li>
 <li><p><strong>num_launches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – the total number of times to run the process (0=infinite)</p></li>
 <li><p><strong>sleep_time</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><em>int</em></a>) – sleep time in seconds between background runs</p></li>
 <li><p><strong>run_on_finish</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><em>bool</em></a>) – always run this task upon completion of Firework.</p></li>
@@ -83,7 +83,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.background_task.BackgroundTask.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.from_dict" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.background_task.BackgroundTask.from_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -99,7 +99,7 @@
 <p>This module contains the base class for implementing Duplicate Finders.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.features.dupefinder.DupeFinderBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.features.dupefinder.</span></span><span class="sig-name descname"><span class="pre">DupeFinderBase</span></span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.features.dupefinder.</span></span><span class="sig-name descname"><span class="pre">DupeFinderBase</span></span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <p>This serves an Abstract class for implementing Duplicate Finders.</p>
 <dl class="py method">
@@ -109,7 +109,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.dupefinder.DupeFinderBase.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.from_dict" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.dupefinder.DupeFinderBase.from_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -152,7 +152,7 @@ spec2 (dict)</p>
 <span id="fireworks-features-fw-report-module"></span><h2>fireworks.features.fw_report module<a class="headerlink" href="#module-fireworks.features.fw_report" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.features.fw_report.FWReport">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.features.fw_report.</span></span><span class="sig-name descname"><span class="pre">FWReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.features.fw_report.</span></span><span class="sig-name descname"><span class="pre">FWReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.fw_report.FWReport" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.fw_report.FWReport.__init__">
@@ -186,7 +186,7 @@ e.g. past 5 days.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.fw_report.FWReport.get_stats_str">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_stats_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decorated_stat_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats_str" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_stats_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decorated_stat_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="headerlink" href="#fireworks.features.fw_report.FWReport.get_stats_str" title="Link to this definition">¶</a></dt>
 <dd><p>Convert the list of stats from FWReport.get_stats() to a string representation for viewing.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -232,7 +232,7 @@ note this also specifies the order of stacking</p></li>
 <span id="fireworks-features-introspect-module"></span><h2>fireworks.features.introspect module<a class="headerlink" href="#module-fireworks.features.introspect" title="Link to this heading">¶</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.features.introspect.Introspector">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.features.introspect.</span></span><span class="sig-name descname"><span class="pre">Introspector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.features.introspect.</span></span><span class="sig-name descname"><span class="pre">Introspector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.introspect.Introspector" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.introspect.Introspector.__init__">
@@ -251,7 +251,7 @@ note this also specifies the order of stacking</p></li>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.introspect.Introspector.print_report">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">print_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coll</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.features.introspect.Introspector.print_report" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">print_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">table</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coll</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="headerlink" href="#fireworks.features.introspect.Introspector.print_report" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -419,7 +419,7 @@ new fireworks to run, a single rapidfire process will terminate.
 <p>Important: this class is out-of-date and deprecated. It will be replaced by the FWReport() class.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.features.stats.FWStats">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.features.stats.</span></span><span class="sig-name descname"><span class="pre">FWStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.features.stats.</span></span><span class="sig-name descname"><span class="pre">FWStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lpad</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.features.stats.FWStats" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.features.stats.FWStats.__init__">
@@ -665,14 +665,14 @@ datetime.timedelta function. args and query_start can not be given at the same t
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.features package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

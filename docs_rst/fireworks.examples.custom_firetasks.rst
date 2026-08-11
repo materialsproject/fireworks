@@ -15,5 +15,5 @@ Module contents
 
 .. automodule:: fireworks.examples.custom_firetasks
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

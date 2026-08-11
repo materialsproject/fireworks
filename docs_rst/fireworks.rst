@@ -25,13 +25,13 @@ fireworks.fw\_config module
 
 .. automodule:: fireworks.fw_config
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: fireworks
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

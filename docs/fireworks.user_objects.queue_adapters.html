@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>fireworks.user_objects.queue_adapters package &#8212; FireWorks 2.0.4 documentation</title>
+    <title>fireworks.user_objects.queue_adapters package &#8212; FireWorks 2.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
-    <script src="_static/documentation_options.js?v=adc66a14"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/documentation_options.js?v=dc13204d"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.queue_adapters package</a></li> 
       </ul>
     </div>  
@@ -71,7 +71,7 @@
 queues.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.queue_adapters.common_adapter.</span></span><span class="sig-name descname"><span class="pre">CommonAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.queue_adapters.common_adapter.</span></span><span class="sig-name descname"><span class="pre">CommonAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">q_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">q_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">template_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.queue.html#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueueAdapterBase</span></code></a></p>
 <p>An adapter that works on most PBS (including derivatives such as
 TORQUE), SGE, and SLURM queues.</p>
@@ -98,12 +98,12 @@ checking the number of jobs in the queue. Default 5 seconds.</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands">
-<span class="sig-name descname"><span class="pre">default_q_commands</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Cobalt':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'LoadLeveler':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'llq',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'llsubmit'},</span> <span class="pre">'LoadSharingFacility':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'bjobs',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'bsub'},</span> <span class="pre">'MOAB':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'showq',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'msub'},</span> <span class="pre">'PBS':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'SGE':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'SLURM':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'squeue',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'sbatch'}}</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">default_q_commands</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'Cobalt':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'LoadLeveler':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'llq',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'llsubmit'},</span> <span class="pre">'LoadSharingFacility':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'bjobs',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'bsub'},</span> <span class="pre">'MOAB':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'showq',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'msub'},</span> <span class="pre">'PBS':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'SGE':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'qstat',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'qsub'},</span> <span class="pre">'SLURM':</span> <span class="pre">{'status_cmd':</span> <span class="pre">'squeue',</span> <span class="pre">'submit_cmd':</span> <span class="pre">'sbatch'}}</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.default_q_commands" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.from_dict" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.common_adapter.CommonAdapter.from_dict" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -147,13 +147,13 @@ checking the number of jobs in the queue. Default 5 seconds.</p></li>
 <p>NEWT-based PBS queue adapter used for remote job submission and status.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.queue_adapters.pbs_newt_adapter.</span></span><span class="sig-name descname"><span class="pre">PBSAdapterNEWT</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.queue_adapters.pbs_newt_adapter.</span></span><span class="sig-name descname"><span class="pre">PBSAdapterNEWT</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.queue.html#fireworks.queue.queue_adapter.QueueAdapterBase" title="fireworks.queue.queue_adapter.QueueAdapterBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">QueueAdapterBase</span></code></a></p>
 <p>A special PBS adapter that works via the NEWT interface (<a class="reference external" href="https://newt.nersc.gov">https://newt.nersc.gov</a>)
 Only intended for job submission via the RESTful NEWT web interface.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.defaults">
-<span class="sig-name descname"><span class="pre">defaults</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.defaults" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">defaults</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.defaults" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -172,17 +172,17 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name">
-<span class="sig-name descname"><span class="pre">q_name</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pbs_newt'</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">q_name</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'pbs_newt'</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.q_name" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource">
-<span class="sig-name descname"><span class="pre">resource</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'carver'</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">resource</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'carver'</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.resource" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd">
-<span class="sig-name descname"><span class="pre">submit_cmd</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">submit_cmd</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.submit_cmd" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -201,7 +201,7 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file">
-<span class="sig-name descname"><span class="pre">template_file</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Users/ajain/Documents/code_venvs/fireworks/fireworks/fireworks/user_objects/queue_adapters/PBS_template.txt'</span></em><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">template_file</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'/Users/ajain/Documents/code_venvs/fireworks_env/fireworks/fireworks/user_objects/queue_adapters/PBS_template.txt'</span></span><a class="headerlink" href="#fireworks.user_objects.queue_adapters.pbs_newt_adapter.PBSAdapterNEWT.template_file" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -287,14 +287,14 @@ Only intended for job submission via the RESTful NEWT web interface.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.queue_adapters package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){

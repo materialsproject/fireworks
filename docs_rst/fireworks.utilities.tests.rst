@@ -9,45 +9,45 @@ fireworks.utilities.tests.test\_dagflow module
 
 .. automodule:: fireworks.utilities.tests.test_dagflow
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 fireworks.utilities.tests.test\_filepad module
 ----------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_filepad
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 fireworks.utilities.tests.test\_fw\_serializers module
 ------------------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_fw_serializers
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 fireworks.utilities.tests.test\_update\_collection module
 ---------------------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_update_collection
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 fireworks.utilities.tests.test\_visualize module
 ------------------------------------------------
 
 .. automodule:: fireworks.utilities.tests.test_visualize
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:
 
 Module contents
 ---------------
 
 .. automodule:: fireworks.utilities.tests
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

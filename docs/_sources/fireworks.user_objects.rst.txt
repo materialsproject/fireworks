@@ -16,5 +16,5 @@ Module contents
 
 .. automodule:: fireworks.user_objects
    :members:
-   :undoc-members:
    :show-inheritance:
+   :undoc-members:

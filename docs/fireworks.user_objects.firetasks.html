@@ -5,12 +5,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 2.0.4 documentation</title>
+    <title>fireworks.user_objects.firetasks package &#8212; FireWorks 2.1.4 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="_static/nature.css?v=b0beeceb" />
-    <script src="_static/documentation_options.js?v=adc66a14"></script>
-    <script src="_static/doctools.js?v=9bcbadda"></script>
-    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/documentation_options.js?v=dc13204d"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
  
@@ -26,7 +26,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.firetasks package</a></li> 
       </ul>
     </div>  
@@ -143,7 +143,7 @@
 <p>This module includes dataflow firetask tasks.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">CommandLineTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">CommandLineTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to execute external commands in a shell.</p>
 <dl class="simple">
@@ -216,7 +216,7 @@ available and of the schema of the ‘source’.</p>
 dictionary with this schema or a list of such dictionaries.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.command_line_tool">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">command_line_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.command_line_tool" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">command_line_tool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.command_line_tool" title="Link to this definition">¶</a></dt>
 <dd><p>This function composes and executes a command from provided
 specifications.</p>
 <dl class="simple">
@@ -258,12 +258,12 @@ multiple inputs may be passed in one list of dictionaries</p></li>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'outputs',</span> <span class="pre">'chunk_number']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'outputs',</span> <span class="pre">'chunk_number']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['command_spec']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['command_spec']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.CommandLineTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -296,7 +296,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">ForeachTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">ForeachTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>This firetask branches the workflow creating parallel fireworks
 using FWAction: one firework for each element or each chunk from the
@@ -320,12 +320,12 @@ a separate child firework</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['number</span> <span class="pre">of</span> <span class="pre">chunks']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['number</span> <span class="pre">of</span> <span class="pre">chunks']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['task',</span> <span class="pre">'split']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['task',</span> <span class="pre">'split']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ForeachTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -357,19 +357,19 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">ImportDataTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">ImportDataTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Update the spec with data from file in a nested dictionary at a position
 specified by a mapstring = maplist[0]/maplist[1]/…
 i.e. spec[maplist[0]][maplist[1]]… = data.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">[]</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filename',</span> <span class="pre">'mapstring']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filename',</span> <span class="pre">'mapstring']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.ImportDataTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -401,17 +401,17 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">JoinDictTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">JoinDictTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>combines specified spec fields into a dictionary.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['rename']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['rename']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'output']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'output']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinDictTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -443,12 +443,12 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">JoinListTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.dataflow_tasks.</span></span><span class="sig-name descname"><span class="pre">JoinListTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>combines specified spec fields into a list.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'output']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['inputs',</span> <span class="pre">'output']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.dataflow_tasks.JoinListTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -484,7 +484,7 @@ these multiple resources.</p>
 <p>File I/O related firetasks for writing, deleting, transferring and archiving files.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">ArchiveDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">ArchiveDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Wrapper around shutil.make_archive to make tar archives.</p>
 <dl class="field-list simple">
@@ -498,12 +498,12 @@ minus any format-specific extension.</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['format']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['format']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['base_name']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['base_name']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.ArchiveDirTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -535,7 +535,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">CompressDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">CompressDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Compress all files in a directory.</p>
 <dl class="field-list simple">
@@ -549,7 +549,7 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['compression',</span> <span class="pre">'dest',</span> <span class="pre">'ignore_errors']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['compression',</span> <span class="pre">'dest',</span> <span class="pre">'ignore_errors']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.CompressDirTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -581,7 +581,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">DecompressDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">DecompressDirTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Decompress all files in a directory. Autodetects gz, bz2 and z file
 extensions.</p>
@@ -595,7 +595,7 @@ extensions.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'ignore_errors']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'ignore_errors']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.DecompressDirTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -627,7 +627,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileDeleteTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileDeleteTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to delete files.</p>
 <dl class="simple">
@@ -643,12 +643,12 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'ignore_errors']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'ignore_errors']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['files_to_delete']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['files_to_delete']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileDeleteTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -680,7 +680,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileTransferTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileTransferTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to Transfer files. Note that.</p>
 <dl class="simple">
@@ -706,17 +706,17 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.fn_list">
-<span class="sig-name descname"><span class="pre">fn_list</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'copy':</span> <span class="pre">&lt;function</span> <span class="pre">copy&gt;,</span> <span class="pre">'copy2':</span> <span class="pre">&lt;function</span> <span class="pre">copy2&gt;,</span> <span class="pre">'copyfile':</span> <span class="pre">&lt;function</span> <span class="pre">copyfile&gt;,</span> <span class="pre">'copytree':</span> <span class="pre">&lt;function</span> <span class="pre">copytree&gt;,</span> <span class="pre">'cp':</span> <span class="pre">&lt;function</span> <span class="pre">copy&gt;,</span> <span class="pre">'move':</span> <span class="pre">&lt;function</span> <span class="pre">move&gt;,</span> <span class="pre">'mv':</span> <span class="pre">&lt;function</span> <span class="pre">move&gt;}</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.fn_list" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">fn_list</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'copy':</span> <span class="pre">&lt;function</span> <span class="pre">copy&gt;,</span> <span class="pre">'copy2':</span> <span class="pre">&lt;function</span> <span class="pre">copy2&gt;,</span> <span class="pre">'copyfile':</span> <span class="pre">&lt;function</span> <span class="pre">copyfile&gt;,</span> <span class="pre">'copytree':</span> <span class="pre">&lt;function</span> <span class="pre">copytree&gt;,</span> <span class="pre">'cp':</span> <span class="pre">&lt;function</span> <span class="pre">copy&gt;,</span> <span class="pre">'move':</span> <span class="pre">&lt;function</span> <span class="pre">move&gt;,</span> <span class="pre">'mv':</span> <span class="pre">&lt;function</span> <span class="pre">move&gt;}</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.fn_list" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'server',</span> <span class="pre">'user',</span> <span class="pre">'key_filename',</span> <span class="pre">'max_retry',</span> <span class="pre">'retry_delay',</span> <span class="pre">'ignore_errors']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest',</span> <span class="pre">'server',</span> <span class="pre">'user',</span> <span class="pre">'key_filename',</span> <span class="pre">'max_retry',</span> <span class="pre">'retry_delay',</span> <span class="pre">'ignore_errors']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['mode',</span> <span class="pre">'files']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['mode',</span> <span class="pre">'files']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileTransferTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -748,7 +748,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileWriteTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.fileio_tasks.</span></span><span class="sig-name descname"><span class="pre">FileWriteTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to write files.</p>
 <dl class="simple">
@@ -767,12 +767,12 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['files_to_write']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['files_to_write']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.fileio_tasks.FileWriteTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -808,7 +808,7 @@ these multiple resources.</p>
 <p>Firetasks for interacting with FilePad: add, fetch, query, and delete files.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">AddFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">AddFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to add files to the filepad.</p>
 <dl class="simple">
@@ -827,12 +827,12 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers',</span> <span class="pre">'directory',</span> <span class="pre">'filepad_file',</span> <span class="pre">'compress',</span> <span class="pre">'metadata']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers',</span> <span class="pre">'directory',</span> <span class="pre">'filepad_file',</span> <span class="pre">'compress',</span> <span class="pre">'metadata']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['paths']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['paths']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.AddFilesTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -864,7 +864,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">DeleteFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">DeleteFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to delete files from the filepad.</p>
 <dl class="simple">
@@ -879,12 +879,12 @@ these multiple resources.</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filepad_file']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filepad_file']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.DeleteFilesTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -916,7 +916,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">GetFilesByQueryTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">GetFilesByQueryTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to query files from the filepad and write them to specified
 directory (current working directory if not specified).</p>
@@ -963,12 +963,12 @@ can help to assure deterministic behavior, e.g. by always processing newer
 files later.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest_dir',</span> <span class="pre">'filepad_file',</span> <span class="pre">'fizzle_degenerate_file_name',</span> <span class="pre">'fizzle_empty_result',</span> <span class="pre">'limit',</span> <span class="pre">'meta_file',</span> <span class="pre">'meta_file_suffix',</span> <span class="pre">'new_file_names',</span> <span class="pre">'sort_direction',</span> <span class="pre">'sort_key']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['dest_dir',</span> <span class="pre">'filepad_file',</span> <span class="pre">'fizzle_degenerate_file_name',</span> <span class="pre">'fizzle_empty_result',</span> <span class="pre">'limit',</span> <span class="pre">'meta_file',</span> <span class="pre">'meta_file_suffix',</span> <span class="pre">'new_file_names',</span> <span class="pre">'sort_direction',</span> <span class="pre">'sort_key']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['query']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['query']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesByQueryTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1000,7 +1000,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">GetFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.filepad_tasks.</span></span><span class="sig-name descname"><span class="pre">GetFilesTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>A Firetask to fetch files from the filepad and write it to specified directory (current working
 directory if not specified).</p>
@@ -1018,12 +1018,12 @@ directory if not specified).</p>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.optional_params">
-<span class="sig-name descname"><span class="pre">optional_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filepad_file',</span> <span class="pre">'dest_dir',</span> <span class="pre">'new_file_names']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.optional_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">optional_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['filepad_file',</span> <span class="pre">'dest_dir',</span> <span class="pre">'new_file_names']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.optional_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['identifiers']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.filepad_tasks.GetFilesTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1065,7 +1065,7 @@ these multiple resources.</p>
 <p>This module includes tasks to integrate scripts and python functions.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.PyTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.script_task.</span></span><span class="sig-name descname"><span class="pre">PyTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.script_task.</span></span><span class="sig-name descname"><span class="pre">PyTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Runs any python function! Extremely powerful, which allows you to
 essentially run any accessible method on the system. The optional inputs
@@ -1102,12 +1102,12 @@ group of Firetasks generated by a ForeachTask</p></li>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.PyTask.other_params">
-<span class="sig-name descname"><span class="pre">other_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['args',</span> <span class="pre">'kwargs',</span> <span class="pre">'auto_kwargs',</span> <span class="pre">'stored_data_varname',</span> <span class="pre">'inputs',</span> <span class="pre">'outputs',</span> <span class="pre">'chunk_number']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask.other_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">other_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['args',</span> <span class="pre">'kwargs',</span> <span class="pre">'auto_kwargs',</span> <span class="pre">'stored_data_varname',</span> <span class="pre">'inputs',</span> <span class="pre">'outputs',</span> <span class="pre">'chunk_number']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask.other_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.PyTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['func']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['func']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.PyTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1139,17 +1139,17 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.ScriptTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.script_task.</span></span><span class="sig-name descname"><span class="pre">ScriptTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.script_task.</span></span><span class="sig-name descname"><span class="pre">ScriptTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Runs a user-defined script.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.ScriptTask.from_str">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shell_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask.from_str" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shell_cmd</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parameters</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask.from_str" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.script_task.ScriptTask.required_params">
-<span class="sig-name descname"><span class="pre">required_params</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['script']</span></em><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask.required_params" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">required_params</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['script']</span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.script_task.ScriptTask.required_params" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -1186,7 +1186,7 @@ these multiple resources.</p>
 Context using Jinja2’s templating engine.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.templatewriter_task.TemplateWriterTask">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.templatewriter_task.</span></span><span class="sig-name descname"><span class="pre">TemplateWriterTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.templatewriter_task.TemplateWriterTask" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.templatewriter_task.</span></span><span class="sig-name descname"><span class="pre">TemplateWriterTask</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.templatewriter_task.TemplateWriterTask" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.core.html#fireworks.core.firework.FiretaskBase" title="fireworks.core.firework.FiretaskBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FiretaskBase</span></code></a></p>
 <p>Task to write templated files via Jinja2 library
 Required parameters:</p>
@@ -1237,7 +1237,7 @@ these multiple resources.</p>
 <p>Helpers used in unit tests to validate serialization behavior.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.unittest_tasks.</span></span><span class="sig-name descname"><span class="pre">ExportTestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.unittest_tasks.</span></span><span class="sig-name descname"><span class="pre">ExportTestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <p>Serializer to test exporting with explicit _fw_name entries.</p>
 <dl class="py method">
@@ -1248,7 +1248,7 @@ these multiple resources.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer" title="fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer"><span class="pre">ExportTestSerializer</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer.from_dict" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer" title="fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer"><span class="pre">ExportTestSerializer</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.ExportTestSerializer.from_dict" title="Link to this definition">¶</a></dt>
 <dd><p>Recreate instance from a serialized dict.</p>
 </dd></dl>
 
@@ -1262,7 +1262,7 @@ these multiple resources.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.unittest_tasks.</span></span><span class="sig-name descname"><span class="pre">UnitTestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">fireworks.user_objects.firetasks.unittest_tasks.</span></span><span class="sig-name descname"><span class="pre">UnitTestSerializer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">m_date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/datetime.html#datetime.datetime" title="(in Python v3.14)"><span class="pre">datetime</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer" title="Link to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="fireworks.utilities.html#fireworks.utilities.fw_serializers.FWSerializable" title="fireworks.utilities.fw_serializers.FWSerializable"><code class="xref py py-class docutils literal notranslate"><span class="pre">FWSerializable</span></code></a></p>
 <p>Serializable object used for testing round-trip serialization.</p>
 <dl class="py method">
@@ -1273,7 +1273,7 @@ these multiple resources.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer.from_dict">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer" title="fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer"><span class="pre">UnitTestSerializer</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer.from_dict" title="Link to this definition">¶</a></dt>
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m_dict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer" title="fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer"><span class="pre">UnitTestSerializer</span></a></span></span><a class="headerlink" href="#fireworks.user_objects.firetasks.unittest_tasks.UnitTestSerializer.from_dict" title="Link to this definition">¶</a></dt>
 <dd><p>Recreate instance from a serialized dict.</p>
 </dd></dl>
 
@@ -1476,14 +1476,14 @@ these multiple resources.</p>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.0.4 documentation</a> &#187;</li>
+        <li class="nav-item nav-item-0"><a href="index.html">FireWorks 2.1.4 documentation</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">fireworks.user_objects.firetasks package</a></li> 
       </ul>
     </div>
 
     <div class="footer" role="contentinfo">
     &#169; Copyright 2013, Anubhav Jain.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.0.4.
     </div>
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
