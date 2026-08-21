@@ -166,6 +166,27 @@ class WorkflowTest(unittest.TestCase):
 
         assert wflow[0] == self.fw1
 
+    def test_get_representative_launch_returns_most_recent_completed(self) -> None:
+        """Regression test for #577: with multiple COMPLETED launches, the most
+        recently completed one should be returned.
+        """
+        launch_dir = "."
+        earlier_completed = Launch(
+            state="COMPLETED",
+            launch_dir=launch_dir,
+            state_history=[{"state": "COMPLETED", "created_on": datetime.datetime(2020, 1, 1, tzinfo=UTC)}],
+        )
+        later_completed = Launch(
+            state="COMPLETED",
+            launch_dir=launch_dir,
+            state_history=[{"state": "COMPLETED", "created_on": datetime.datetime(2021, 1, 1, tzinfo=UTC)}],
+        )
+        running = Launch(state="RUNNING", launch_dir=launch_dir)
+
+        fw = Firework(Task1(), launches=[running, earlier_completed, later_completed])
+
+        assert Workflow._get_representative_launch(fw) is later_completed
+
 
 UTC = datetime.timezone.utc
 
