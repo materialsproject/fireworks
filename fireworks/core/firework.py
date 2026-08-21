@@ -1280,7 +1280,7 @@ class Workflow(FWSerializable):
         m_launch = None
         completed_launches = []
         for launch in fw.launches:
-            if Firework.STATE_RANKS[launch.state] > max_score:
+            if Firework.STATE_RANKS[launch.state] >= max_score:
                 max_score = Firework.STATE_RANKS[launch.state]
                 m_launch = launch
                 if launch.state == "COMPLETED":
