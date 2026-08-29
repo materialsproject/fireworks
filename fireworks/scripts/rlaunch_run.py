@@ -137,7 +137,11 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--loglvl", help="level to print log messages", default=STREAM_LOGLEVEL)
     parser.add_argument("-s", "--silencer", help="shortcut to mute log messages", action="store_true")
 
-    if argcomplete is not None:
+    parser.add_argument("--json", help="Pass launchpad and worker files as json-formatted string", action="store_true")
+
+    try:
+        import argcomplete
+
         argcomplete.autocomplete(parser)
         # This supports bash autocompletion. To enable this, pip install
         # argcomplete, activate global completion, or add
@@ -152,16 +156,27 @@ def rlaunch(argv: Sequence[str] | None = None) -> int:
         ("launchpad", "-l", False, LAUNCHPAD_LOC),
         ("fworker", "-w", False, FWORKER_LOC),
     ]
-    _validate_config_file_paths(args, cfg_files_to_check)
+    if not args.json:
+        _validate_config_file_paths(args, cfg_files_to_check)
 
     args.loglvl = "CRITICAL" if args.silencer else args.loglvl
+
+    if args.json:
+        launchpad_generator = lambda x: LaunchPad.from_format(x, f_format="json")
+        fworker_generator = lambda x: FWorker.from_format(x, f_format="json")
+    else:
+        launchpad_generator = lambda x: LaunchPad.from_file(x)
+        fworker_generator = lambda x: FWorker.from_file(x)
 
     if args.command == "singleshot" and args.offline:
         launchpad = None
     else:
-        launchpad = LaunchPad.from_file(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
+        launchpad = launchpad_generator(args.launchpad_file) if args.launchpad_file else LaunchPad(strm_lvl=args.loglvl)
 
-    fworker = FWorker.from_file(args.fworker_file) if args.fworker_file else FWorker()
+    if args.fworker_file:
+        fworker = fworker_generator(args.fworker_file)
+    else:
+        fworker = FWorker()
 
     # prime addr lookups
     _log = get_fw_logger("rlaunch", stream_level=STREAM_LOGLEVEL)
