@@ -12,7 +12,13 @@ import pytest
 
 from fireworks.user_objects.firetasks.unittest_tasks import ExportTestSerializer, UnitTestSerializer
 from fireworks.utilities.exceptions import FWFormatError, FWSerializationError
-from fireworks.utilities.fw_serializers import FWSerializable, load_object, load_object_from_file, recursive_dict
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    load_object,
+    load_object_from_file,
+    recursive_dict,
+    recursive_numpy_to_builtin,
+)
 from fireworks.utilities.fw_utilities import explicit_serialize
 
 __author__ = "Anubhav Jain"
@@ -141,6 +147,28 @@ class SerializationTest(unittest.TestCase):
         x = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 9]])
         x = recursive_dict(x)
         assert x == [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+    def test_numpy_scalar(self) -> None:
+        assert recursive_dict(np.bool_(True)) is True
+
+    def test_recursive_numpy_to_builtin(self) -> None:
+        timestamp = datetime.datetime.now(datetime.timezone.utc)
+        converted = recursive_numpy_to_builtin(
+            {
+                "flag": np.bool_(True),
+                "nested": [np.int64(3), {"ratio": np.float64(1.25)}],
+                "array": np.array([[1, 2], [3, 4]]),
+                "timestamp": timestamp,
+            }
+        )
+
+        assert converted == {
+            "flag": True,
+            "nested": [3, {"ratio": 1.25}],
+            "array": [[1, 2], [3, 4]],
+            "timestamp": timestamp,
+        }
+        assert converted["timestamp"] is timestamp
 
 
 class ExplicitSerializationTest(unittest.TestCase):
