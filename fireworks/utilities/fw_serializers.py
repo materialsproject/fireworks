@@ -98,6 +98,9 @@ def recursive_dict(obj, preserve_unicode=True):
     if isinstance(obj, (list, tuple)):
         return [recursive_dict(v, preserve_unicode) for v in obj]
 
+    if NUMPY_INSTALLED and isinstance(obj, np.generic):
+        return recursive_dict(obj.item(), preserve_unicode)
+
     if isinstance(obj, (int, float)):
         return obj
 
@@ -111,6 +114,29 @@ def recursive_dict(obj, preserve_unicode=True):
         return [recursive_dict(v, preserve_unicode) for v in obj.tolist()]
 
     return str(obj)
+
+
+def recursive_numpy_to_builtin(obj):
+    """Recursively convert NumPy arrays and scalars to Python built-in types."""
+    if not NUMPY_INSTALLED:
+        return obj
+
+    if isinstance(obj, np.ndarray):
+        return recursive_numpy_to_builtin(obj.tolist())
+
+    if isinstance(obj, np.generic):
+        return recursive_numpy_to_builtin(obj.item())
+
+    if isinstance(obj, dict):
+        return {recursive_numpy_to_builtin(k): recursive_numpy_to_builtin(v) for k, v in obj.items()}
+
+    if isinstance(obj, list):
+        return [recursive_numpy_to_builtin(v) for v in obj]
+
+    if isinstance(obj, tuple):
+        return tuple(recursive_numpy_to_builtin(v) for v in obj)
+
+    return obj
 
 
 # TODO: is reconstitute_dates really needed? Can this method just do everything?

@@ -10,7 +10,9 @@ import datetime
 import pickle
 import unittest
 
+import numpy as np
 import pytest
+from bson import BSON
 
 from fireworks.core.firework import FiretaskBase, Firework, FWAction, Launch, Workflow
 from fireworks.user_objects.firetasks.script_task import PyTask
@@ -108,6 +110,30 @@ class WorkflowTest(unittest.TestCase):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 100: [4]})
         with pytest.raises(ValueError, match=r"Specified links don't match given FW"):
             Workflow(fws, links_dict={0: [1, 2, 3], 1: [4], 2: [100]})
+
+    def test_to_db_dict_converts_numpy_metadata(self) -> None:
+        timestamp = datetime.datetime.now(datetime.timezone.utc)
+        workflow = Workflow(
+            [self.fw1],
+            metadata={
+                "flag": np.bool_(True),
+                "nested": {"count": np.int64(3), "ratio": np.float64(1.25)},
+                "array": np.array([1, 2, 3]),
+                "timestamp": timestamp,
+            },
+        )
+
+        db_dict = workflow.to_db_dict()
+
+        assert db_dict["metadata"] == {
+            "flag": True,
+            "nested": {"count": 3, "ratio": 1.25},
+            "array": [1, 2, 3],
+            "timestamp": timestamp,
+        }
+        assert db_dict["metadata"]["timestamp"] is timestamp
+        assert isinstance(workflow.metadata["flag"], np.bool_)
+        BSON.encode(db_dict)
 
     def test_copy(self) -> None:
         """Test that we can produce a copy of a Workflow but that the copy

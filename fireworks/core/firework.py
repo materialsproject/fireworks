@@ -24,7 +24,13 @@ from fireworks.core.fworker import FWorker
 from fireworks.fw_config import EXCEPT_DETAILS_ON_RERUN, TRACKER_LINES
 from fireworks.fw_config import NEGATIVE_FWID_CTR as NEGATIVE_FWID_CTR  # noqa: PLC0414
 from fireworks.utilities.dict_mods import apply_mod
-from fireworks.utilities.fw_serializers import FWSerializable, recursive_deserialize, recursive_serialize, serialize_fw
+from fireworks.utilities.fw_serializers import (
+    FWSerializable,
+    recursive_deserialize,
+    recursive_numpy_to_builtin,
+    recursive_serialize,
+    serialize_fw,
+)
 from fireworks.utilities.fw_utilities import NestedClassGetter, get_my_host, get_my_ip
 
 if TYPE_CHECKING:
@@ -1229,7 +1235,7 @@ class Workflow(FWSerializable):
 
     def to_db_dict(self) -> dict[str, Any]:
         m_dict = self.links.to_db_dict()
-        m_dict["metadata"] = self.metadata
+        m_dict["metadata"] = recursive_numpy_to_builtin(self.metadata)
         m_dict["state"] = self.state
         m_dict["name"] = self.name
         m_dict["created_on"] = self.created_on
